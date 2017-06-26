@@ -1,0 +1,262 @@
+<?php defined('IN_IA') or exit('Access Denied');?><style>
+    @import url("http://fonts.useso.com/css?family=Open+Sans:300,400,600,700&amp;lang=en");
+    body {
+        font-size: 13px;
+        color: #676a6c;
+        overflow-x: hidden;
+    }
+    .dashboard_list_wrap {
+        clear: both;
+        margin-bottom: 25px;
+        margin-top: 0;
+        padding: 0;
+    }
+    .dashboard_list_title {
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-top-colors: none;
+        background-color: #fff;
+        border-color: #e7eaec;
+        border-image: none;
+        border-style: solid solid none;
+        border-width: 4px 0 0;
+        color: inherit;
+        margin-bottom: 0;
+        padding: 14px 15px 7px;
+        min-height: 48px;
+    }
+    .label {
+        font-family: 'Open Sans';
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 8px;
+        text-shadow: none;
+    }
+    .dashboard_list_title h5 {
+        display: inline-block;
+        font-size: 14px;
+        margin: 0 0 7px;
+        padding: 0;
+        text-overflow: ellipsis;
+        float: left;
+    }
+    .dashboard_list_content {
+        background-color: #fff;
+        clear: both;
+        color: inherit;
+        padding: 15px 20px 20px 20px;
+        border-color: #e7eaec;
+        border-image: none;
+        border-style: solid solid none;
+        border-width: 1px 0;
+    }
+    .dashboard_list_content h1 {
+        margin-top: 5px;
+        font-size: 30px;
+        font-family: "open sans";
+        font-weight: 100 !important;
+    }
+</style>
+<div class="row">
+    <div class="col-sm-3">
+        <div class="dashboard_list_wrap">
+            <div class="dashboard_list_title">
+                <!--<button type="button" class="btn btn-success btn-xs pull-right" data-toggle="modal" data-target=".bs-example-modal-lg">申请提现</button>-->
+                <h5>总收入</h5>
+            </div>
+            <div class="dashboard_list_content">
+                <h1>&#165;<?php  echo $data['income'];?></h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="dashboard_list_wrap">
+            <div class="dashboard_list_title">
+                <span class="label label-info pull-right">本月</span>
+                <h5>订单</h5>
+            </div>
+            <div class="dashboard_list_content">
+                <h1><?php  echo $data['order'];?></h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="dashboard_list_wrap">
+            <div class="dashboard_list_title">
+                <span class="label label-info pull-right">今天</span>
+                <h5>浏览量(pv)</h5>
+            </div>
+            <div class="dashboard_list_content">
+                <h1><?php  echo $data['page_view'];?></h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="dashboard_list_wrap">
+            <div class="dashboard_list_title">
+                <span class="label label-info pull-right">今天</span>
+                <h5>访客(uv)</h5>
+            </div>
+            <div class="dashboard_list_content">
+                <h1><?php  echo $data['unique_visitor'];?></h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">申请提现</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-xs-12 col-sm-2 col-md-2 control-label text-right">金额</label>
+                        <div class="col-sm-6 col-md-8 col-xs-12">
+                            <input type="text" class="form-control" name="" value="">
+                            <span class="help-block">最低提现金额为&yen;<?php echo $getcash_setting['limit']?$getcash_setting['limit']:0.00?> <span style="color:#ff0000">可申请提现金额&#165;1520.00</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        订单数据
+    </div>
+    <div class="panel-body" id="scroll">
+        <div class="pull-left">
+            <form method="get" id="form1">
+                <input name="c" value="site" type="hidden" />
+                <input name="a" value="entry" type="hidden" />
+                <input name="eid" value="<?php  echo $_GPC['eid'];?>" type="hidden" />
+                <input name="do" value="order" type="hidden" />
+                <input name="act" value="overview" type="hidden" />
+                <input name="m" value="superman_mall" type="hidden" />
+                <?php  echo tpl_form_field_daterange('datelimit', array('start' => date('Y-m-d', $starttime),'end' => date('Y-m-d', $endtime)), '')?>
+                <input type="hidden" value="" name="scroll">
+            </form>
+        </div>
+        <div class="pull-right">
+            <div class="checkbox">
+                <label style="color:#57B9E6;"><input checked type="checkbox">待支付</label>&nbsp;
+                <label style="color:rgba(203,48,48,1)"><input checked type="checkbox">待发货</label>&nbsp;
+                <label style="color:rgba(149,192,0,1);;"><input checked type="checkbox">已发货</label>&nbsp;
+                <label style="color:#e7a017;"><input checked type="checkbox">已收货</label>&nbsp;
+            </div>
+        </div>
+        <div style="margin-top:20px">
+            <canvas id="myChart" width="1200" height="300"></canvas>
+        </div>
+    </div>
+</div>
+<script>
+    require(['chart', 'daterangepicker'], function(c) {
+        $('.daterange').on('apply.daterangepicker', function(ev, picker) {
+            $('input[name="scroll"]').val($(document).scrollTop());
+            $('#form1')[0].submit();
+        });
+        <?php  if($scroll) { ?>
+        var scroll = "<?php  echo $scroll;?>";
+        $("html,body").animate({scrollTop: scroll}, 300);
+        <?php  } ?>
+        var chart = null;
+        var chartDatasets = null;
+        var templates = {
+            flow1: {
+                label: '待支付',
+                fillColor : "rgba(36,165,222,0.1)",
+                strokeColor : "rgba(36,165,222,1)",
+                pointColor : "rgba(36,165,222,1)",
+                pointStrokeColor : "#fff",
+                pointHighlightFill : "#fff",
+                pointHighlightStroke : "rgba(36,165,222,1)"
+            },
+            flow2: {
+                label: '待发货',
+                fillColor : "rgba(203,48,48,0.1)",
+                strokeColor : "rgba(203,48,48,1)",
+                pointColor : "rgba(203,48,48,1)",
+                pointStrokeColor : "#fff",
+                pointHighlightFill : "#fff",
+                pointHighlightStroke : "rgba(203,48,48,1)"
+            },
+            flow3: {
+                label: '已发货',
+                fillColor : "rgba(149,192,0,0.1)",
+                strokeColor : "rgba(149,192,0,1)",
+                pointColor : "rgba(149,192,0,1)",
+                pointStrokeColor : "#fff",
+                pointHighlightFill : "#fff",
+                pointHighlightStroke : "rgba(149,192,0,1)"
+            },
+            flow4: {
+                label: '已收货',
+                fillColor : "rgba(231,160,23,0.1)",
+                strokeColor : "rgba(231,160,23,1)",
+                pointColor : "rgba(231,160,23,1)",
+                pointStrokeColor : "#fff",
+                pointHighlightFill : "#fff",
+                pointHighlightStroke : "rgba(231,160,23,1)"
+            }
+        };
+
+        function refreshData() {
+            if(!chart || !chartDatasets) {
+                return;
+            }
+            var visables = [];
+            var i = 0;
+            $('.checkbox input[type="checkbox"]').each(function(){
+                if($(this).attr('checked')) {
+                    visables.push(i);
+                }
+                i++;
+            });
+            var ds = [];
+            $.each(visables, function(){
+                var o = chartDatasets[this];
+                ds.push(o);
+            });
+            chart.datasets = ds;
+            chart.update();
+        }
+
+        var url = location.href + '&#aaaa';
+        $.post(url, function(data){
+            var data = $.parseJSON(data);
+            var datasets = data.datasets;
+            if(!chart) {
+                var label = data.label;
+                var ds = $.extend(true, {}, templates);
+                ds.flow1.data = datasets.flow1;
+                ds.flow2.data = datasets.flow2;
+                ds.flow3.data = datasets.flow3;
+                ds.flow4.data = datasets.flow4;
+                var lineChartData = {
+                    labels : label,
+                    datasets : [ds.flow1, ds.flow2, ds.flow3, ds.flow4]
+                };
+                var ctx = document.getElementById("myChart").getContext("2d");
+                chart = new Chart(ctx).Line(lineChartData, {
+                    responsive: true
+                });
+                chartDatasets = $.extend(true, {}, chart.datasets);
+            }
+            refreshData();
+        });
+
+        $('.checkbox input[type="checkbox"]').on('click', function(){
+            $(this).attr('checked', !$(this).attr('checked'))
+            refreshData();
+        });
+    });
+</script>

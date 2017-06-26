@@ -1,0 +1,208 @@
+{template 'web/header'}
+<style>
+	.star {
+		color: red;
+		margin-right: 5px;
+		font-weight: bold;
+	}
+</style>
+{if $act == 'post'}
+<form class="form-horizontal form" method="post" enctype="multipart/form-data">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			{if $id}编辑商户{else}添加商户{/if}
+		</div>
+		<div class="panel-body">
+			{if $id}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">后台网址</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<div class="form-control-static">
+						{php $shop_admin_url = $_W['siteroot'].'/addons/superman_mall/admin/index.php?shopid='.$id}
+						<p>
+							<a href="{$shop_admin_url}" target="_blank">
+								{$shop_admin_url}
+							</a>
+						</p>
+						{if !defined('LOCAL_DEVELOPMENT')}
+						<p>
+							<a href="{$shop_admin_url}" target="_blank">
+								{php echo $this->short_url($shop_admin_url)}
+							</a>
+						</p>
+						{/if}
+					</div>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			{/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"><span class="star">*</span>名称</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<input class="form-control" name="title" type="text" value="{$item['title']}">
+					<span class="help-block">商户名称最多50个字符</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="star">*</span>标志</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					{php echo tpl_form_field_image('logo', $item['logo'])}
+					<span class="help-block">商户Logo或门店图片，推荐尺寸：200x200像素</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">简介</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<textarea class="form-control" name="description">{$item['description']}</textarea>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">经营品类</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<input class="form-control" name="business_scope" type="text" value="{$item['business_scope']}">
+					<span class="help-block">经营品类信息仅作审核参考使用</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">商户地址</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					{php echo tpl_form_field_district('area', array('province' => $item['province'], 'city' => $item['city'], 'district' => $item['district']));}
+					<br/>
+					<input class="form-control" name="address" type="text" value="{$item['address']}">
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"><span class="star">*</span>地理位置</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					{php echo tpl_form_field_coordinate('location', $location);}
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">联系电话</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<input class="form-control" name="phone" type="text" value="{$item['phone']}">
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">申请人</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					{if isset($user_info)}
+					<div style="width: 3.5rem; height: 3.5rem; display: inline-block; overflow: hidden">
+						<img src="{$user_info['avatar']}" onerror="this.src='{$_W[siteroot]}/app/resource/images/heading.jpg'" style="width: 3.5rem; height: 3.5rem; overflow: hidden; border-radius: 50%;">
+					</div>
+					<span>{$user_info['nickname']}</span>
+					{else}
+					<span>无</span>
+					{/if}
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">手机号</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					{$shop_user['mobile']}
+				</div>
+			</div>
+			{if $item['createtime']}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">注册时间</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<span style="line-height: 30px;">{$item['createtime']}</span>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			{/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">提现费率</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group ">
+						<input type="text" disabled class="form-control" value="{$item['fee_rate']}">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button">%</button>
+						</span>
+					</div>
+					<span class="help-block">商户申请提现时，每笔申请提现扣除的费用，默认为空，即提现不扣费，支持填写小数</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">提现费用</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button">最低</button>
+						</span>
+						<input type="text" disabled class="form-control" value="{$item['fee_min']}">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button">元</button>
+						</span>
+					</div>
+					<div class="input-group" style="margin-top: .5rem">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button">最高</button>
+						</span>
+						<input type="text" disabled class="form-control" value="{$item['fee_max']}">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button">元</button>
+						</span>
+					</div>
+					<span class="help-block">商户提现时，提现费用的上下限，最高为空时，表示不限制扣除的提现费用<br>
+						例如：提现100元，费率5%，最低1元，最高2元，商户最终提现金额=100-2=98<br>
+						例如：提现100元，费率5%，最低1元，最高10元，商户最终提现金额=100-100*5%=95<br>
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">短信</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<input type="text" disabled class="form-control" value="{$item['sms_total']}">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button">条</button>
+						</span>
+					</div>
+					<span class="help-block">短信通知服务余额，余额不足请联系管理员充值</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+			<input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+			<input type="hidden" name="token" value="{$_W['token']}">
+			<input type="hidden" name="id" value="{$id}">
+		</div>
+	</div>
+</form>
+<script>
+	require(['jquery'], function($){
+		$('form').submit(function(){
+			var title = $('input[name=title]');
+			var logo = $('input[name=logo]');
+			var lng = $('input[name="location[lng]"]');
+			var lat = $('input[name="location[lat]"]');
+			if (title.val() == '') {
+				util.message('商户名称为空，请重新填写', '', 'error');
+				return false;
+			}
+			if (logo.val() == '') {
+				util.message('商户标志为空，请上传标志', '', 'error');
+				return false;
+			}
+			if (lng.val() == '') {
+				util.message('地理经度为空，请选择坐标', '', 'error');
+				return false;
+			}
+			if (lat.val() == '') {
+				util.message('地理纬度为空，请选择坐标', '', 'error');
+				return false;
+			}
+			return true;
+		});
+	});
+</script>
+{/if}
+{template 'web/footer'}

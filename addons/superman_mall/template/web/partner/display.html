@@ -1,0 +1,287 @@
+{if $op == 'display'}
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site">
+			<input type="hidden" name="a" value="entry">
+			<input type="hidden" name="do" value="partner">
+			<input type="hidden" name="act" value="{$_GPC['act']}">
+			<input type="hidden" name="m" value="superman_mall">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">分销等级</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<select class="form-control" name="groupid">
+						<option value="">全部</option>
+						{if $group_list}
+						{loop $group_list $group}
+						<option value="{$group['id']}" {if $_GPC['groupid'] == $group['id']}selected{/if}>{$group['title']}</option>
+						{/loop}
+						{/if}
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">状态</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<select class="form-control" name="status">
+						<option value="">全部</option>
+						<option value="1">正常</option>
+						<option value="-2">禁用</option>
+						<option value="0">待审核</option>
+						<option value="-1">等待中</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">分销商</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<input class="form-control" name="nickname" type="text" value="{$_GPC['nickname']}" placeholder="ID/昵称">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">推荐人</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<input class="form-control" name="recommend" type="text" value="{$_GPC['recommend']}" placeholder="ID/昵称">
+				</div>
+				<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<form action="" method="post">
+	<div class="panel panel-default">
+		<div class="table-responsive panel-body">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th width="60">ID</th>
+						<th>分销商</th>
+						<th width="120">姓名/手机</th>
+						<th width="100">分销等级</th>
+						<th width="60">一级</th>
+						<th width="60">二级</th>
+						<th width="60">三级</th>
+						<th width="100">累计佣金</th>
+						<th width="120">推荐人</th>
+						<th width="70">状态</th>
+						<th width="160">加入时间</th>
+						<th width="90" class="text-right">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{if $list}
+					{loop $list $li}
+					<tr>
+						<td>{$li['id']}</td>
+						<td>
+							<div style="height: 50px; padding-top: 6px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+								<img src="{php echo tomedia($li['avatar'])}" onerror="this.src='{$_W['siteroot']}/app/resource/images/heading.jpg'" style="width: 40px; height: 40px; border-radius: 50%; margin-left: .5rem; overflow: hidden" alt=""/>
+								<span style="padding-left: .3rem;">{$li['nickname']}</span>
+							</div>
+						</td>
+						<td>
+							<div>{$li['realname']}</div>
+							<div>{$li['mobile']}</div>
+						</td>
+						<td>{if isset($group_list[$li['groupid']]['title'])}{$group_list[$li['groupid']]['title']}{else}无{/if}</td>
+						<td>{$li['downline1']}</td>
+						<td>{$li['downline2']}</td>
+						<td>{$li['downline3']}</td>
+						<td>&yen;{$li['commission_total']}</td>
+						<td>
+							{if $li['recommendid'] > 0}
+							<div style="height: 50px; line-height: 50px;">
+								<img src="{php echo tomedia($li['recommend']['avatar'])}" onerror="this.src='{$_W['siteroot']}/app/resource/images/heading.jpg'" style="width: 40px; height: 40px; border-radius: 50%; margin-left: .5rem; overflow: hidden" alt=""/>
+								<span style="padding-left: .3rem">{$li['recommend']['nickname']}</span>
+							</div>
+							{else}
+							无
+							{/if}
+						</td>
+						<td>
+							<span class="{php echo SupermanUtil::get_partner_status_style($li['status'])}">{php echo SupermanUtil::get_partner_status_title($li['status'])}</span>
+						</td>
+						<td>{php echo str_replace(' ', '<span style="padding-right: .8rem"></span>', date('Y-m-d H:i:s', $li['createtime']))}</td>
+						<td style="white-space:nowrap;overflow: visible" class="text-right">
+							<div class="btn-group">
+								<a href="{php echo $this->createWebUrl('partner', array('act' => 'display', 'op' => 'post', 'id' => $li['id']))}" title="编辑" class="btn btn-default btn-sm"><i class="fa fa-edit"></i></a>
+								<a href="{php echo $this->createWebUrl('partner', array('act' => 'display', 'op' => 'delete', 'id' => $li['id']))}" onclick="return confirm('此操作不可恢复，确认吗？'); return false;" title="删除" class="btn btn-default btn-sm"><i class="fa fa-times"></i></a>
+							</div>
+						</td>
+					</tr>
+					{/loop}
+					{/if}
+				</tbody>
+			</table>
+		</div>
+		<div class="panel-footer">
+			总共 <strong>{$total}</strong> 条
+		</div>
+	</div>
+	{$pager}
+</form>
+{else if $op == 'post'}
+<form class="form-horizontal form" action="" method="post">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			编辑
+		</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">ID</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<span style="height: 34px; line-height: 34px;">
+						{$row['id']}
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">分销商</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="clear">
+						<div class="pull-left" style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+							<img src="{php echo tomedia($member['avatar'])}" onerror="this.src='{$_W['siteroot']}/app/resource/images/heading.jpg'" style="width: 100%">
+						</div>
+						<div class="pull-left" style="line-height: 40px; margin-left: 5px;" title="{$member['nickname']}">
+							{$member['nickname']}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">分销等级</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<select class="form-control" name="group">
+						<option>请选择</option>
+						{if $group_list}
+						{loop $group_list $group}
+						<option value="{$group['id']}" {if $row['groupid'] == $group['id']}selected{/if}>{$group['title']}</option>
+						{/loop}
+						{/if}
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">状态</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="status" value="0" {if $row['status'] == 0}checked{/if}> 待审核
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="status" value="1" {if $row['status'] == 1}checked{/if}> 正常
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="status" value="-2" {if $row['status'] == -2}checked{/if}> 禁用
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="status" value="-1" {if $row['status'] == -1}checked{/if}> 等待中
+						</label>
+					</div>
+					<div style="padding-top: 10px">
+						<label style="font-weight: normal;">
+							<input type="checkbox" name="send_template_message" checked> 发送模板消息（变更状态时通知审核结果）
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">姓名</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<input type="text" class="form-control" name="realname" value="{$member['realname']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">手机号</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<input type="text" class="form-control" name="mobile" value="{$member['mobile']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">一级下线</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<span style="height: 34px; line-height: 34px;">
+						{$row['downline1']}
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">二级下线</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<span style="height: 34px; line-height: 34px;">
+						{$row['downline2']}
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">三级下线</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<span style="height: 34px; line-height: 34px;">
+						{$row['downline3']}
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">累计佣金</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<span style="height: 34px; line-height: 34px;">
+						&yen;{$row['commission_total']}
+					</span>
+					<span style="padding-left: .5rem">
+						<a href="{php echo $this->createWebUrl('partner', array('act' => 'commission', 'op' => 'display','partnerid' => $row['id']));}">查看佣金记录</a>
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">可提佣金</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<span style="height: 34px; line-height: 34px;">
+						&yen;{$row['commission_balance']}
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">已提佣金</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<span style="height: 34px; line-height: 34px;">
+						&yen;{$row['commission_received']}
+					</span>
+					<span style="padding-left: .5rem">
+						<a href="{php echo $this->createWebUrl('partner', array('act' => 'getcash','nickname' => $row['id']));}">查看提现记录</a>
+					</span>
+				</div>
+			</div>
+			{if $row['recommendid'] > 0}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">推荐人</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="clear">
+						<div class="pull-left" style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+							<img src="{php echo tomedia($recommend_member['avatar'])}" onerror="this.src='{$_W['siteroot']}/app/resource/images/heading.jpg'" style="width: 100%">
+						</div>
+						<div class="pull-left" style="line-height: 40px; margin-left: 5px; width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{$recommend_member['nickname']}">
+							{$recommend_member['nickname']}
+						</div>
+					</div>
+				</div>
+			</div>
+			{/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">加入时间</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<span style="height: 34px; line-height: 34px;">
+						{php echo date('Y-m-d H:i:s', $row['createtime'])}
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group col-sm-12">
+		<input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交">
+		<input type="hidden" name="token" value="{$_W['token']}">
+	</div>
+</form>
+{/if}

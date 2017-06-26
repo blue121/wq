@@ -1,0 +1,31 @@
+<div class="main">
+	<form class="form-horizontal form" method="post" enctype="multipart/form-data">
+		<div class="alert alert-info">
+			<i class="fa fa-exclamation-circle"></i> 1. 导入订单时，如果订单号重复，则默认使用第一个订单号填写的物流公司和物流单号；<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;2. 请使用快递公司中提供的公司名称，例如快递公司一栏应该是“申通快递”，不是“申通E物流”；
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				批量发货
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">发货文件</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<input type="file" name="batch_order">
+						<span class="help-block">请<a href="{php echo MODULE_URL.'data/batch_ship.csv'}" target="_blank">下载CSV模板</a>，按照模板中的示例填写发货信息</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交">
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+<script type="text/javascript">
+	require(['jquery', 'util', 'filestyle'], function($){
+		$(".form-group").find(':file').filestyle({buttonText: '上传文件'});
+	});
+</script>

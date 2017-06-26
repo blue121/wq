@@ -1,0 +1,22 @@
+{template 'common/header'}{template 'tab'}
+<div class="main" style="background: white;">
+    <div style="padding:15px;">
+        <table class="table table-hover">
+            <thead class="navbar-inner">
+                <tr>
+                    <th>粉丝</th>					
+                    <th>提现金额</th>
+					<th>状态</th>										<th>流水号</th>					                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {loop $list $l}
+                <tr>
+                    <td><img style="width: 80px;height: 80px;" src="{$l['avatar']}"><br>{$l['nickname']}</td>
+                    <td>{$l['price']}</td>                                        <td>{if $l['status']}<label class="label label-success">已发放</label>{else}<label class="label label-default">待发放</label>{/if}</td>                                        <td>{$l['transid']}</td>                                        <td>                    	<a href="{php echo $this->createWebUrl('index',array('openid'=>$l['openid']));}" class="btn btn-default btn-sm">所有消息</a>                    	{if !$l['status']}<a onclick="return confirm('发放后，将发送红包给粉丝，确定吗？')" href="{php echo $this->createWebUrl('wcheck',array('wid'=>$l['id']));}" class="btn btn-primary btn-sm">发放</a>{/if}                    	<a onclick="return confirm('删除后将无法恢复，确定吗？')" href="{php echo $this->createWebUrl('wdel',array('wid'=>$l['id']));}" class="btn btn-danger btn-sm">删除</a>                    </td>
+                </tr>
+                {/loop}
+            </tbody>
+        </table>{$pager}
+    </div>
+</div>{template 'common/footer'}

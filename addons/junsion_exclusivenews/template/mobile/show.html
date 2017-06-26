@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="{RES}css/weui.css " />
+<link rel="stylesheet" href="{RES}css/style.css?v={TIMESTAMP}" />
+<script src="../app/resource/js/lib/jquery-1.11.1.min.js"></script>
+<title>{$_W['account']['name']}</title>
+</head>
+<body>
+<div class="header">
+{if $cfg['logo']}<img src="{php echo toimage($cfg['logo'])}" class="logo">{/if}
+	来自{$news['nickname']}的消息
+	<a class="weui_btn weui_btn_mini  weui_btn_primary rightbtn" href="{php echo $this->createMobileUrl('cover')}">{if $cfg['w_create']}{$cfg['w_create']}{else}写消息{/if}</a>
+</div>
+<div style="background: white;margin: 20px 10px;padding: 10px 5px;">
+	<div style="line-height: 40px;height: 40px;"><img class="avatar" src="{$news['avatar']}"> {$news['nickname']}<font style="float: right;">赚了 ￥{$price}</font></div>
+	<div style="margin: 5px 0;">{$news['words']}</div>
+	{if $order}
+	{template 'com_show'}
+	{else}
+	<div class="shide" onclick="location.href='{php echo $this->createMobileUrl('pay',array('nid'=>$nid))}'"><font style="position: absolute;">支付 ￥{$news['price']} 刮开</font><img src="{RES}img/hide.png"></div>
+	{php $hideword = unserialize($news['hideword'])}
+	{if $hideword['img'][0] && strstr($hideword['img'][0],$cfg['qiniuUrl']) && !strstr($hideword['img'][0],'.gif')}
+	<img style="width: 60%;margin-top: 5px" src="{$hideword['img'][0]}?imageMogr2/auto-orient/blur/50x50">
+	{/if}
+	{/if}
+	<div style="margin: 10px 0;"><span><img class="icon" src="{RES}img/smile.png"> {$good}人觉得值</span><span style="margin-left: 10px;"><img class="icon" src="{RES}img/sad.png"> {$fail}人觉得坑</span></div>
+</div>
+{if $order && $order!=1 && !$order['checked']}
+<div style="background: white;margin: 20px 10px;padding: 10px 5px;text-align: center;">
+	<div><b>你觉得这个消息值吗？</b></div>
+	<div>
+		<a class="weui_btn weui_btn_mini weui_btn_primary" onclick="return oncheck()" href="{php echo $this->createMobileUrl('check',array('nid'=>$nid,'checked'=>1))}">值了</a>
+		<a class="weui_btn weui_btn_mini weui_btn_warn" onclick="return oncheck()" href="{php echo $this->createMobileUrl('check',array('nid'=>$nid,'checked'=>-1))}" style="margin-left: 20px">巨坑</a>
+	</div>
+	<div>
+		<p style="color: gray;font-size: 13px;">{$cfg['gtips']}</p>
+		<p style="color: gray;font-size: 13px;">{$cfg['ftips']}</p>
+	</div>
+</div>
+{else}
+<a class="weui_btn weui_btn_primary" style="width: 95%;margin-top: 20px;" href="{php echo $this->createMobileUrl('cover')}">{if $cfg['w_write']}{$cfg['w_write']}{else}我也来写一条{/if}</a>
+<a class="weui_btn weui_btn_plain_default" style="width: 95%;margin-top: 20px;" href="{php echo $this->createMobileUrl('list')}">{if $cfg['w_more']}{$cfg['w_more']}{else}更多独家消息{/if}</a>
+{/if}
+{template 'share'}
+</body>
+<script>
+var i = 0;
+function oncheck(){
+	return i == 0;	
+}
+</script>
+</html>

@@ -1,0 +1,351 @@
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site">
+			<input type="hidden" name="a" value="entry">
+			<input type="hidden" name="do" value="order">
+			<input type="hidden" name="act" value="{$_GPC['act']}">
+			<input type="hidden" name="status" value="{$_GPC['status']}">
+			<input type="hidden" name="dispatch_type" value="{$_GPC['dispatch_type']}">
+			<input type="hidden" name="type" value="{$_GPC['type']}">
+			<input type="hidden" name="service_type" value="{$_GPC['service_type']}">
+			<input type="hidden" name="m" value="superman_mall">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">订单号</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<input class="form-control" name="ordersn" type="text" value="{$_GPC['ordersn']}" placeholder="支持模糊搜索">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">下单时间</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					{php echo tpl_form_field_daterange('createtime', array('start' => date('Y-m-d', $starttime),'end' => date('Y-m-d', $endtime)), '')}
+				</div>
+				<div class="pull-right col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+					<a class="btn btn-primary" target="_blank" href="{php echo $this->createWebUrl('order', array('export' => 'yes', 'ordersn' => $_GPC['ordersn'], 'title' => $_GPC['title'], 'type' => $_GPC['type'], 'status' => $_GPC['status']))}">导出订单</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<form action="" method="post">
+	<div class="panel panel-default">
+		<div class="table-responsive panel-body">
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th width="50"></th>
+					<th width="160">订单号</th>
+					<th>头像/昵称</th>
+					<th width="160">总金额</th>
+					<th width="70">件数</th>
+					<th width="80">支付方式</th>
+					{if $type == 1}
+					<th width="80">身份</th>
+					<th width="80">拼团状态</th>
+					{/if}
+					<th width="80">状态</th>
+					<th width="100">下单时间</th>
+					<th width="160" class="text-right">操作</th>
+				</tr>
+				</thead>
+				<tbody>
+				{loop $list $k $li}
+				<tr>
+					<td>
+						<input type="checkbox" name="ids[]" value="{$li['id']}">
+					</td>
+					<td>{$li['ordersn']}</td>
+					<td>
+						<div class="clear">
+							<div class="pull-left" style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+								<img src="{php echo tomedia($li['member']['avatar'])}" onerror="this.src='{$_W['siteroot']}/app/resource/images/heading.jpg'" style="width: 100%" />
+							</div>
+							<div class="pull-left" style="line-height: 40px; margin-left: 5px;" title="{$li['member']['nickname']}">
+								{if $li['member']['nickname']!=''}{$li['member']['nickname']}{else}{$li['uid']}{/if}
+							</div>
+						</div>
+					</td>
+					<td>&#165;{$li['price']}</td>
+					<td>{$li['total']}</td>
+					<td>
+						{if $li['pay_type'] == 2}
+						<button class="btn btn-default btn-xs" type="button" title="微信支付" style="border-color: #4cd964;color: #4cd964;">微信</button>
+						{else if $li['pay_type'] == 1}
+						<button class="btn btn-default btn-xs" type="button" title="余额支付" style="border-color: #ff6600;color: #ff6600;">余额</button>
+						{/if}
+					</td>
+					{if $type == 1}
+					<td>
+						{if isset($li['mgroupon']['mgid']) && $li['mgroupon']['mgid'] == 0}
+						<a href="{php echo $this->createWebUrl('order' , array('act' => 'display', 'type' => 1, 'mgid' => $li['mgid']));}" title="拼团列表" class="btn btn-default btn-xs">团长</a>
+						{/if}
+					</td>
+					<td>
+						{$li['mgroupon']['statu']}
+					</td>
+					{/if}
+					<td>
+						<span class="{php echo SupermanUtil::get_order_status_style($li['status'])}">{php echo SupermanUtil::get_order_status_title($li['status'],$li['dispatch_type'] )}</span>
+						{if in_array($li['status'], array(2, 3, 4)) && $li['express_no']}
+						<span style="display: block; margin-top: .5rem">
+							<input class="btn btn-default btn-xs get_logistics" data-order-id="{$li['id']}" data-ordersn="{$li['ordersn']}" data-express-title="{$li['express_title']}" data-express-no="{$li['express_no']}" data-toggle="modal" data-target=".quick_logistics_modal" type="button" value="查看物流">
+						</span>
+						{/if}
+					</td>
+					<td>{php echo str_replace(' ', '<br>', date('Y-m-d H:i:s', $li['createtime']))}</td>
+					<td style="white-space:nowrap;overflow: visible" class="text-right">
+						<div class="btn-group">
+							<a href="{php echo $this->createWebUrl('order', array('act' => 'post', 'id' => $li['id']));}" title="编辑" class="btn btn-default btn-sm"><i class="fa fa-edit"></i></a>
+							<a href="#" data-shopid="{$li['shopid']}" data-order-status="{$li['status']}" data-express-no="{$li['express_no']}" data-express-alias="{$li['express_alias']}" data-express-title="{$li['express_title']}" data-redirect-express-url="{$li['redirect_express_url']}" data-toggle="modal" data-orderid="{$li['id']}" {if $li['status'] < 1 || $li['status'] > 2 || $li['is_virtual']}disabled{/if} data-ordersn="{$li['ordersn']}" class="btn_quick_express btn btn-default btn-sm" data-target=".quick_express_modal" title="快递发货"><i class="fa fa-truck"></i></a>
+							<a href="javascript:;" data-url="{php echo $this->createWebUrl('order' , array('act' => 'delete', 'id' => $li['id']));}" onclick="if(confirm('此操作不可恢复，确认吗？')){$(this).attr('href', $(this).attr('data-url'));return true;}return false;" title="删除" class="btn btn-default btn-sm"><i class="fa fa-times"></i></a>
+						</div>
+					</td>
+				</tr>
+				{/loop}
+				</tbody>
+			</table>
+			{if $list}
+			<div style="padding-left: 8px;padding-top: 8px;">
+				<label style="cursor: pointer;">
+					<input type="checkbox" name="checkall"> 全选&nbsp;&nbsp;
+				</label>
+				<button type="submit" name="batch_delete" value="yes" onclick="return confirm('此操作不可恢复，确认吗？'); return false;" class="btn btn-danger btn-sm">删除订单</button>
+				<input type="hidden" name="token" value="{$_W['token']}">
+			</div>
+			{/if}
+		</div>
+		<div class="panel-footer">
+			总共 <strong>{$total}</strong> 条
+		</div>
+	</div>
+	{$pager}
+</form>
+<div class="modal fade quick_express_modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				<h4 class="modal-title">快速发货</h4>
+			</div>
+			<form action="" class="form-horizontal express_form" method="post">
+				<div class="modal-body">
+					<div class="form-group" style="min-height: 35px; line-height: 35px;">
+						<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label text-right">订单号</label>
+						<div class="col-sm-8 col-md-8 col-xs-12">
+							<span class="ordersn_show"></span>
+						</div>
+					</div>
+					<div class="form-group" style="min-height: 35px; line-height: 35px;">
+						<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label text-right">快递公司</label>
+						<div class="col-sm-8 col-md-8 col-xs-12 expressid_wrap">
+							<select class="form-control" name="expressid"></select>
+						</div>
+					</div>
+					<div class="form-group" style="min-height: 35px; line-height: 35px;">
+						<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label text-right">快递单号</label>
+						<div class="col-sm-8 col-md-8 col-xs-12">
+							<input type="text" class="form-control" name="express_no">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button name="quick_send" type="submit" value="yes" class="btn btn-primary">确认发货</button>
+					<button name="cancel_send" type="submit" value="yes" class="btn btn-danger">取消发货</button>
+					<input type="hidden" name="token" value="{$_W['token']}">
+					<input type="hidden" name="orderid">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="modal fade quick_logistics_modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header" style="padding-left: 40px;">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" style="font-size: 16px; line-height: 26px;">订单号：<span id="ordersn" style="color:#f94f00;"></span></h4>
+				<h4 class="modal-title" style="font-size: 16px; line-height: 26px;">快递公司：<span id="express_title" style="color:#f94f00;"></span></h4>
+				<h4 class="modal-title" style="font-size: 16px; line-height: 26px;">快递单号：<span id="express_no" style="color:#f94f00;"></span></h4>
+			</div>
+			<div class="modal-body" style="height: 330px; overflow-y: scroll; padding-left: 40px; padding-right: 40px;">
+				<style>
+					.time_axis_wrap {
+						list-style: none;
+						padding-left: 0;
+					}
+					.time_axis_wrap li {
+						position: relative;
+						height: auto;
+						min-height: 30px;
+						border-left: 2px solid #d9d9d9;
+						padding-left: 20px;
+						margin-bottom: -2px;
+						padding-bottom: 15px;
+					}
+					.time_axis_wrap li:before {
+						content: '';
+						border: 3px solid #d9d9d9;
+						background-color: #d9d9d9;
+						display: inline-block;
+						width: 10px;
+						height: 10px;
+						border-radius: 5px;
+						margin-left: -26px;
+						margin-right: 10px;
+						position: absolute;
+						top: 0;
+					}
+					.time_axis_wrap .active:before {
+						border: 3px solid #ff0000;
+						background-color: #ff0000;
+					}
+					.time_axis_wrap li:last-child {
+						border-left: 0;
+						margin-left: 2px;
+						padding-bottom: 0;
+					}
+					.time_axis_wrap li:last-child hr {
+						border-top: 0;
+					}
+					.time_axis_wrap li span {
+						margin-bottom: 15px; display: block
+					}
+					.time_axis_wrap li hr {
+						margin: 0;
+					}
+				</style>
+				<ul class="time_axis_wrap"></ul>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	require(['jquery', 'bootstrap'],function($){
+		$('.btn_quick_express').click(function () {
+			var t = this;
+			var shopid = $(t).attr('data-shopid');
+			var url = window.location.href;
+			var ordersn = $(t).attr('data-ordersn');
+			var orderid = $(t).attr('data-orderid');
+			var express_no = $(t).attr('data-express-no');
+			var order_status = $(t).attr('data-order-status');
+			var express_alias = $(t).attr('data-express-alias');
+			var express_title = $(t).attr('data-express-title');
+			var redirect_express_url = $(t).attr('data-redirect-express-url');
+			if (express_title != '' && express_no != '') {
+				$('select[name=expressid]').html('<option selected>'+express_title+'</option>');
+				$('.no_express').remove();
+				$('.expressid_wrap').html('<select class="form-control" name="expressid"><option selected>'+express_title+'</option></select>');
+			} else {
+				$.ajax({
+					type: 'post',
+					url: url,
+					dataType: 'json',
+					data: 'get_shop_express=1&id='+shopid,
+					success: function (resp) {
+						if (resp.length > 0) {
+							$('.no_express').remove();
+							$('.expressid_wrap').html('<select class="form-control" name="expressid"><option selected>'+express_title+'</option></select>');
+							var html = '<option value="-1">请选择</option>', item, selected = '';
+							for (var i=0; i<resp.length; i++) {
+								item = resp[i];
+								if (express_alias == item['alias']) {
+									selected = ' selected ';
+								} else {
+									selected = '';
+								}
+								html += '<option value='+item['id']+' '+selected+'>'+item['title']+'</option>';
+							}
+							$('select[name=expressid]').html(html);
+						} else {
+							$('select[name=expressid]').parent().html('<span class="no_express">还没有选择快递公司 <a target="_blank" href="'+redirect_express_url+'">点击选择</a></span>');
+						}
+					}
+				});
+			}
+			$('.ordersn_show').html(ordersn);
+			$('input[name=orderid]').val(orderid);
+			if (order_status == 1) {
+				$('button[name=quick_send]').show();
+				$('button[name=cancel_send]').hide();
+				$('input[name=express_no]').val(express_no).prop('disabled', false);
+				$('select[name=expressid]').prop('disabled', false);
+			}
+			if (order_status == 2) {
+				$('button[name=cancel_send]').show();
+				$('button[name=quick_send]').hide();
+				$('input[name=express_no]').val(express_no).prop('disabled', true);
+				$('select[name=expressid]').prop('disabled', true);
+			}
+		});
+		$('.express_form').submit(function(){
+			var expressid = $('select[name=expressid]');
+			if (expressid.val() == '' || expressid.val() < 0 || $('.no_express').length > 0) {
+				util.message('请选择快递公司', '', 'error');
+				return false;
+			}
+			var express_no = $('input[name=express_no]');
+			if (express_no.val() == '') {
+				util.message('快递单号为空，请重新填写', '', 'error');
+				return false;
+			}
+			return true;
+		});
+		$('input[name=checkall]').click(function(){
+			if ($(this).prop('checked')) {
+				$('input[type=checkbox]').prop('checked', true);
+			} else {
+				$('input[type=checkbox]').prop('checked', false);
+			}
+		});
+
+		//插入物流信息
+		function addItems(data) {
+			var html = '', item;
+			for (var i = 0; i < data.length; i++) {
+				item = data[i];
+				if (i == 0) {
+					html += '<li class="active">';
+				} else {
+					html += '<li>';
+				}
+				html += '<div>'+item['context']+'</div>';
+				html += '<span class="text-muted">'+item['time']+'</span>';
+				html += '<hr/>';
+				html += '</li>';
+			}
+			$('.time_axis_wrap').html(html);
+		}
+		//获取物流信息
+		$('.get_logistics').click(function () {
+			var orderid = $(this).attr('data-order-id');
+			var ordersn = $(this).attr('data-ordersn');
+			var express_title = $(this).attr('data-express-title');
+			var express_no = $(this).attr('data-express-no');
+			var url = window.location.href;
+			$('#ordersn').html(ordersn);
+			$('#express_title').html(express_title);
+			$('#express_no').html(express_no);
+			$.ajax({
+				url: url,
+				type: 'post',
+				data: 'get_logistics=1&orderid='+orderid,
+				dataType: 'json',
+				success: function(resp) {
+					if (resp['data'].length > 0) {
+						addItems(resp['data']);
+					} else {
+						$('.time_axis_wrap').html('物流单号有误或暂时没有数据');
+					}
+				}
+			})
+		});
+
+	})
+</script>

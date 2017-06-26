@@ -1,0 +1,10 @@
+{template 'common/header'}
+{if is_error($plugin_permission)}
+<div class="alert alert-danger">{$plugin_permission['message']}</div>
+{else}
+<ul class="nav nav-tabs">
+    <li {if $act == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('tbast', array('act' => 'display'));}">淘宝助手</a></li>
+</ul>
+{template $this->do.'/'.$this->act}
+{/if}
+{template 'common/footer'}

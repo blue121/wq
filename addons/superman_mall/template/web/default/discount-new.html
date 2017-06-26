@@ -1,0 +1,22 @@
+<div class="row" style="margin-bottom: 1rem">
+	<div class="col-sm-11 col-md-11 col-xs-11" style="padding: 0">
+		<div class="input-group">
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button">订单满</button>
+			</span>
+			<input type="number" step="0.01" name="limit[]" class="form-control">
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button" style="border-radius: 0; border-left: 0; border-right: 0">元  立减</button>
+			</span>
+			<input type="number" step="0.01" name="minus[]" class="form-control">
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button">元</button>
+			</span>
+		</div>
+	</div>
+	<div class="col-sm-1 col-md-1 col-xs-1">
+		<a href="javascript:;" data-toggle="tooltip" class="btn btn-danger" onclick="deleteLimitMinus(this)" title="删除" data-id="0">
+			<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 删除
+		</a>
+	</div>
+</div>

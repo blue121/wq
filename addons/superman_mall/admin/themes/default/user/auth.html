@@ -1,0 +1,54 @@
+{template 'common/header-base'}
+    <style>
+        body {
+            padding-top: 120px;
+            padding-bottom: 40px;
+            background-color: #f6f6f6;
+        }
+        .container {
+            width: 480px;
+            padding: 0;
+        }
+        .select_shop_wrap {
+            padding: 30px;
+            background: #fff;
+            font-size: 14px;
+            border-radius: 2px;
+            box-shadow: 0 2px 3px rgba(213,213,213,0.7);
+        }
+        .select_shop_wrap form label {
+            width: 100%;
+        }
+        .select_shop_info {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <div class="container">
+        <div class="select_shop_wrap">
+            <div class="select_shop_info text-center">
+                请选择
+            </div>
+            <form action="" method="post">
+                <ul class="list-group">
+                    {if $list}
+                    {loop $list $key $li}
+                    <li class="list-group-item">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="key" value="{$key}" {if $key == 0}checked{/if}>
+                                {$li['username']}
+                                <span class="badge pull-right">{$li['shop']['title']}</span>
+                            </label>
+                        </div>
+                    </li>
+                    {/loop}
+                    {/if}
+                </ul>
+                <button class="btn btn-lg btn-primary btn-block" type="submit" id="submit" name="submit" value="登录">登录</button>
+                <input name="token" value="{$_W['token']}" type="hidden" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

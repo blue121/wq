@@ -1,0 +1,93 @@
+<div class="main">
+	<form class="form-horizontal form" id="setting_form" action="" method="post" enctype="multipart/form-data">
+		{if $_W['account']['level'] < 3}
+		<div class="alert alert-danger">
+			已认证公众号可以设置以下分享参数，否则没有权限调用分享接口，或者可以借用其它公众号权限
+			<a href="{php echo url('profile/jsauth')}" target="_blank">去借一下</a>
+		</div>
+		{/if}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				商城分享参数
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">标题</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<input type="text" class="form-control" name="setting[system][title]" value="{$setting['system']['title']}" />
+						<span class="help-block">推荐字数为13个汉字</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">图片</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						{php echo tpl_form_field_image('setting[system][imgurl]', $setting['system']['imgurl'])}
+						<span class="help-block">推荐图片尺寸为：200x200像素</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">描述</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<textarea name="setting[system][desc]" rows="4" class="form-control">{$setting['system']['desc']}</textarea>
+						<span class="help-block"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				拼团分享参数
+			</div>
+			<div class="panel-body">
+				<div class="alert alert-info">
+					<div class="row" id="super_var_wrap">
+						<div class="col-xs-12 col-sm-12 col-md-12" style="color: #777">变量</div>
+						<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##标题##}</strong> 表示商品标题，默认为订单中第1个商品标题 <a data-content="{##标题##}" href="javascript:;" title="点击复制">点击复制</a></div>
+						<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##人数##}</strong> 表示该拼团还差几人 点击复制 <a data-content="{##人数##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					</div>
+				</div>
+				<script>
+					require(['jquery', 'util'], function($, u){
+						$('#super_var_wrap a').each(function(){
+							var t = this;
+							u.clip(t, $(t).attr('data-content'));
+						});
+					});
+				</script>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">标题</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<input type="text" class="form-control" name="setting[mgroupon][title]" value="{$setting['mgroupon']['title']}" />
+						<span class="help-block">推荐字数为13个汉字 <span style="color: red">支持变量</span></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">图片</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						{php echo tpl_form_field_image('setting[mgroupon][imgurl]', $setting['mgroupon']['imgurl'])}
+						<span class="help-block">推荐图片尺寸为：200x200像素，该项留空时默认调用该用户拼团订单中第1个商品图片
+</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">描述</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<textarea name="setting[mgroupon][desc]" class="form-control">{$setting['mgroupon']['desc']}</textarea>
+						<span class="help-block" style="color: red">支持变量</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input name="token" type="hidden" value="{$_W['token']}" />
+			<input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交" />
+		</div>
+	</form>
+</div>
+<script>
+	require(['jquery', 'util'], function($){
+		$('#setting_form').submit(function(){
+			return true;
+		});
+	});
+</script>

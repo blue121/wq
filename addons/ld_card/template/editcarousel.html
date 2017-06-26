@@ -1,0 +1,49 @@
+{template 'common/header'}
+<style type="text/css">
+	.title{
+		text-align: right;
+		margin-right:20px;
+	}
+</style>
+<ul class="nav nav-tabs">
+	<li role="presentation"><a href="{php echo $this->createweburl('index')}">幻灯片管理</a></li>
+	<li role="presentation" class="active"><a href="">编辑幻灯片</a></li>
+</ul>
+<div class="contarnar">
+	<form action="" class="form-horizantal" method="post">
+		
+			<div class="title col-sm-3">
+				<label for="" class="title control-label">标题</label>
+			</div>
+			
+			<div class="input-group col-sm-8">
+				<input type="text" value="{$carousel['title']}" name="title" class="form-control">
+				<span class="help-block">幻灯片标题，18个字以内</span>
+			</div>
+		
+			<div class="title col-sm-3">
+				<label for="" class="title control-label">添加图片</label>
+			</div>
+			
+			<div class="input-group col-sm-8">
+				{php echo tpl_form_field_image("img",$carousel['img']);}
+				<span class="help-block">600*320</span>
+			</div>
+		
+			<div class="title col-sm-3">
+				<label for="" class="title control-label">幻灯片链接</label>
+			</div>
+			
+			<div class="input-group col-sm-8">
+				<input type="text" value="{$carousel['href']}" name="href" class="form-control">
+				<span class="help-block">http://开头</span>
+			</div>
+			<div class="col-sm-2 col-sm-offset-2">
+				<input type="submit" name="submit" value="提交" class="btn btn-primary">
+				<input type="hidden" name="token" value="{$_W['token']}">				
+			</div>
+
+	</form>
+</div>
+
+{template 'common/footer'}

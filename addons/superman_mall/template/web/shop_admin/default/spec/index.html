@@ -1,0 +1,15 @@
+{template 'common/header'}
+<style>
+    .star {
+        color: red;
+        margin-right: 5px;
+        font-weight: bold;
+    }
+</style>
+<ul class="nav nav-tabs">
+    <li {if $act == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('spec');}">商品规格</a></li>
+    <li {if $act == 'post' && !$_GPC['id']}class="active"{/if}><a href="{php echo $this->createWebUrl('spec', array('act' => 'post'));}">添加规格</a></li>
+    {if $_GPC['id']}<li {if $act == 'post'}class="active"{/if}><a href="{php echo $this->createWebUrl('spec', array('act' => 'post', 'id' => $id));}">编辑规格</a></li>{/if}
+</ul>
+{template $this->do.'/'.$this->act}
+{template 'common/footer'}

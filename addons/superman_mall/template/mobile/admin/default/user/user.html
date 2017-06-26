@@ -1,0 +1,34 @@
+<div class="page-group">
+    <div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+        {template 'common/nav'}
+        {template 'common/title'}
+        <div class="content">
+            <div class="list-block media-list">
+                <ul>
+                    {if $list}
+                    {loop $list $li}
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'user.post', 'id' => $li['id']));}" class="item-link item-content">
+                            <div class="item-media">
+                                <img class="user_avatar" src="{php echo tomedia($li['avatar'])}" onerror="this.src='resource/images/heading.jpg'">
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title-row">
+                                    <div class="item-title font7">{$li['username']}</div>
+                                    <div class="item-after font7">{$li['group_title']}</div>
+                                </div>
+                                <div class="item-title-row">
+                                    <div class="item-title font6 color-gray">{$li['remark']}</div>
+                                    <div class="item-after font7">{$li['status_title']}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    {/loop}
+                    {/if}
+                </ul>
+            </div>
+        </div>
+        {template 'common/share'}
+    </div>
+</div>

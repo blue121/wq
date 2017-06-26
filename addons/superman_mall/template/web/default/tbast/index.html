@@ -1,0 +1,7 @@
+{template 'header'}
+{template 'common/shop-nav'}
+<ul class="nav nav-tabs">
+    <li {if $act == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('tbast', array('act' => 'display'));}">淘宝助手</a></li>
+</ul>
+{template 'tbast/'.$act}
+{template 'footer'}

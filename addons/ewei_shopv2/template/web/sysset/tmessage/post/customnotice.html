@@ -1,0 +1,204 @@
+<div class="row">
+    <div class="col-sm-8">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">输入文字内容</label>
+            <div class="col-sm-9 col-xs-12">
+                <textarea name="send_desc" style="height: 150px;resize: none;" class="form-control" placeholder='支持<a href=""></a>标签' name="content" id="content">{$list['send_desc']}</textarea>
+                <div class="edit" style="width: 100%;height: 30px;border-bottom:1px solid #e5e6e7;border-left:1px solid #e5e6e7;border-right:1px solid #e5e6e7;">
+                    <div style="width: 30px;height: 30px;float: left;margin-left: 20px">
+                        <a href="javascript:" id="btn" title="插入emoji">
+                            <img src="../addons/ewei_shopv2/static/images/emoji.png" width="18px" height="18px" style="margin-top: 7px;">
+                        </a>
+                    </div>
+                    <div style="width: 30px;height: 30px;float: left;margin-left: 20px">
+                        <a href="javascript:" id="emotion" title="插入表情">
+                            <img src="../addons/ewei_shopv2/static/images/qq.png" width="18px" height="18px" style="margin-top: 7px;">
+                        </a>
+                    </div>
+                    <div style="width: 30px;height: 30px;float: left;margin-left: 20px">
+                        <a href="javascript:" id="link" title="插入链接">
+                            <img src="../addons/ewei_shopv2/static/images/link.png" width="18px" height="18px" style="margin-top: 7px;">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4" >
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <select class="form-control" onclick="$('.tm').hide();$('.tm-' + $(this).val()).show()">
+                    <option value="">选择模板变量类型</option>
+                    <option value="order">订单类</option>
+                    <option value="upgrade">升级类</option>
+                    <option value="rw">充值提现类</option>
+                    {if cv('commission')}
+                    <option value="commission">分销类</option>
+                    {/if}
+                </select>
+            </div>
+            <div class="panel-body tm tm-upgrade" style="display:none">
+                <a href='JavaScript:' class="btn btn-default  btn-sm ">商城名称</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">粉丝昵称</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">旧等级</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">新等级</a>
+            </div>
+            <div class="panel-heading tm tm-rw" style="display:none">充值</div>
+
+            <div class="panel-body tm tm-rw" style="display:none">
+                <a href='JavaScript:' class="btn btn-default  btn-sm">支付方式</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">充值金额</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">充值时间</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">赠送金额</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">实际到账</a>
+            </div>
+
+            <div class="panel-heading tm tm-rw" style="display:none">充值退款</div>
+            <div class="panel-body tm tm-rw" style="display:none">
+                <a href='JavaScript:' class="btn btn-default  btn-sm">支付方式</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">充值金额</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">充值时间</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">赠送金额</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">实际到账</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">退款金额</a>
+            </div>
+
+            <div class="panel-heading tm tm-rw" style="display:none">提现</div>
+            <div class="panel-body tm tm-rw" style="display:none">
+                <a href='JavaScript:' class="btn btn-default  btn-sm">提现金额</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">提现时间</a>
+            </div>
+            <div class="panel-heading tm tm-order" style="display:none">
+                订单信息
+            </div>
+            <div class="panel-body tm tm-order" style="display:none">
+                <a href='JavaScript:' class="btn btn-default  btn-sm">商城名称</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">粉丝昵称</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">订单号</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">订单金额</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">运费</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">商品详情</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">单品详情</a>(单品商家下单通知变量)
+                <a href='JavaScript:' class="btn btn-default btn-sm">快递公司</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">快递单号</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">购买者姓名</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">购买者电话</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">收货地址</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">下单时间</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">支付时间</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">发货时间</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">收货时间</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">门店</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">门店地址</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">门店联系人</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">门店营业时间</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">虚拟物品自动发货内容</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">虚拟卡密自动发货内容</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">自提码</a>
+
+            </div>
+            <div class="panel-heading tm tm-order" style="display:none">
+                售后相关
+            </div>
+            <div class="panel-body tm tm-order" style="display:none">
+                <a href='JavaScript:' class="btn btn-default btn-sm">售后类型</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">申请金额</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">退款金额</a>
+
+                <a href='JavaScript:' class="btn btn-default btn-sm">退货地址</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">换货快递公司</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">换货快递单号</a>
+
+            </div>
+            <div class="panel-heading tm tm-order" style="display:none">
+                订单状态更新
+            </div>
+            <div class="panel-body tm tm-order" style="display:none">
+                <a href='JavaScript:' class="btn btn-default btn-sm">粉丝昵称</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">订单编号</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">原收货地址</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">新收货地址</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">订单原价格</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">订单新价格</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">修改时间</a>
+            </div>
+
+            <div class="panel-heading tm tm-commission" style="display:none">成为下级或分销商</div>
+            <div class="panel-body tm tm-commission" style="display:none">
+                <a href='JavaScript:' class="btn btn-default btn-sm">昵称</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">时间</a>
+            </div>
+            <div class="panel-heading tm tm-commission" style="display:none">新增下线通知</div>
+            <div class="panel-body tm tm-commission" style="display:none">
+                <a href='JavaScript:' class="btn btn-default btn-sm">下线层级</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">下级昵称</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">时间</a>
+            </div>
+            <div class="panel-heading tm tm-commission" style="display:none">下级付款类</div>
+            <div class="panel-body tm tm-commission" style="display:none">
+                <a href='JavaScript:' class="btn btn-default btn-sm">下级昵称</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">订单编号</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">订单金额</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">商品详情</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">佣金金额</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">时间</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">下线层级</a>
+            </div>
+            <div class="panel-heading tm tm-commission" style="display:none">提现申请和佣金打款类</div>
+            <div class="panel-body tm tm-commission" style="display:none">
+                <a href='JavaScript:' class="btn btn-default btn-sm">昵称</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">时间</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">金额</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">提现方式</a>
+            </div>
+            <div class="panel-heading tm tm-commission" style="display:none">分销商等级升级通知</div>
+            <div class="panel-body tm tm-commission" style="display:none">
+                <a href='JavaScript:' class="btn btn-default btn-sm">昵称</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">时间</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">旧等级</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">旧一级分销比例</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">旧二级分销比例</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">旧三级分销比例</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">新等级</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">新一级分销比例</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">新二级分销比例</a>
+                <a href='JavaScript:' class="btn btn-default btn-sm">新三级分销比例</a>
+            </div>
+
+            <div class="panel-body">
+                点击变量后会自动插入选择的文本框的焦点位置，在发送给粉丝时系统会自动替换对应变量值
+                <div class="text text-danger">
+                    注意：以上模板消息变量只适用于系统类通知，会员群发工具不适用
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    require(['jquery','util'], function($, util){
+        $(function(){
+            $('#btn').click(function(){
+                util.emojiBrowser(function(emoji){
+                    var text = '[U+'+emoji[0].text+']';
+                    var content = $('#content').val()+text;
+                    $('#content').val(content);
+
+                });
+            });
+        });
+
+        $(function(){
+            util.emotion($('#emotion'), $('#content'));
+        });
+
+        $(function () {
+            $('#link').click(function () {
+                var link='<a href="您要插入的链接">链接文字</a>';
+                var content = $('#content').val()+link;
+                $('#content').val(content);
+            });
+        });
+    });
+</script>

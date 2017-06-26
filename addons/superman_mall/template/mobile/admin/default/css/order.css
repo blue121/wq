@@ -1,0 +1,78 @@
+.superpage_order .order_wrap {
+    margin: .5rem 0;
+    padding: 0;
+}
+.superpage_order .order_list_wrap {
+    margin: .5rem 0;
+}
+.superpage_order .order_list_wrap .mgroupon_success {
+    display: inline-block;
+    height: 2.2rem;
+    overflow: hidden;
+    border-radius: 50%;
+    /*margin-top: 1.3rem;*/
+    position: absolute;
+    right: 0;
+    bottom: 2.2rem;
+    margin-right: .5rem;
+    z-index: 1;
+}
+.superpage_order .order_list_wrap .mgroupon_success img {
+    width: 2.2rem;
+}
+.superpage_order .order_list_wrap .item_img {
+    width: 2rem;
+    height: 2rem;
+}
+.superpage_order .order_list_wrap .order_item_title {
+    color: #5f646e;
+}
+.superpage_order .down_icon {
+    transform:rotate(180deg);
+    -webkit-transform:rotate(180deg);
+    display: inline-block;
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
+.superpage_order .express_info_wrap, .superpage_order .order_info_wrap {
+    margin: .5rem 0;
+}
+.superpage_order .order_item_img {
+    width: 2rem;
+    height: 2rem;
+}
+/*send*/
+.superpage_order .order_send_wrap .address_info {
+    margin: .5rem 0;
+}
+.superpage_order .order_send_wrap .express_wrap {
+    margin: 0;
+    padding: 0;
+}
+.superpage_order .order_send_wrap .express_wrap .tab .list-block {
+    margin: 0;
+}
+.superpage_order .order_send_wrap .order_send_info {
+    margin: .5rem 0;
+    padding-bottom: 2.5rem;
+}
+.superpage_order .order_log {
+    margin-left: 0;
+    padding-top: .5rem;
+}
+.superpage_order .order_send_wrap .no_express {
+    min-height: 4.4rem;
+}
+.superpage_order .edit_price {
+    border-right: 1px #ccc solid;
+}
+.superpage_order .send_btn {
+    display: block;
+}
+.order_type_wrap .active {
+    color: #0894ec;
+}
+.popup-more .content-block {
+    margin-top: 2.2rem;
+    padding: 0;
+}

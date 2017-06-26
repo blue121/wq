@@ -1,0 +1,31 @@
+{template 'web/header'}
+{if $act!='overview'}
+<ul class="nav nav-tabs">
+	<li class="{if $act == 'display' && $status == 'all' && $dispatch_type!=2 && $type==0}active{/if}"><a href="{php echo $this->createWebUrl('order',array('status' => 'all', 'dispatch_type' => 'all'));}">全部订单</a></li>
+	<!--<li class="{if $status=='-2'}active{/if}"><a href="{php echo $this->createWebUrl('order', array('status'=> '-2'))}">已删除</a></li>-->
+	<li class="{if $status=='-5'}active{/if}"><a href="{php echo $this->createWebUrl('order', array('status'=> '-5'))}">已退款</a></li>
+	<li class="{if $status=='-1'}active{/if}"><a href="{php echo $this->createWebUrl('order', array('status'=> '-1'))}">已取消</a></li>
+	<li class="{if $status=='0'}active{/if}"><a href="{php echo $this->createWebUrl('order', array('status'=> '0'))}">待支付</a></li>
+	<li class="{if $status=='-4'}active{/if}"><a href="{php echo $this->createWebUrl('order', array('status'=> '-4'))}">申请退款</a></li>
+	<li class="{if $status=='1'}active{/if}"><a href="{php echo $this->createWebUrl('order', array('status'=> '1'))}">待发货</a></li>
+	<li class="{if $status=='2'}active{/if}"><a href="{php echo $this->createWebUrl('order', array('status'=> '2'))}">已发货</a></li>
+	<li class="{if $status=='3'}active{/if}"><a href="{php echo $this->createWebUrl('order', array('status'=> '3', 'dispatch_type' => 'all'))}">已收货</a></li>
+	<li class="{if $status=='4'}active{/if}"><a href="{php echo $this->createWebUrl('order', array('status'=> '4'))}">已完成</a></li>
+	<li class="{if $dispatch_type=='2'}active{/if}"><a href="{php echo $this->createWebUrl('order', array('dispatch_type'=> '2'))}">待自提</a></li>
+	<li class="{if $type=='1'}active{/if}"><a href="{php echo $this->createWebUrl('order', array('type'=> '1'))}">拼团</a></li>
+	<li {if $act == 'refund'}class="active"{/if}><a href="{php echo $this->createWebUrl('order', array('act' => 'refund', 'service_type' => 1));}">售后管理</a></li>
+	<li {if $act == 'express'}class="active"{/if}><a href="{php echo $this->createWebUrl('order', array('act' => 'express'));}">快递公司</a></li>
+	<li {if $act == 'batch'}class="active"{/if}><a href="{php echo $this->createWebUrl('order', array('act' => 'batch'));}">批量发货</a></li>
+	{if $act=='refund-post'&&$_GPC['srvid']}<li {if $act == 'refund-post'}class="active"{/if}><a href="{php echo $this->createWebUrl('order', array('act' => 'refund-post', 'srvid' => $srvid));}">编辑退款</a></li>{/if}
+	{if $act=='post'&&$_GPC['id']}<li {if $act == 'post'}class="active"{/if}><a href="{php echo $this->createWebUrl('order', array('act' => 'post', 'id' => $id));}">编辑订单</a></li>{/if}
+</ul>
+{/if}
+<style>
+	.text-overflow {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+</style>
+{template 'web/shop_admin/order/'.$act}
+{template 'web/footer'}

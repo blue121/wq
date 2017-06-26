@@ -1,0 +1,37 @@
+{template 'web/header'}
+{if $act == 'base'}
+	{template 'web/platform-base'}
+{else if $act == 'seo'}
+	{template 'web/platform-seo'}
+{else if $act == 'share'}
+	{template 'web/platform-share'}
+{else if $act == 'slide'}
+	{template 'web/platform-slide'}
+{else if $act == 'notice'}
+	{template 'web/platform-notice'}
+{else if $act == 'service'}
+	{template 'web/platform-service'}
+{else if $act == 'nav'}
+	{template 'web/platform-nav'}
+{else if $act == 'homead'}
+	{template 'web/platform-homead'}
+{else if $act == 'subscribe'}
+	{template 'web/platform-subscribe'}
+{else if $act == 'plugin'}
+	{template 'web/platform-plugin'}
+{else if $act == 'sms'}
+	{template 'web/platform-sms'}
+{else if $act == 'getcash'}
+	{template 'web/platform-getcash'}
+{else if $act == 'paycert'}
+	{template 'web/platform-paycert'}
+{else if $act == 'shop'}
+	{template 'web/platform-shop'}
+{else if $act == 'order'}
+	{template 'web/platform-order'}
+{else if $act == 'discount'}
+	{template 'web/platform-discount'}
+{else if $act == 'express'}
+	{template 'web/platform-express'}
+{/if}
+{template 'web/footer'}

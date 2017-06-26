@@ -1,0 +1,46 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+		{template 'common/nav'}
+		{if $act == 'display'}
+		{template 'common/title'}
+		<div class="content infinite-scroll" data-flag="0" data-display-url="{php echo $this->createMobileUrl('creditlog', array('load' => 'infinite', 'credittype' => $credittype))}" data-distance="50" data-page="{$pindex}" data-credit-title="{$credit_titles[$credittype]['title']}">
+			<div class="list-block media-list item_list">
+				{if $list}
+				<ul>
+					{loop $list $li}
+					<li>
+						<a href="#" class="item-content">
+							<div class="item-inner">
+								<div class="item-title-row">
+									<div class="item-title font8 color-default creditlog_title">{if $li['remark']!=''}{$li['remark']}{else}系统操作{/if}</div>
+									<div class="font8 color-danger text-strong">{$li['num']}<span class="font6">{$credit_titles[$credittype]['title']}</span></div>
+								</div>
+								<div class="item-subtitle font6 color-gray">{$li['createtime']}</div>
+							</div>
+						</a>
+					</li>
+					{/loop}
+				</ul>
+				{else}
+				<div class="text-center color-gray font7 msg_tips">
+					{if $_W['member']['uid']}
+					<span>没有明细数据</span>
+					{else}
+					<span>登录后可查看收支明细</span>
+					<a href="{php echo url('auth/login', array('forward' => base64_encode($_SERVER['QUERY_STRING'])))}" class="external">登录</a>
+					{/if}
+				</div>
+				{/if}
+				<div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+			</div>
+			{if count($list)==$pagesize}
+			<div class="infinite-scroll-preloader">
+				<div class="preloader"></div>
+			</div>
+			{/if}
+		</div>
+		{/if}
+	</div>
+</div>
+{template 'common/footer'}

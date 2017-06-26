@@ -1,0 +1,8 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+    <li class="{if $act == 'display'}active{/if}"><a href="{php echo $this->createWebUrl('delivery',array('act' => 'display'));}">自定义配送</a></li>
+    <li class="{if $act == 'post' && !$_GPC['id']}active{/if}"><a href="{php echo $this->createWebUrl('delivery', array('act' => 'post'))}">添加</a></li>
+    {if $act == 'post' && $_GPC['id']}<li class="active"><a href="{php echo $this->createWebUrl('delivery', array('act' => 'post', 'id' => $_GPC['id']))}">编辑</a></li>{/if}
+</ul>
+{template $this->do.'/'.$this->act}
+{template 'common/footer'}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="{RES}css/weui.css" />
+<link rel="stylesheet" href="{RES}css/style.css" />
+<script src="../app/resource/js/lib/jquery-1.11.1.min.js"></script>
+<title>{$_W['account']['name']}</title>
+</head>
+<body>
+<div class="header">
+	{if $cfg['logo']}<img class="logo" src="{php echo toimage($cfg['logo'])}">{/if}
+	{$cfg['w_more']}
+	<a class="weui_btn weui_btn_mini  weui_btn_primary rightbtn" href="{php echo $this->createMobileUrl('cover')}">{if $cfg['w_create']}{$cfg['w_create']}{else}写消息{/if}</a>
+</div>
+<div id="list">
+{loop $news $n}
+<div class="list_item" onclick="location.href='{php echo $this->createMobileUrl('show',array('nid'=>$n['id']))}'">
+	<div style="line-height: 40px;height: 40px;"><img class="avatar" src="{$n['avatar']}"> {$n['nickname']}<font style="float: right;">赚了 ￥{$n['all']}</font></div>
+	<div style="margin: 5px 0;">{$n['words']} <div class="mhide">{if $n['open']}免费刮开{else}支付 ￥{$n['price']} 刮开{/if}</div></div>
+	{php $hideword = unserialize($n['hideword'])}
+	{if $hideword['img'][0] && strstr($hideword['img'][0],$cfg['qiniuUrl']) && !strstr($hideword['img'][0],'.gif')}
+	<img style="width: 60%;" src="{$hideword['img'][0]}?imageMogr2/auto-orient/blur/50x50">
+	{/if}
+	<div style="margin: 10px 0;"><span><img class="icon" src="{RES}img/smile.png"> {$n['good']}人觉得值</span><span style="margin-left: 10px;"><img class="icon" src="{RES}img/sad.png"> {$n['fail']}人觉得坑</span></div>
+</div>
+{/loop}
+</div>
+<script>
+//下拉加载
+var range = 50; //距下边界长度/单位px
+var pageNo = 2;
+var totalheight = 0;
+var container = $("#list");
+var loading = false;
+$(window).scroll(function(){
+	if(loading) return;
+    var srollPos = $(window).scrollTop(); //滚动条距顶部距离(页面超出窗口的高度)
+    totalheight = parseFloat($(window).height()) + parseFloat(srollPos);
+    if(($(document).height()-range) <= totalheight && pageNo > 1) {
+    	loading = true;
+ 		$.ajax({
+ 			url:'{php echo $this->createMobileUrl("more",array("status"=>$status))}',
+ 			type:'post',
+ 			data:{pageNo:pageNo},
+ 			success:function(data){
+ 				if(data != '1'){
+ 					data = JSON.parse(data);
+ 					$.each(data, function(i, item){     
+ 					    var str = "<div class='list_item' onclick='onlink("+item['id']+")'>";
+ 					    str += "<div style='line-height: 40px;height: 40px;'><img class='avatar' src='"+item['avatar']+"'> "+item['nickname']+"<font style='float: right;'>赚了 ￥"+item['all']+"</font></div>";
+ 					    str += '<div style="margin: 5px 0;">'+item['words']+' <div class="mhide">支付 ￥'+item['price']+' 刮开</div></div>';
+ 					    if(item['img']){
+ 					    	str += '<img style="width: 60%;" src="'+item['img']+'">';
+ 					    }
+ 					    str += '<div style="margin: 10px 0;"><span><img class="icon" src="{RES}img/smile.png"> '+item['good']+'人觉得值</span><span style="margin-left: 10px;"><img class="icon" src="{RES}img/sad.png"> '+item['fail']+'人觉得坑</span></div>';
+ 						container.append(str);
+ 					});  
+ 					pageNo++;
+ 					
+ 				}else pageNo = 0;
+ 				loading = false;
+ 			}
+ 		});
+		
+    }            
+});
+function onlink(nid){
+	location.href="{php echo $this->createMobileUrl('show')}&nid="+nid;
+}
+</script>
+{template 'share'}
+{template 'footer'}
+</body>
+</html>

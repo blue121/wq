@@ -1,0 +1,75 @@
+<div class="main">
+	<form class="form-horizontal form" id="setting_form" action="" method="post" enctype="multipart/form-data">
+		<div class="alert alert-info">
+			<i class="fa fa-exclamation-circle"></i> 开启引导关注后，未关注粉丝进入商品详情页，将在页面顶部提示引导关注内容
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				引导关注
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">是否开启</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<div class="input-group">
+							<label class="radio-inline">
+								<input type="radio" name="setting[open]" value="1" {if $setting['open'] == 1}checked{/if}> 是
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="setting[open]" value="0" {if $setting['open'] == 0}checked{/if}> 否
+							</label>
+						</div>
+						<span class="help-block">开启后，通过好友或朋友圈分享打开商品页时，顶部将显示关注按钮</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">公众号头像</label>
+					<div class="col-sm-8 col-xs-12">
+						{php echo tpl_form_field_image('setting[headimg]', $setting['headimg'])}
+						<span class="help-block">推荐尺寸：100*100</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">公众号名称</label>
+					<div class="col-sm-8 col-md-8 col-xs-12">
+						<input type="text" class="form-control" placeholder="" name="setting[cname]" value="{$setting['cname']}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">关注链接</label>
+					<div class="col-sm-8 col-md-8 col-xs-12">
+						<input type="text" class="form-control" placeholder="http://" name="setting[subscribeurl]" value="{$setting['subscribeurl']}">
+						<span class="help-block">在公众号后台设置引导关注素材链接</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">未关注下单</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<div class="input-group">
+							<label class="radio-inline">
+								<input type="radio" name="setting[unsubscribe_order]" value="0" {if !$setting['unsubscribe_order']}checked{/if}> 允许
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="setting[unsubscribe_order]" value="1" {if $setting['unsubscribe_order']}checked{/if}> 不允许
+							</label>
+						</div>
+						<span class="help-block">粉丝未关注公众号时，设置是否允许下单购物，不允许为强制性，即不关注公众号不能下单</span>
+						<span class="help-block">提示：允许未关注下单时，粉丝微信端将收不到模板消息、客服消息等接口推送的信息</span>
+						<span class="help-block" style="color: red">注意：设置为不允许时，必须填写关注链接</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">未关注温馨提示</label>
+					<div class="col-sm-8 col-md-8 col-xs-12">
+						<input type="text" class="form-control" placeholder="关注公众号，享受更好的购物体验！" name="setting[subscribe_tips]" value="{$setting['subscribe_tips']}">
+						<span class="help-block">未关注温馨提示框内容设置，不填写时默认为：关注公众号，享受更好的购物体验！</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input name="token" type="hidden" value="{$_W['token']}">
+			<input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交" data-original-title="" title="">
+		</div>
+	</form>
+</div>

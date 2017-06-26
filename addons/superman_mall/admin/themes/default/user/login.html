@@ -1,0 +1,221 @@
+{template 'common/header-base'}
+<style>
+	@media screen and (max-width:767px){.login_wrap .panel.panel-default{width:90%; min-width:300px;}}
+	@media screen and (min-width:768px){.login_wrap .panel.panel-default{width:70%;}}
+	@media screen and (min-width:1200px){.login_wrap .panel.panel-default{width:50%;}}
+	body {
+		padding-top: 120px;
+		padding-bottom: 40px;
+		background-color: #f6f6f6;
+	}
+	.container {
+        height: 668px;
+		width: 480px;
+        padding: 0;
+	}
+    .login_wrap {
+        height: 668px;
+        padding: 90px 92px 30px 92px;
+        background: #fff;
+        font-size: 14px;
+        border-radius: 2px;
+        box-shadow: 0 2px 3px rgba(213,213,213,0.7);
+    }
+    .shop_logo {
+        font-size: 0;
+        margin-bottom: 50px;
+    }
+    .shop_logo a {
+        display: block;
+    }
+    .shop_logo img {
+        width: 160px;
+        height: 40px;
+    }
+    .account_tab_wrap {
+        height: 39px;
+        margin: 105px 0 20px;
+        border-bottom: 1px solid #e9e9ea;
+    }
+    .account_tab_wrap ul {
+        height: 39px;
+        margin-bottom: 20px;
+    }
+    .account_tab_wrap ul li {
+        height: 39px;
+        list-style:none;
+        float: left;
+        margin: 0 20px;
+        display: block;
+    }
+    .account_tab_wrap ul .active, .account_tab_wrap ul li:hover {
+        border-bottom: 2px #8f9396 solid;
+    }
+
+    .account_tab_wrap ul .active a, .account_tab_wrap ul li a:hover {
+        color: #41464b;
+    }
+    .account_tab_wrap ul li a {
+        display: block;
+        height: 39px;
+        font-size: 16px;
+        color: #888;
+        text-decoration: none;
+    }
+    .verify_input_wrap {
+        margin-bottom: 15px;
+    }
+    .verify_input_wrap input {
+        width:50% !important;
+        height: 40px !important;
+    }
+    .verify_wrap a {
+        text-decoration: none;
+        width:50%;
+    }
+    .qrcode_img {
+        background: none;
+        margin: 0 auto;
+        width: 150px;
+        height: 150px;
+    }
+    .qrcode_login_info {
+        font-size: 16px;
+        line-height:24px;
+        margin-top: 10px;
+        color: #41464b;
+    }
+    .input_style {
+        font-size: 18px;
+        line-height: 1.33;
+        height: 40px;
+    }
+</style>
+
+<div class="container">
+	<div class="login_wrap">
+        <div class="shop_logo text-center">
+            <img src="{$_W[siteroot]}addons/superman_mall/template/web/default/images/shop_logo.png">
+        </div>
+        <div class="account_tab_wrap">
+            <ul>
+                <li role="presentation" class="active">
+                    <a href="#account_login" role="tab" data-toggle="tab" class="login_account">账号登录</a>
+                </li>
+                <li role="presentation">
+                    <a href="#qrcode_login" role="tab" data-toggle="tab" class="login_qrcode" data-url="{php echo wurl('user/login/qrcode', array('shopid' => $_GPC['shopid']));}" data-id="0" data-sign="">微信登录</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="account_login">
+                    <form class="form_wrap" action="" method="post" role="form" id="form1" onsubmit="return formcheck();">
+                        <div class="form-group">
+                            <input type="text" class="form-control input_style" name="username" placeholder="请输入账号">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control input_style" name="password" placeholder="请输入密码">
+                        </div>
+                        <div class="input-group input-group-lg clearfix verify_input_wrap">
+                            <input type="text" name="verify" class="form-control pull-left" placeholder="请输入验证码">
+                            <span class="verify_wrap">
+                                <a href="javascript:;" id="toggle" class="pull-left">
+                                    <img id="imgverify" src="{php echo $_W['siteroot'].'web/'.url('utility/code')}" title="点击图片更换验证码"/>
+                                </a>
+                            </span>
+                        </div>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit" id="submit" name="submit" value="登录">登录</button>
+                        <input name="token" value="{$_W['token']}" type="hidden" />
+                    </form>
+                </div>
+                <div role="tabpanel" class="tab-pane fade text-center" id="qrcode_login">
+                    <img class="qrcode_img" src="{$_W['siteroot']}attachment/images/global/loading.gif">
+                    <div class="qrcode_login_info">微信扫一扫即可登录</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function formcheck() {
+	if($('#remember:checked').length == 1) {
+		cookie.set('remember-username', $(':text[name="username"]').val());
+	} else {
+		cookie.del('remember-username');
+	}
+	return true;
+}
+$('#toggle').click(function() {
+	$('#imgverify').prop('src', '{php echo $_W["siteroot"]."web/".url("utility/code")}r='+Math.round(new Date().getTime()));
+	return false;
+});
+$('#form1').submit(function() {
+	var verify = $(':text[name="verify"]').val();
+	if (verify == '') {
+		alert('请填写验证码');
+		return false;
+	}
+});
+require(['bootstrap']);
+require(['jquery', 'bootstrap'],function($) {
+    var load_timer, reload_timer, check_timer;
+	$('.login_qrcode').click(function () {
+		var t = this;
+		var url = $(t).attr('data-url');
+		var loadQrcode = function () {
+		    $.ajax({
+                type: 'post',
+                url: url,
+                dataType : "json",
+                success: function (resp) {
+                    if (resp['id'] > 0) {
+                        $('.qrcode_img').attr('src', resp['qrcode']);
+                        $(t).attr('data-id', resp['id']).attr('data-sign', resp['sign']);
+                        //检查是否被扫
+                        load_timer = setTimeout(function() {
+                            checkQrcode(resp['id'], resp['_t'], resp['sign']);
+                        }, 3000);
+                        //二维码过期检查
+                        reload_timer = setTimeout(function(){
+                            loadQrcode();//重载二维码
+                        }, 5*60*1000);
+                    } else {
+                        reload_timer = setTimeout(function(){
+                            loadQrcode();//重载二维码
+                        }, 5*1000);
+                    }
+                }
+            });
+        };
+        //检查是否已加载二维码
+//        if ($('.qrcode_img').attr('src').indexOf('/attachment/images/global/loading.gif') > 0) {
+            loadQrcode();
+//        }
+        var checkQrcode = function (id, _t, sign) {
+            $.ajax({
+                type: 'post',
+                url: "{php echo wurl('user/login/check_qrcode', array('shopid' => $_GPC['shopid']));}",
+                data: 'id='+id+'&_t='+_t+'&sign='+sign,
+                dataType : "json",
+                success: function(response) {
+                    if (response['errno'] == 0) {
+                        window.location.href = response['url'];
+                    } else if (response['errno'] == 3) {
+                        check_timer = setTimeout(function(){
+                            checkQrcode(id, _t, sign);
+                        }, 2000);
+                    } else {
+                        console.log(response)
+                    }
+                }
+            });
+        }
+	});
+    $('.login_account').click(function () {
+        clearTimeout(load_timer);
+        clearTimeout(reload_timer);
+        clearTimeout(check_timer);
+    });
+});
+</script>
+</body>
+</html>

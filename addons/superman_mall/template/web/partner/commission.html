@@ -1,0 +1,248 @@
+{if $op == 'display'}
+<div class="alert alert-info">
+	<i class="fa fa-exclamation-circle"></i> 这里可手动修改未结算订单的佣金，当没有开启自动结算时，可以手动批量操作结算，删除操作不可恢复，请谨慎操作。
+</div>
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="" method="post" class="form-horizontal" role="form">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">状态</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<select class="form-control" name="commission_status">
+						<option value="all" {if $commission_status == 'all'}selected{/if}>全部</option>
+						<option value="0" {if $commission_status == '0'}selected{/if}>未结算</option>
+						<option value="1" {if $commission_status == '1'}selected{/if}>已结算</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">订单号</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<input class="form-control" name="ordersn" type="text" value="{$_GPC['ordersn']}">
+				</div>
+				<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<form action="" method="post">
+	<div class="panel panel-default">
+		<div class="table-responsive panel-body">
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th width="30"></th>
+					<th>订单号</th>
+					<th width="180">买家</th>
+					<th width="120">总佣金</th>
+					<th width="70">状态</th>
+					<th width="160">下单时间</th>
+					<th width="150" class="text-right">操作</th>
+				</tr>
+				</thead>
+				<tbody>
+					{if $list}
+					{loop $list $li}
+					<tr>
+						<td>
+							<input type="checkbox" name="ids[]" value="{$li['id']}" {if $li['commission_status'] == 1}disabled{/if}>
+						</td>
+						<td>{$li['ordersn']}</td>
+						<td>
+							<div style="height: 50px; line-height: 50px;">
+								<img src="{php echo tomedia($li['user']['avatar'])}" onerror="this.src='{$_W['siteroot']}/app/resource/images/heading.jpg'" style="width: 40px; height: 40px; border-radius: 50%; margin-left: .5rem; overflow: hidden" alt=""/>
+								<span style="padding-left: .3rem">{$li['user']['nickname']}</span>
+							</div>
+						</td>
+						<td>&yen;{php echo $li['partner1_commission']+$li['partner2_commission']+$li['partner3_commission']}</td>
+						<td>
+							<span class="{php echo SupermanUtil::get_money_status_style($li['commission_status'])}">{php echo SupermanUtil::get_money_status_title($li['commission_status'])}</span>
+						</td>
+						<td>{php echo str_replace(' ', '<span style="padding-right: .8rem"></span>', date('Y-m-d H:i:s', $li['createtime']))}</td>
+						<td style="white-space:nowrap;overflow: visible" class="text-right">
+							<div class="btn-group">
+								<a href="{php echo $this->createWebUrl('order', array('act' => 'post', 'id' => $li['id']));}" title="编辑" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-edit"></i></a>
+								<a href="#" data-id="{$li['id']}" data-toggle="modal" class="btn_edit_commission btn btn-default btn-sm" data-commission-status="{$li['commission_status']}" data-target=".edit_commission_modal" title="编辑佣金"><i class="fa fa-dollar"></i></a>
+								<a href="{php echo $this->createWebUrl('partner', array('act' => 'commission', 'op' => 'delete', 'id' => $li['id']))}" onclick="return confirm('此操作不可恢复，确认吗？'); return false;" title="删除" class="btn btn-default btn-sm"><i class="fa fa-times"></i></a>
+							</div>
+						</td>
+					</tr>
+					{/loop}
+					{/if}
+				</tbody>
+			</table>
+			<div style="padding-left: 8px;padding-top: 8px;">
+				<label style="cursor: pointer;">
+					<input type="checkbox" name="checkall"> 全选&nbsp;&nbsp;
+				</label>
+				<button type="submit" name="batch_action" value="settlement" class="btn btn-success">批量结算</button>
+				<button type="submit" name="batch_action" value="delete" onclick="return confirm('此操作不可恢复，确认吗？'); return false;" class="btn btn-danger">批量删除</button>
+				<input type="hidden" name="token" value="{$_W['token']}">
+			</div>
+		</div>
+		<div class="panel-footer">
+			总共 <strong>{$total}</strong> 条
+		</div>
+	</div>
+	{$pager}
+</form>
+<div class="modal fade edit_commission_modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				<h4 class="modal-title">查看佣金</h4>
+			</div>
+			<form action="" method="post">
+				<div class="modal-body">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>商品</th>
+								<th width="60">数量</th>
+								<th width="90">价格</th>
+								<th width="145">一级佣金</th>
+								<th width="145">二级佣金</th>
+								<th width="145">三级佣金</th>
+							</tr>
+						</thead>
+						<tbody id="item_list_wrap"></tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<!--<span class="commission_prompt" style="display: none">已结算状态不能修改佣金</span>
+					<button style="display: none" name="commission_edit" type="submit" value="yes" class="btn btn-primary" onclick="return confirm('是否确实修改佣金？'); return false;">提交</button>
+					<input type="hidden" name="token" value="{$_W['token']}">-->
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	require(['jquery', 'bootstrap'],function($){
+		$('.btn_edit_commission').click(function () {
+			var url = "{php echo $this->createWebUrl('partner', array('act' => 'commission', 'op' => 'get_item'))}";
+			var id = $(this).attr('data-id');
+			$('.commission_prompt').hide();
+			$('button[name=commission_edit]').hide();
+			var data_commission_status = $(this).attr('data-commission-status');
+			if (data_commission_status == 1) {
+				$(".commission_prompt").show();
+			} else {
+				$('button[name=commission_edit]').show();
+			}
+			$.ajax({
+				url: url,
+				data: "id="+id,
+				dataType: 'json',
+				success: function (resp) {
+					if (resp.length > 0) {
+						var html='', item;
+						var partner1_commission = 0.00;
+						var partner2_commission = 0.00;
+						var partner3_commission = 0.00;
+						for (var i=0; i<resp.length; i++) {
+							item = resp[i];
+							partner1_commission += parseFloat(item.partner1_commission);
+							partner2_commission += parseFloat(item.partner2_commission);
+							partner3_commission += parseFloat(item.partner3_commission);
+							html += '<tr>';
+							html += '<td style="position: relative" class="clearfix">';
+							html += '<img class="pull-left" src="'+tomedia(item['cover'])+'" onerror="this.src=\'{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif\'" height="60px">';
+							html += '<span class="pull-left" style="width: 200px; padding-left: 10px; line-height: 30px; display: block">'+item['title']+'</span>';
+							html += '<span class="pull-left" style="width: 200px; padding-left: 10px; line-height: 30px; display: block; color: #ccc">'+item['sku']+'</span>';
+							html += '</td>';
+							html += '<td>'+item['total']+'</td>';
+							html += '<td>&yen;'+item['price']+'</td>';
+							html += '<td>';
+							if (item['partner1_id'] > 0) {
+								html += '<div style="height: 50px; line-height: 50px;">';
+								html += '<img src="'+tomedia(item['partner1']['avatar'])+'" onerror="this.src=\'{$_W[siteroot]}/app/resource/images/heading.jpg\'" style="width: 40px; height: 40px; border-radius: 50%; margin-left: .5rem; overflow: hidden" alt=""/>';
+								html += '<span style="padding-left: .3rem">'+item['partner1']['nickname']+'</span>';
+								html += '</div>';
+								html += '<div>';
+								html += '<input class="form-control partner1_commission" disabled name="partner1_commission['+item['id']+']" type="number" step="0.01" value="'+item['partner1_commission']+'">';
+								html += '</div>';
+							}
+							html += '</td>';
+							html += '<td>';
+							if (item['partner2_id'] > 0) {
+								html += '<div style="height: 50px; line-height: 50px;">';
+								html += '<img src="'+tomedia(item['partner2']['avatar'])+'" onerror="this.src=\'{$_W[siteroot]}/app/resource/images/heading.jpg\'" style="width: 40px; height: 40px; border-radius: 50%; margin-left: .5rem; overflow: hidden" alt=""/>';
+								html += '<span style="padding-left: .3rem">'+item['partner2']['nickname']+'</span>';
+								html += '</div>';
+								html += '<div>';
+								html += '<input class="form-control partner2_commission" disabled name="partner2_commission['+item['id']+']" type="number" step="0.01" value="'+item['partner2_commission']+'">';
+								html += '</div>';
+							}
+							html += '</td>';
+							html += '<td>';
+							if (item['partner3_id'] > 0) {
+								html += '<div style="height: 50px; line-height: 50px;">';
+								html += '<img src="' + tomedia(item['partner3']['avatar']) + '" onerror="this.src=\'{$_W[siteroot]}/app/resource/images/heading.jpg\'" style="width: 40px; height: 40px; border-radius: 50%; margin-left: .5rem; overflow: hidden" alt=""/>';
+								html += '<span style="padding-left: .3rem">' + item['partner3']['nickname'] + '</span>';
+								html += '</div>';
+								html += '<div>';
+								html += '<input class="form-control partner3_commission" disabled name="partner3_commission[' + item['id'] + ']" type="number" step="0.01" value="' + item['partner3_commission'] + '">';
+								html += '</div>';
+							}
+							html += '</td>';
+							html += '</tr>';
+						}
+						html += '<tr><input type="hidden" name="orderid" value="'+item['orderid']+'">';
+						html += '<td></td>';
+						html += '<td></td>';
+						html += '<td></td>';
+						html += '<td>&yen;<span class="partner1_commission_total">'+partner1_commission+'</span></td>';
+						html += '<td>&yen;<span class="partner2_commission_total">'+partner2_commission+'</span></td>';
+						html += '<td>&yen;<span class="partner3_commission_total">'+partner3_commission+'</span></td>';
+						html += '</tr>';
+						$('#item_list_wrap').html(html);
+						//计算总佣金
+						$('.partner1_commission').keyup(function(){
+							var partner1_commission_total = 0.00;
+							$('.partner1_commission').each(function(){
+								if ($(this).val() != '') {
+									partner1_commission_total +=parseFloat($(this).val());
+								}
+							});
+							$('.partner1_commission_total').text(partner1_commission_total.formatCurrency(2,''));
+						});
+						$('.partner2_commission').keyup(function(){
+							var partner2_commission_total = 0.00;
+							$('.partner2_commission').each(function(){
+								if ($(this).val() != '') {
+									partner2_commission_total +=parseFloat($(this).val());
+								}
+							});
+							$('.partner2_commission_total').text(partner2_commission_total.formatCurrency(2,''));
+						});
+						$('.partner3_commission').keyup(function(){
+							var partner3_commission_total = 0.00;
+							$('.partner3_commission').each(function(){
+								if ($(this).val() != '') {
+									partner3_commission_total +=parseFloat($(this).val());
+								}
+							});
+							$('.partner3_commission_total').text(partner3_commission_total.formatCurrency(2,''));
+						});
+					} else {
+						util.message(resp, '', 'error');
+					}
+				}
+			});
+		});
+		$('input[name=checkall]').click(function(){
+			if ($(this).prop('checked')) {
+				$('input[type=checkbox]').not(':disabled').prop('checked', true);
+			} else {
+				$('input[type=checkbox]').not(':disabled').prop('checked', false);
+			}
+		});
+
+	});
+</script>
+{/if}

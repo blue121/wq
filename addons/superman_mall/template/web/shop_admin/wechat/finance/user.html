@@ -1,0 +1,99 @@
+<div class="main">
+    <form class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+        {if $row['openid']}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                微信账户
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> 微信提现账户默认为申请商户入驻的微信号，如需修改微信号，<a target="_blank" href="{php echo $this->createWebUrl('profile')}">点击去绑定</a></div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">微信昵称</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <input type="text" class="form-control" disabled="disabled" name="" value="{$row['shop_admin']['nickname']}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right" style="line-height: 30px;">微信头像</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <div style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+                            <img src="{$row['shop_admin']['avatar']}" onerror="this.src='{$_W['siteroot']}app/resource/images/heading.jpg'" style="width: 100%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/if}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                支付宝账户
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">账户名称</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <input type="text" class="form-control" name="alipay_account" value="{$row['alipay_account']}" placeholder="邮箱地址/手机号">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">姓名</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <input type="text" class="form-control" name="alipay_username" value="{$row['alipay_username']}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                银行账户
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">银行名称</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <input type="text" class="form-control" name="bank_name" value="{$row['bank_name']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">开户行</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <input type="text" class="form-control" name="bank_account" value="{$row['bank_account']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">银行卡号</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <input type="text" class="form-control" name="bank_cardno" value="{$row['bank_cardno']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">开卡人姓名</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <input type="text" class="form-control" name="bank_username" value="{$row['bank_username']}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-sm-12">
+            <input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交">
+            <input type="hidden" name="token" value="{$_W['token']}" />
+        </div>
+    </form>
+</div>
+<script>
+    require(['jquery'], function($){
+        //支付宝账号格式
+        $('form').submit(function(){
+            var alipay_account = $('input[name=alipay_account]');
+            if (alipay_account.val()) {
+                var mobile_regexp = /^\d{11}$/;
+                var email_regexp = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/i;
+                if(!mobile_regexp.test(alipay_account.val()) && !email_regexp.test(alipay_account.val())) {
+                    util.message('手机或邮箱格式不合法');
+                    return false;
+                }
+            }
+            return true;
+        });
+    });
+</script>

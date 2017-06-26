@@ -1,0 +1,547 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do} page-current" data-container="{$_W['container']}" id="superpage_{$do}_{$act}" data-share-url="{php echo $this->createMobileUrl('detail', array('itemid' => $itemid, 'shopid' => $item['shopid'], 'act' => 'share'))}" data-view-url="{php echo $this->createMobileUrl('detail', array('itemid' => $itemid, 'shopid' => $item['shopid'], 'act' => 'view'))}">
+		{if isset($setting['open']) && $setting['open'] == 1}
+		<header class="bar">
+			<div class="pull-left clearfix">
+				<div class="avatar pull-left">
+					<img src="{php echo tomedia($setting['headimg'])}" onerror="this.src='{php echo $this->superman_placeholder}'"/>
+				</div>
+				<div class="nickname pull-left font6">
+					{$setting['cname']}
+				</div>
+			</div>
+			<div class="pull-right">
+				<a href="{$setting['subscribeurl']}" class="button button-fill button-small button-success {SUPERMAN_EXTERNAL}" data-no-cache="true">
+					<span class="icon iconfont font7">&#xe632;</span>
+					关注
+				</a>
+			</div>
+		</header>
+		{/if}
+		<nav class="bar bar-tab">
+			{if !isset($mgroupon_id) || $mgroupon_id <= 0}
+			<a class="tab-item {SUPERMAN_EXTERNAL}" href="{php echo $this->createMobileUrl('home')}" data-no-cache="true">
+				<span class="icon iconfont">&#xe642;</span>
+				<span class="tab-label">首页</span>
+			</a>
+			<a class="tab-item follow_link" href="#" data-status="{$item['isfollow']}" data-itemid="{$itemid}" data-url="{php echo $this->createMobileUrl('detail', array('act' => 'follow'))}">
+				{if $item['isfollow']}
+				<span class="icon iconfont color-danger">&#xe62e;</span>
+				<span class="tab-label color-danger">已关注</span>
+				{else}
+				<span class="icon iconfont">&#xe62f;</span>
+				<span class="tab-label">关注</span>
+				{/if}
+			</a>
+			<a class="tab-item {SUPERMAN_EXTERNAL}" href="{php echo $this->createMobileUrl('cart')}" data-no-cache="true">
+				<span class="icon iconfont">&#xe626;</span>
+                <span class="cart_corner font5" style="{if $this->cart_count<=0}display: none{/if}">{php echo $this->cart_count}</span>
+				<span class="tab-label">购物车</span>
+			</a>
+			{/if}
+			<div class="tab-item row no-gutter">
+				{if $item['special']==2}
+				<div class="col-50 single_price_bgcolor">
+					<a class="single_price" data-price="{$item['extend']['single_price']}" href="#">
+						<span class="tab-label font8">&yen;{$item['extend']['single_price']}</span>
+						<span class="tab-label font6">单人价</span>
+					</a>
+				</div>
+				<div class="col-50">
+                    {if isset($mgroupon_id) && $mgroupon_id > 0}
+                        {loop $mg_list $li}
+                            {if $li['id'] == $mgroupon_id}
+                            <img class="mgroupon_avatar" src="{php echo tomedia($li['member']['avatar'])}" onerror="this.src='{php echo $this->superman_placeholder}'"/>
+                            {/if}
+                        {/loop}
+                    {/if}
+                    <a class="multi_member_join font8" data-price="{$item_default_spec_price}" href="#">
+						<span class="tab-label font8">&yen;{$item_default_spec_price}</span>
+						<span class="tab-label font6">
+							{if isset($mgroupon_id) && $mgroupon_id > 0}
+								参加{if isset($item['extend']['multi_member_limit'])}{$item['extend']['multi_member_limit']}{/if}人团
+							{else}
+								发起{if isset($item['extend']['multi_member_limit'])}{$item['extend']['multi_member_limit']}{/if}人团
+							{/if}
+						</span>
+					</a>
+				</div>
+				{else if $item['special'] == 1 && $starttime != 0}
+				<div class="seckill_countdown">
+					{if $starttime == -1}
+					<div class="text-strong color-white">秒杀已结束</div>
+					{else if $starttime > 0}
+					还有 <span class="seckill_remain_time countdown text-strong" data-time="{$starttime}">-时-分-秒</span> 开始
+					{/if}
+				</div>
+				{else}
+				<div class="col-50">
+					<a class="{if !$_W['member']['uid']}external{else}add_cart{/if}" href="{if !$_W['member']['uid']}{php echo $this->createMobileUrl('detail', array('act' => 'checkauth', 'itemid' => $itemid))}#{else}{/if}">
+						<span class="tab-label">加入购物车</span>
+					</a>
+				</div>
+				<div class="col-50">
+					<a class="{if !$_W['member']['uid']}external{else}buy_item{/if}" href="{if !$_W['member']['uid']}{php echo $this->createMobileUrl('detail', array('act' => 'checkauth', 'itemid' => $itemid))}#{else}{/if}">
+						<span class="tab-label">立即购买</span>
+					</a>
+				</div>
+				{/if}
+			</div>
+		</nav>
+        <div class="content {if isset($setting['open']) && $setting['open'] == 1}nofollow_style{/if}">
+            {if $item['album']}
+            <div class="swiper-container" data-space-between='10' data-autoplay="3000">
+                <div class="swiper-wrapper">
+                    {loop $item['album'] $val}
+                    <div class="swiper-slide">
+                        <a href="#">
+                            <img src="{php echo tomedia($val)}">
+                        </a>
+                    </div>
+                    {/loop}
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+            {/if}
+            <div class="row">
+                <div class="col-100 item_title">
+                    <p>{$item['title']}</p>
+                </div>
+                <div class="col-100 item_subtitle">
+                    <p class="font7">{$item['subtitle']}</p>
+                </div>
+                <div class="col-100 price">
+                    &#165;{$item_default_spec_price}
+					{if isset($item_default) && $item_default}
+					<span class="font6 color-gray text-delete-line">&#165;{$item_default}</span>
+                    {else if $item['market_price'] > 0}
+                    <span class="font6 color-gray text-delete-line">&#165;{$item['market_price']}</span>
+                    {/if}
+                    {if isset($activitys['type2']['title']) && $activitys['type2']['starttime'] < TIMESTAMP}<span class="button button-danger font6 discount_btn">{$activitys['type2']['title']}</span>{/if}
+                    {if $item['special']==2}
+                    <span class="mgroupon_title">拼团价</span>
+					<span class="button button-warning font6 pull-right">
+						<span class="font6 multi_member_new">发起拼团</span>
+					</span>
+                    {elseif $item['special']==1}
+                    <span class="seckill_title">秒杀价</span>
+                    {/if}
+                    {if isset($discount_price)}
+                    <div class="pull-right distribution_btn">
+                        <a href="#" class="button button-danger button-fill pull-right wechat_share_tips button-small">{$partner_setting['text']['distribution']}</a>
+                    </div>
+                    {/if}
+                </div>
+                {if ($item_partner_stat['discount_value'] > 0 || $item_partner_stat['discount_rate'] > 0) && isset($discount_price)}
+                <div class="col-100">
+                    <span class="font6 color-warning discount_price">{$partner_setting['text']['innerprice']}：&yen;{$discount_price}（自己买省{php echo SupermanUtil::float_format($item['price']-$discount_price)}元）</span>
+                </div>
+                {/if}
+                <div class="col-100">
+                    <div class="color-danger payment_method row">
+						{if !isset($payments_setting['wechat_open']) || $payments_setting['wechat_open'] == 1}
+                        <div class="col-25">
+                            <span class="payment_method_list">
+                                <span class="iconfont font6 color-danger">&#xe61d;</span>
+                                <span class="font6 color-gray">微信支付</span>
+                            </span>
+                        </div>
+						{/if}
+						{if !isset($payments_setting['credit_open']) || $payments_setting['credit_open'] == 1}
+                        <div class="col-25">
+                            <span class="payment_method_list">
+                                <span class="iconfont font6 color-danger">&#xe61d;</span>
+								{if isset($uni_setting['creditbehaviors']['currency']) && $credit_group[$uni_setting['creditbehaviors']['currency']]['title']}
+                                <span class="font6 color-gray">{$credit_group[$uni_setting['creditbehaviors']['currency']]['title']}支付</span>
+								{else}
+								<span class="font6 color-gray">余额支付</span>
+								{/if}
+                            </span>
+                        </div>
+						{/if}
+						{if $item['delivery_mode'] != 1 && isset($myfetch_setting['open']) && $myfetch_setting['open'] == 1}
+						<div class="col-25">
+                            <span class="payment_method_list">
+                                <span class="iconfont font6 color-danger">&#xe61d;</span>
+                                <span class="font6 color-gray">到店自提</span>
+                            </span>
+						</div>
+						{/if}
+						{if $item['iscash'] == 1}
+						<div class="col-25">
+                            <span class="payment_method_list">
+                                <span class="iconfont font6 color-danger">&#xe61d;</span>
+                                <span class="font6 color-gray">货到付款</span>
+                            </span>
+						</div>
+						{/if}
+                    </div>
+                </div>
+            </div>
+            {if isset($discount_setting['credit']['cash_open']) && $discount_setting['credit']['cash_open'] == 1 && $item['cash_credit'] > 0 || isset($item_partner_stat['commission_show']) && $item_partner_stat['commission_show'] == 1 && !($commission1 == 0 && $commission2 == 0  &&  $commission3 == 0) || $has_discount}
+            <div class="list-block commission_info_wrap">
+                <ul>
+                    {if isset($discount_setting['credit']['cash_open']) && $discount_setting['credit']['cash_open'] == 1 && $item['cash_credit'] > 0}
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title font7">{$creditname}</div>
+                            <div class="item-after font6">{php echo floatval($item['cash_credit'])}{$creditname}可抵{php echo SupermanUtil::float_format($item['cash_credit']/$discount_setting['credit']['cash_rate'])}元</div>
+                        </div>
+                    </li>
+                    {/if}
+                    {if $has_discount}
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title font7">促销</div>
+                        </div>
+                    </li>
+                    <li class="item-content marketing_wrap">
+                        <div class="item-inner row no-gutter">
+                            <div class="font6 col-100">
+                                {if isset($activitys['type2']) && $activitys['type2']}
+                                <div class="text-left color-gray row">
+                                    <div class="col-25 text-center">
+                                        <span class="button button-danger font6">{$activitys['type2']['title']}</span>
+                                    </div>
+                                    <div class="col-75">
+                                        限时折扣{$activitys['type2']['ai_extend']['value']}折（{php echo date('Y-m-d H:i', $activitys['type2']['starttime'])}～{php echo date('Y-m-d H:i', $activitys['type2']['endtime'])}）
+                                    </div>
+                                </div>
+                                {/if}
+                                {if isset($activitys['type1']) && $activitys['type1']}
+                                {loop $activitys['type1'] $aty}
+                                <div class="text-left color-gray row">
+                                    <div class="col-25 text-center">
+                                        <span class="button button-danger font6">{$aty['title']}</span>
+                                    </div>
+                                    <div class="col-75">
+                                        {loop $aty['extend'] $e}
+                                        满{$e['value']}{if $e['unit'] == 'yuan'}元{else}件{/if}包邮（{php echo date('Y-m-d H:i', $aty['starttime'])}～{php echo date('Y-m-d H:i', $aty['endtime'])}）
+                                        {/loop}
+                                    </div>
+                                </div>
+                                {/loop}
+                                {/if}
+                                {if isset($activitys['type3']) && $activitys['type3']}
+                                {loop $activitys['type3'] $aty}
+                                <div class="text-left color-gray row">
+                                    <div class="col-25">
+                                        <span class="button button-danger font6">{$aty['title']}</span>
+                                    </div>
+                                    <div class="col-75">
+                                        （{php echo date('Y-m-d H:i', $aty['starttime'])}～{php echo date('Y-m-d H:i', $aty['endtime'])}）
+                                        {if $aty['extend_content']}
+                                        <span class="full_cut_info">
+                                        {loop $aty['extend_content'] $title}
+                                        {$title}
+                                        {/loop}
+                                        </span>
+                                        {/if}
+                                    </div>
+                                </div>
+                                {/loop}
+                                {/if}
+                            </div>
+                        </div>
+                    </li>
+                    {/if}
+                    {if isset($item_partner_stat['commission_show']) && $item_partner_stat['commission_show'] == 1 && !($commission1 == 0 && $commission2 == 0  &&  $commission3 == 0)}
+                    <li class="item-content row detail_commission">
+                        <div class="col-20 font7">{$partner_setting['text']['commission']}</div>
+                        <div class="col-80">
+                            {if $commission1 > 0}
+                            <div class="text-right font6 color-gray">{$partner_setting['text']['self_sell']}赚{$commission1}元</div>
+                            {/if}
+                            {if $commission2 > 0}
+                            <div class="text-right font6 color-gray">{$partner_setting['text']['invite_direct']}赚{$commission2}元</div>
+                            {/if}
+                            {if $commission3 > 0}
+                            <div class="text-right font6 color-gray">{$partner_setting['text']['invite_indirect']}赚{$commission3}元</div>
+                            {/if}
+                        </div>
+                    </li>
+                    {/if}
+                </ul>
+            </div>
+            {/if}
+            {if $item['special']==2}
+            <div class="list-block mgroupon_rule">
+                <ul>
+                    <li>
+                        <a href="#mgroupon_rule" class="item-content item-link">
+                            <div class="item-inner font7">
+                                <div class="item-title">拼团规则</div>
+                                <div class="item-after">查看</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            {/if}
+            {if $item_default_spec}
+            <div class="list-block selected">
+                <div class="item-link">
+                    <a href="#" class="color-default select_item_spec">
+                        <div class="item-inner">
+                            <div class="font7">点击选择更多</div>
+                            <div class="font6 color-gray spec">{$item_default_spec}</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {/if}
+            {if isset($item['shop']) && $item['shop']}
+            {if !isset($mgroupon_id) || $mgroupon_id <= 0}
+            <div class="list-block mgroupon_rule">
+                <ul>
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('shop', array('shopid' => $item['shopid']))}" class="item-content item-link">
+                            <div class="item-inner font7">
+                                <div class="item-title">{$item['shop']['title']}</div>
+                                <div class="item-after">进入商户</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            {/if}
+            {/if}
+            <!--待参加拼团-->
+            {if $mg_list}
+            <div class="list-block media-list mgroupon_begin_list">
+                <ul>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title font7">以下小伙伴已经开团，您可以直接参团</div>
+                            </div>
+                        </div>
+                    </li>
+                    {loop $mg_list $li}
+                    {if $li['residue']}
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $itemid, '__mgroupon_id' => $li['id']))}" class="item-link item-content">
+                            <div class="item-media"><img src="{php echo tomedia($li['member']['avatar'])}"></div>
+                            <div class="item-inner">
+                                <div class="item-title-row row no-gutter">
+                                    <div class="font6 col-40 text-overflow text-left">{$li['member']['nickname']}</div>
+                                    <div class="font6 color-danger col-40 text-center">还需{$li['residue']}人即发货</div>
+                                    <div class="font6 color-danger col-20 text-center">去参团</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    {/if}
+                    {/loop}
+                </ul>
+            </div>
+            {/if}
+            <div class="buttons-tab">
+                <a href="#tab1" class="tab-link active button">商品详情</a>
+                <a href="#tab2" class="tab-link button">参数规格</a>
+                <a href="#tab3" class="tab-link button">购买评价</a>
+            </div>
+            <div class="content-block item_content">
+                <div class="tabs">
+                    <div id="tab1" class="tab active">
+                        <div class="font7">
+                            {php echo htmlspecialchars_decode($item['description'])}
+                        </div>
+                    </div>
+                    <div id="tab2" class="tab">
+                        <!--<div class="content-padded">-->
+                        <div class="list-block">
+                            <ul class="font7">
+                                {if $item['params']}
+                                {loop $item['params'] $param}
+                                <li class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">{$param['name']}</div>
+                                        <div class="item-after">{$param['value']}</div>
+                                    </div>
+                                </li>
+                                {/loop}
+                                {/if}
+                            </ul>
+                        </div>
+                        <!--</div>-->
+                    </div>
+                    <div id="tab3" class="tab">
+                        <div class="content-padded list-block">
+                            <div class="item-link">
+                                <a href="{php echo $this->createMobileUrl('comment', array('act' => 'list', 'type' => 0, 'itemid' => $itemid))}" class="color-default">
+                                    <div class="item-inner">
+                                        <div class="text-center font7">商品评价</div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="content-block-title">
+                                <span class="good_comment_title">好评度</span>
+                                <span class="good_comment_rate">{if $item['comment_count']&&$item['comment_praise_count']}{php echo intval($item['comment_praise_count']/$item['comment_count']*100)}%{/if}</span>
+                                <span class="comment_total">{$item['comment_count']}人评论</span>
+                            </div>
+                            <div class="list-block media-list comment_list">
+                                <ul>
+                                    {if $comments}
+                                    {loop $comments $comment}
+                                    <li>
+                                        <a href="#" class="item-content">
+                                            <div class="item-inner">
+                                                <div class="item-title-row">
+                                                    <div class="item-title color-danger">{$comment['star']}</div>
+                                                    <div class="item-after font6">
+                                                        <span>{$comment['member']['nickname']}</span>
+                                                        &nbsp;&nbsp;
+                                                        <span>{$comment['dateline']}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="item-subtitle color-default">{$comment['message']}</div>
+                                                {if $comment['imglist']}
+                                                <div class="row share_img_wrap">
+                                                    {loop $comment['imglist'] $img}
+                                                    <div class="col-33">
+                                                        <img src="{php echo tomedia($img['thumb'])}" onerror="this.src='{php echo $this->superman_placeholder}'"/>
+                                                    </div>
+                                                    {/loop}
+                                                </div>
+                                                {/if}
+                                            </div>
+                                        </a>
+                                    </li>
+                                    {/loop}
+                                    {/if}
+                                </ul>
+                                {if count($comments)==$pagesize}
+                                <a href="#" data-url="{php echo $this->createMobileUrl('detail', array('itemid' => $itemid, 'load' => 'infinite'))}" class="button button-light more more_comment" data-page="{$pindex}" data-pagesize="{$pagesize}">点击查看更多</a>
+                                {/if}
+                                <div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="item_spec_wrap">
+			<div class="__item_spec">
+				<input type="hidden" name="valueids" value=""/>
+				<input type="hidden" name="skuid" value="{$item_default_spec_skuid}"/>
+				<div class="list-block media-list">
+					<ul>
+						<li>
+							<div class="item-content">
+								<img src="{php echo tomedia($item['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'" class="item_img">
+								<div class="item-inner">
+									<div class="item-title-row">
+										<div class="item-title color-danger">&#165;<span class="sku_price">{$item_default_spec_price}</span></div>
+									</div>
+									<div class="item-subtitle">库存<span class="sku_total">{$item_default_spec_total}</span>件</div>
+								</div>
+								<div class="close_wrap">
+									<a href="#" class="close">
+										<span class="iconfont fonta color-gray">&#xe62b;</span>
+									</a>
+								</div>
+							</div>
+						</li>
+						{if $item_attr}
+						{loop $item_attr $attr}
+						<li>
+							<div class="item-inner">
+								<div class="item-title-row">
+									<div class="item-title font7">{$attr['title']}</div>
+								</div>
+								{if $attr['values']}
+								{loop $attr['values'] $key $val}
+								<a href="#" data-id="{$val['id']}" class="item_value button button-fill button-small {if $key==0}active{/if}">{$val['value']}</a>
+								{/loop}
+								{/if}
+							</div>
+						</li>
+						{/loop}
+						{/if}
+					</ul>
+					<div class="row">
+						<div class="col-60 font7">购买数量
+						</div>
+						<div class="col-40 font6 color-gray">
+							<div class="buttons-row pull-right">
+								<a class="button btn_minus" data-title="购买数不能小于1" data-min-total="1" href="#">-</a>
+								<input class="number" type="text" name="total" value="1"/>
+								<a class="button btn_plus" data-title="超过库存数量" data-max-total="{$item_default_spec_total}" href="#">+</a>
+							</div>
+						</div>
+						{if isset($item['extend']['other_attr']['max_buy_num']) && $item['extend']['other_attr']['max_buy_num'] || isset($item['extend']['other_attr']['order_buy_num']) && $item['extend']['other_attr']['order_buy_num']}
+						<div class="col-100 font6 color-danger text-right">
+							{if $item['extend']['other_attr']['max_buy_num'] > 0}
+							每人限购{$item['extend']['other_attr']['max_buy_num']}件{if $item['extend']['other_attr']['order_buy_num'] > 0},{/if}
+							{/if}
+							{if $item['extend']['other_attr']['order_buy_num'] > 0}
+							每单限购{$item['extend']['other_attr']['order_buy_num']}件
+							{/if}
+						</div>
+						{/if}
+						<div class="col-100">
+							<a class="button button-fill btn_confirm {if $item_default_spec_total == 0}disabled no_click{/if}" data-cart-url="{php echo $this->createMobileUrl('cart', array('act' => 'post'))}" data-buy-url="{php echo $this->createMobileUrl('confirm')}" data-itemid="{$itemid}" data-type="cart" {if isset($item['extend']['other_attr']['order_buy_num'])}data-order-buy-num="{$item['extend']['other_attr']['order_buy_num']}"{/if} {if isset($item['extend']['other_attr']['max_buy_num'])}data-max-buy-num="{$item['extend']['other_attr']['max_buy_num']}"{/if} {if isset($buy_sum)}data-buy-sum="{$buy_sum}"{/if}>确定</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{template 'common/share'}
+	</div>
+	{if $item['special']==2}
+	<div class="page" id='mgroupon_rule'>
+		<header class="bar bar-nav">
+			<a class="button button-link button-nav pull-left back font7" href="#">
+				<span class="icon icon-left font7"></span>
+			</a>
+			<h1 class='title font7'>拼团规则</h1>
+		</header>
+		<div class="content">
+			<div class="content-block">
+				{php echo htmlspecialchars_decode($mgroupon_setting['rule'])}
+			</div>
+		</div>
+		{template 'common/share'}
+	</div>
+	{/if}
+    <div class="kefu_wrap">
+        {if $shop_service['link']}
+        <!--商户客服链接-->
+        <a href="{php echo $shop_service['link']}" {if !strexists($shop_service['link'],"tel:")}class="external"{/if}>
+        {else if $shop_service['content']}
+        <!--商户客服内容-->
+        <a href="{php echo $this->createMobileUrl('service', array('shopid' => $item['shopid']))}" class="external">
+            {else if $this->module['config']['service']['link']}
+            <!--平台客服链接-->
+        <a href="{php echo $this->module['config']['service']['link']}" {if !strexists($this->module['config']['service']['link'],"tel:")}class="external"{/if}>
+            {else if $this->module['config']['service']['content']}
+            <!--平台客服内容-->
+            <a href="{php echo $this->createMobileUrl('service')}" class="external">
+            {/if}
+            <span class="iconfont fonta">&#xe604;</span>
+        </a>
+    </div>
+    <div class="back_style">
+        <a href="{if empty($_SERVER['HTTP_REFERER'])}{php echo $this->createMobileUrl('home')}{/if}" class="font6 {if !empty($_SERVER['HTTP_REFERER'])}back{/if}">返回</a>
+    </div>
+	<script>
+		var ItemSku = [];
+		<!--{if $item_sku}-->
+		<!--{loop $item_sku $valueids $sku}-->
+		ItemSku['<!--{$valueids}-->'] = {
+			id: "<!--{$sku['id']}-->",
+			total: "<!--{$sku['total']}-->",
+			price: "<!--{$sku['price']}-->",
+			weight: "<!--{$sku['weight']}-->",
+			market_price: "<!--{$sku['market_price']}-->",
+			cost_price: "<!--{$sku['cost_price']}-->",
+			sales: "<!--{$sku['sales']}-->"
+		};
+		<!--{/loop}-->
+		<!--{/if}-->
+		//console.log(ItemSku);
+	</script>
+</div>
+{template 'common/footer'}

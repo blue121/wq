@@ -1,0 +1,52 @@
+<div class="panel panel-default">
+	<div class="table-responsive panel-body">
+		<table class="table table-hover">
+			<thead>
+			<tr>
+				<th>名称</th>
+				<th>代号</th>
+				<th width="115">状态</th>
+			</tr>
+			</thead>
+			<tbody>
+			{if $list}
+			{loop $list $li}
+			<tr>
+				<td>{$li['title']}</td>
+				<td>{$li['alias']}</td>
+				<td>
+					<input type="checkbox"  data-id="{$li['id']}" class="isdisplay" {if isset($list_shop_express[$li['id']])} checked{/if} />
+				</td>
+			</tr>
+			{/loop}
+			{/if}
+			</tbody>
+		</table>
+	</div>
+	<div class="panel-footer">
+		总共 <strong>{$total}</strong> 条
+	</div>
+</div>
+<script type="text/javascript">
+	require(['bootstrap.switch', 'util'], function($, u){
+		var load_bootstrap_switch = function() {
+			$(':checkbox').bootstrapSwitch();
+			$('.isdisplay').on('switchChange.bootstrapSwitch', function(e, state){
+				$this = $(this);
+				var id = $this.attr('data-id');
+				var value = this.checked ? 'insert' : 'delete';
+				var url = window.location.href;
+				$.ajax({
+					type: 'post',
+					url: url+'&op='+value+'&id='+id,
+					success: function (resp) {
+						if(resp != 'success') {
+							u.message(resp);
+						}
+					}
+				});
+			});
+		};
+		load_bootstrap_switch();
+	});
+</script>

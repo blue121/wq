@@ -1,0 +1,56 @@
+{template 'common/header'}
+<style>
+	.discount_wrap a {
+		display: block;
+		float: left;
+		text-align: center;
+		margin-right: 1.2em;
+		padding: 8px 5px;
+		width: 7em;
+		height: 7em;
+		overflow: hidden;
+		color: #333;
+	}
+	.discount_wrap i {
+		display: block;
+		font-size: 3em;
+		margin: .28em .2em;
+	}
+	.discount_wrap span {
+		display: block;
+		font-size: 1em;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+</style>
+<div class="main">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			营销工具
+		</div>
+		<div class="panel-body row">
+            <div class="col-xs-2 discount_wrap">
+                <a href="{php echo $this->createWebUrl('discount', array('type' => 1))}">
+                    <!--<i class="fa fa-external-link"></i>-->
+                    <img src="{$_W['siteroot']}addons/superman_mall/template/web/default/images/free_shipping.png" style="max-width: 100%;"/>
+                    <span style="padding-top: 5px;">满包邮</span>
+                </a>
+            </div>
+            <div class="col-xs-2 discount_wrap">
+                <a href="{php echo $this->createWebUrl('discount', array('type' => 2))}">
+                    <!--<i class="fa fa-external-link"></i>-->
+                    <img src="{$_W['siteroot']}addons/superman_mall/template/web/default/images/discount.png" style="max-width: 100%;"/>
+                    <span style="padding-top: 5px;">限时打折</span>
+                </a>
+            </div>
+			<div class="col-xs-2 discount_wrap">
+				<a href="{php echo $this->createWebUrl('discount', array('type' => 3))}">
+					<!--<i class="fa fa-external-link"></i>-->
+					<img src="{$_W['siteroot']}addons/superman_mall/template/web/default/images/full_cut.png" style="max-width: 100%;"/>
+					<span style="padding-top: 5px;">满减优惠</span>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+{template 'common/footer'}

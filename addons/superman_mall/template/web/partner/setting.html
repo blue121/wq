@@ -1,0 +1,583 @@
+<form class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+	<div class="panel panel-default">
+		<div class="panel-heading">基本设置</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">分销层级</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<select class="form-control" name="setting[base][level]">
+						<option value="0" {if !isset($setting['base']['level']) || $setting['base']['level'] == 0}selected{/if}>请选择</option>
+						<option value="1" {if isset($setting['base']['level']) && $setting['base']['level'] == 1}selected{/if}>一级分销</option>
+						<option value="2" {if isset($setting['base']['level']) && $setting['base']['level'] == 2}selected{/if}>二级分销</option>
+						<option value="3" {if isset($setting['base']['level']) && $setting['base']['level'] == 3}selected{/if}>三级分销</option>
+					</select>
+					<span class="help-block">未选择分销层级时，分销订单将不生成佣金数据，分销商将无法分润</span>
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">是否显示分销佣金</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="setting[base][show_commission]" value="1" {if isset($setting['base']['show_commission']) && $setting['base']['show_commission'] == 1}checked{/if}> 显示
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="setting[base][show_commission]" value="0" {if !isset($setting['base']['show_commission']) || $setting['base']['show_commission'] == 0}checked{/if}> 不显示
+						</label>
+					</div>
+					<span class="help-block">当分销商打开商品页时，可选择是否显示分销佣金，选择显示时，分销商将可以查看该商品的各级分销佣金，需要修改单个商品显示时，请到商品编辑页单独设置</span>
+				</div>
+			</div>-->
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">是否显示快递信息</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="setting[base][show_express]" value="2" {if isset($setting['base']['show_express']) && $setting['base']['show_express'] == 2}checked{/if}> 显示
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="setting[base][show_express]" value="1" {if isset($setting['base']['show_express']) && $setting['base']['show_express'] == 1}checked{/if}> 显示部分
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="setting[base][show_express]" value="0" {if !isset($setting['base']['show_express']) || $setting['base']['show_express'] == 0}checked{/if}> 不显示
+						</label>
+					</div>
+					<span class="help-block">分销商查看推广订单时，是否显示订单快递信息，“显示部分”为隐藏部分快递单号，“不显示”为隐藏所有快递信息</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">查看物流跟踪信息</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="setting[base][express_info]" value="1" {if isset($setting['base']['express_info']) && $setting['base']['express_info'] == 1}checked{/if}> 允许
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="setting[base][express_info]" value="0" {if !isset($setting['base']['express_info']) || $setting['base']['express_info'] == 0}checked{/if}> 不允许
+						</label>
+					</div>
+					<span class="help-block">分销商查看推广订单时，是否允许查看订单的快递物流跟踪信息，仅限查看下级分销商订单，不能跨级查看</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">是否开启佣金排行</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="setting[base][rank]" value="1" {if isset($setting['base']['rank']) && $setting['base']['rank'] == 1}checked{/if}> 开启
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="setting[base][rank]" value="0" {if !isset($setting['base']['rank']) || $setting['base']['rank'] == 0}checked{/if}> 关闭
+						</label>
+					</div>
+					<span class="help-block">关闭佣金排行后，分销中心将不显示入口</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">佣金排行条数</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[base][rank_pagesize]" placeholder="" {if isset($setting['base']['rank_pagesize'])}value="{$setting['base']['rank_pagesize']}"{/if}>
+					<span class="help-block">开启佣金排行后，可控制佣金排行榜输出数据条数，默认为空输出10条</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">佣金排行顶部图片</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					{php echo tpl_form_field_image('setting[base][top][img]', isset($setting['base']['top']['img'])?$setting['base']['top']['img']:'')}
+					<span class="help-block">推荐尺寸：360x200像素</span>
+					<input type="text" class="form-control" name="setting[base][top][url]" placeholder="http://" {if isset($setting['base']['top']['url'])}value="{$setting['base']['top']['url']}"{/if}>
+					<span class="help-block">图片链接，可以为空，格式：http://xxx</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">分销商注册顶部图片</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					{php echo tpl_form_field_image('setting[base][top][reg_img]', isset($setting['base']['top']['reg_img'])?$setting['base']['top']['reg_img']:'')}
+					<span class="help-block">推荐尺寸：360x200像素</span>
+					<input type="text" class="form-control" name="setting[base][top][reg_url]" placeholder="http://" {if isset($setting['base']['top']['reg_url'])}value="{$setting['base']['top']['reg_url']}"{/if}>
+					<span class="help-block">图片链接，可以为空，格式：http://xxx</span>
+				</div>
+			</div>
+			<div class="alert alert-info">
+				<i class="fa fa-exclamation-circle"></i> 商户编辑商品分销佣金属性时，可控制佣金最大值，防止商户提交恶意佣金数据，超过设置最大值无法提交更新
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">一级分销佣金</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group" style="margin-bottom: .5rem">
+						<span class="input-group-addon">最高</span>
+						<input type="number" step="0.01" class="form-control" value="{$setting['base']['commission1_rate_max']}" name="setting[base][commission1_rate_max]">
+						<span class="input-group-addon">%</span>
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon">最高</span>
+						<input type="number" step="0.01" class="form-control" value="{$setting['base']['commission1_value_max']}" name="setting[base][commission1_value_max]">
+						<span class="input-group-addon">元</span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">二级分销佣金</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group" style="margin-bottom: .5rem">
+						<span class="input-group-addon">最高</span>
+						<input type="number" step="0.01" class="form-control" value="{$setting['base']['commission2_rate_max']}" name="setting[base][commission2_rate_max]">
+						<span class="input-group-addon">%</span>
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon">最高</span>
+						<input type="number" step="0.01" class="form-control" value="{$setting['base']['commission2_value_max']}" name="setting[base][commission2_value_max]">
+						<span class="input-group-addon">元</span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">三级分销佣金</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group" style="margin-bottom: .5rem">
+						<span class="input-group-addon">最高</span>
+						<input type="number" step="0.01" class="form-control" value="{$setting['base']['commission3_rate_max']}" name="setting[base][commission3_rate_max]">
+						<span class="input-group-addon">%</span>
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon">最高</span>
+						<input type="number" step="0.01" class="form-control" value="{$setting['base']['commission3_value_max']}" name="setting[base][commission3_value_max]">
+						<span class="input-group-addon">元</span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">分销商优惠价</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group" style="margin-bottom: .5rem">
+						<span class="input-group-addon">最低</span>
+						<input type="number" step="0.01" class="form-control" value="{$setting['base']['discount_rate_min']}" name="setting[base][discount_rate_min]">
+						<span class="input-group-addon">%</span>
+					</div>
+					<div class="input-group">
+						<span class="input-group-addon">最高</span>
+						<input type="number" step="0.01" class="form-control" value="{$setting['base']['discount_value_max']}" name="setting[base][discount_value_max]">
+						<span class="input-group-addon">元</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">分销商设置</div>
+		<div class="panel-body" style="line-height: 20px;">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">加入条件</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="row" style="margin-bottom: .5rem">
+						<div class="col-sm-12 col-md-12 col-xs-12" style="padding: 0">
+							<div class="input-group">
+								<label class="radio-inline">
+									<input type="radio" name="setting[partner][join_condition][type]" value="1" {if !isset($setting['partner']['join_condition']['type']) || $setting['partner']['join_condition']['type'] == 1}checked{/if}> 无条件（关注公众号即可成为分销商）
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: .5rem">
+						<div class="col-sm-12 col-md-12 col-xs-12" style="padding: 0">
+							<div class="input-group">
+								<label class="radio-inline">
+									<input type="radio" name="setting[partner][join_condition][type]" value="2" {if isset($setting['partner']['join_condition']['type']) && $setting['partner']['join_condition']['type'] == 2}checked{/if}> 申请加入
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: .5rem">
+						<div class="col-sm-6 col-md-2 col-xs-12" style="padding: 0">
+							<div class="input-group">
+								<label class="radio-inline">
+									<input type="radio" name="setting[partner][join_condition][type]" value="3" {if isset($setting['partner']['join_condition']['type']) && $setting['partner']['join_condition']['type'] == 3}checked{/if}> 订单总数
+								</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-10 col-xs-12" style="padding: 0">
+							<input class="form-control" name="setting[partner][join_condition][limit]" type="text" {if isset($setting['partner']['join_condition']['limit']) && isset($setting['partner']['join_condition']['type']) && $setting['partner']['join_condition']['type'] == 3}value="{$setting['partner']['join_condition']['limit']}"{else}disabled="disabled"{/if}>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: .5rem">
+						<div class="col-sm-6 col-md-2 col-xs-12" style="padding: 0">
+							<div class="input-group">
+								<label class="radio-inline">
+									<input type="radio" name="setting[partner][join_condition][type]" value="4" {if isset($setting['partner']['join_condition']['type']) && $setting['partner']['join_condition']['type'] == 4}checked{/if}> 订单总金额
+								</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-10 col-xs-12" style="padding: 0">
+							<input class="form-control" name="setting[partner][join_condition][limit]" type="text" {if isset($setting['partner']['join_condition']['limit']) && isset($setting['partner']['join_condition']['type']) && $setting['partner']['join_condition']['type'] == 4}value="{$setting['partner']['join_condition']['limit']}"{else}disabled="disabled"{/if} >
+						</div>
+					</div>
+					<span class="help-block">
+						订单数和订单金额条件，仅统计已完成状态的订单
+					</span>
+					<span class="help-block" style="color: red;">每10分钟检查一次</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">下线条件</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="row" style="margin-bottom: .5rem">
+						<div class="col-sm-12 col-md-12 col-xs-12" style="padding: 0">
+							<div class="input-group">
+								<label class="radio-inline">
+									<input type="radio" name="setting[partner][downline]" value="1" {if !isset($setting['partner']['downline']) || $setting['partner']['downline'] == 1}checked{/if}> 点击邀请人分享链接
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: .5rem">
+						<div class="col-sm-12 col-md-12 col-xs-12" style="padding: 0">
+							<div class="input-group">
+								<label class="radio-inline">
+									<input type="radio" name="setting[partner][downline]" value="2" {if isset($setting['partner']['downline']) && $setting['partner']['downline'] == 2}checked{/if}> 首次下单——订单状态：已收货（待评价）
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: .5rem">
+						<div class="col-sm-12 col-md-12 col-xs-12" style="padding: 0">
+							<div class="input-group">
+								<label class="radio-inline">
+									<input type="radio" name="setting[partner][downline]" value="3" {if isset($setting['partner']['downline']) && $setting['partner']['downline'] == 3}checked{/if}> 首次下单——订单状态：已完成（已评价）
+								</label>
+							</div>
+						</div>
+					</div>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">默认分销等级</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<select class="form-control" name="setting[partner][groupid]">
+						<option value="0" {if !isset($setting['partner']['groupid']) || $setting['partner']['groupid'] == 0}selected{/if}>请选择</option>
+						{if $group_list}
+						{loop $group_list $group}
+						<option value="{$group['id']}" {if isset($setting['partner']['groupid']) && $setting['partner']['groupid'] == $group['id']}selected{/if}>{$group['title']}</option>
+						{/loop}
+						{/if}
+					</select>
+					<span class="help-block">新加入分销商默认所属分销等级，不选择时分销商没有分销等级，此时需要设置每个商品的自定义佣金</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">是否需要审核</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="setting[partner][check]" value="1" {if isset($setting['partner']['check']) && $setting['partner']['check'] == 1}checked{/if}> 需要
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="setting[partner][check]" value="0" {if !isset($setting['partner']['check']) || $setting['partner']['check'] == 0}checked{/if}> 不需要
+						</label>
+					</div>
+					<span class="help-block">分销商加入后，是否需要管理员审核，选择需要审核时，必须审核通过后，才正式成为分销商</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">是否需要完善资料</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="setting[partner][member_info]" value="1" {if isset($setting['partner']['member_info']) && $setting['partner']['member_info'] == 1}checked{/if}> 需要
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="setting[partner][member_info]" value="0" {if !isset($setting['partner']['member_info']) || $setting['partner']['member_info'] == 0}checked{/if}> 不需要
+						</label>
+					</div>
+					<span class="help-block">分销商加入和提现等操作时，是否强制完善资料</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">佣金结算</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="setting[partner][commission_settlement]" value="1" {if isset($setting['partner']['commission_settlement']) && $setting['partner']['commission_settlement'] == 1}checked{/if}> 自动
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="setting[partner][commission_settlement]" value="0" {if !isset($setting['partner']['commission_settlement']) || $setting['partner']['commission_settlement'] == 0}checked{/if}> 手动
+						</label>
+					</div>
+					<span class="help-block">
+						自动结算佣金：当结算周期条件满足后，分销商佣金自动进入分销商可提现佣金；
+					</span>
+					<span class="help-block">
+						手动结算佣金：进入佣金管理列表，选择佣金结算并提交，需人工参与操作佣金结算；
+					</span>
+					<span class="help-block" style="color: red;">每5分钟检查一次</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">结算周期</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<input type="text" class="form-control" name="setting[partner][commission_interval]" {if isset($setting['partner']['commission_interval'])}value="{$setting['partner']['commission_interval']}"{/if}>
+						<span class="input-group-addon">天</span>
+					</div>
+					<span class="help-block">订单完成x天后，佣金可以结算到分销商可提现佣金账户，默认为空不限制结算周期，即订单状态为已完成时生成结算佣金</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">提现额度</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<input type="text" class="form-control" name="setting[partner][getcash_limit]" {if isset($setting['partner']['getcash_limit'])}value="{$setting['partner']['getcash_limit']}"{/if}>
+						<span class="input-group-addon">元</span>
+					</div>
+					<span class="help-block">分销商提现最低金额限制，未达提现额度时，不能申请提现</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">分销等级变更</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="row" style="margin-bottom: .5rem">
+						<div class="col-sm-12 col-md-12 col-xs-12" style="padding: 0">
+							<div class="input-group">
+								<label class="radio-inline">
+									<input type="radio" name="setting[partner][group_upgrade]" value="0" {if !isset($setting['partner']['group_upgrade']) || $setting['partner']['group_upgrade'] == 0}checked{/if}> 不自动变更
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: .5rem">
+						<div class="col-sm-12 col-md-12 col-xs-12" style="padding: 0">
+							<div class="input-group">
+								<label class="radio-inline">
+									<input type="radio" name="setting[partner][group_upgrade]" value="1" {if isset($setting['partner']['group_upgrade']) && $setting['partner']['group_upgrade'] == 1}checked{/if}> 根据等级变更条件自动升降
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: .5rem">
+						<div class="col-sm-12 col-md-12 col-xs-12" style="padding: 0">
+							<div class="input-group">
+								<label class="radio-inline">
+									<input type="radio" name="setting[partner][group_upgrade]" value="2" {if isset($setting['partner']['group_upgrade']) && $setting['partner']['group_upgrade'] == 2}checked{/if}> 根据等级变更条件只升不降
+								</label>
+							</div>
+						</div>
+					</div>
+					<span class="help-block">不自动变更：分销商等级变更只能由管理员编辑修改；</span>
+					<span class="help-block">根据等级变更条件自动升降：系统根据等级变更条件，自动更新分销商等级，符合条件时可升级，反之降级；</span>
+					<span class="help-block">根据等级变更条件只升不降：系统根据等级变更条件，自动更新分销商等级，符合条件时可升级，但不会降级；</span>
+					<span class="help-block" style="color: red;">每小时检查一次</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">分销等级变更条件</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					{loop $group_condition_titles $key $value}
+					<div class="row" style="margin-bottom: .5rem">
+						<div class="col-sm-12 col-md-12 col-xs-12" style="padding: 0">
+							<div class="input-group">
+								<label class="radio-inline">
+									<input type="radio" name="setting[partner][group_condition]" value="{$key}" {if !isset($setting['partner']['group_condition']) && $key == 1 || isset($setting['partner']['group_condition']) && $setting['partner']['group_condition'] == $key}checked{/if}> {$value}
+								</label>
+							</div>
+						</div>
+					</div>
+					{/loop}
+					<span class="help-block">设置分销等级升级或降级条件后，必须选择等级变更条件，默认为分销订单总数</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">邀请好友提示内容</label>
+				<div class="col-sm-8 col-xs-12">
+					<textarea  rows="3" class="form-control" name="setting[partner][invite_text]">{if isset($setting['partner']['invite_text'])}{$setting['partner']['invite_text']}{/if}</textarea>
+					<div class="row" id="super_var_wrap2">
+						<div class="col-xs-6 col-sm-6 col-md-3" style="color: #000"><strong>{##平台##}</strong> 表示公众号的名称 <a data-content="{##平台##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					</div>
+					<script>
+						require(['jquery', 'util'], function($, u){
+							$('#super_var_wrap2 a').each(function(){
+								var t = this;
+								u.clip(t, $(t).attr('data-content'));
+							});
+						});
+					</script>
+					<span class="help-block">分销商好友打开邀请页时，可自定义提示内容</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">分享标题</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[partner][share_title]" {if isset($setting['partner']['share_title'])}value="{$setting['partner']['share_title']}"{/if}>
+					<span class="help-block">邀请好友分享标题，推荐字数13个汉字</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">分享图片</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					{php echo tpl_form_field_image('setting[partner][share_img]', isset($setting['partner']['share_img'])?$setting['partner']['share_img']:'')}
+					<span class="help-block">邀请好友分享图片，推荐尺寸：200x200像素</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">分享描述</label>
+				<div class="col-sm-8 col-xs-12">
+					<textarea  rows="3" class="form-control" name="setting[partner][share_desc]">{if isset($setting['partner']['share_desc'])}{$setting['partner']['share_desc']}{/if}</textarea>
+					<span class="help-block">邀请好友分享描述内容</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">文字自定义</div>
+		<div class="panel-body">
+			<div class="alert alert-info">
+				<i class="fa fa-exclamation-circle"></i> 分销页面文字自定义，如需修改请在对应文字后面填写，输入框为空时，使用默认值
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">内部价</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][innerprice]" placeholder="内部价" {if isset($setting['text']['innerprice'])}value="{$setting['text']['innerprice']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">我要分销</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][distribution]" placeholder="我要分销" {if isset($setting['text']['distribution'])}value="{$setting['text']['distribution']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">佣金</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][commission]" placeholder="佣金" {if isset($setting['text']['commission'])}value="{$setting['text']['commission']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">自己卖出</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][self_sell]" placeholder="自己卖出" {if isset($setting['text']['self_sell'])}value="{$setting['text']['self_sell']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">直接邀请成员买/卖</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][invite_direct]" placeholder="直接邀请成员买/卖" {if isset($setting['text']['invite_direct'])}value="{$setting['text']['invite_direct']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">间接邀请成员买/卖</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][invite_indirect]" placeholder="间接邀请成员买/卖" {if isset($setting['text']['invite_indirect'])}value="{$setting['text']['invite_indirect']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">分销中心</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][partner_center]" placeholder="分销中心" {if isset($setting['text']['partner_center'])}value="{$setting['text']['partner_center']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">赚佣金</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][get_commission]" placeholder="赚佣金" {if isset($setting['text']['get_commission'])}value="{$setting['text']['get_commission']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">累计佣金</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][commission_total]" placeholder="累计佣金" {if isset($setting['text']['commission_total'])}value="{$setting['text']['commission_total']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">已提佣金</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][commission_received]" placeholder="已提佣金" {if isset($setting['text']['commission_received'])}value="{$setting['text']['commission_received']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">可提佣金</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][commission_balance]" placeholder="可提佣金" {if isset($setting['text']['commission_balance'])}value="{$setting['text']['commission_balance']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">我的团队</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][myteam]" placeholder="我的团队" {if isset($setting['text']['myteam'])}value="{$setting['text']['myteam']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">邀请好友</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][invite_friend]" placeholder="邀请好友" {if isset($setting['text']['invite_friend'])}value="{$setting['text']['invite_friend']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">佣金排行</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][commission_rank]" placeholder="佣金排行" {if isset($setting['text']['commission_rank'])}value="{$setting['text']['commission_rank']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">推广订单</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][order]" placeholder="推广订单" {if isset($setting['text']['order'])}value="{$setting['text']['order']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">邀请人数</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][invite_total]" placeholder="邀请人数" {if isset($setting['text']['invite_total'])}value="{$setting['text']['invite_total']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">订单数</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][order_total]" placeholder="订单数" {if isset($setting['text']['order_total'])}value="{$setting['text']['order_total']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">一级人数</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][downline1]" placeholder="一级人数" {if isset($setting['text']['downline1'])}value="{$setting['text']['downline1']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">二级人数</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][downline2]" placeholder="二级人数" {if isset($setting['text']['downline2'])}value="{$setting['text']['downline2']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">三级人数</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][downline3]" placeholder="三级人数" {if isset($setting['text']['downline3'])}value="{$setting['text']['downline3']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">本单奖励</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][order_reward]" placeholder="本单奖励" {if isset($setting['text']['order_reward'])}value="{$setting['text']['order_reward']}"{/if}>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">申请加入</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="setting[text][apply_join]" placeholder="申请加入" {if isset($setting['text']['apply_join'])}value="{$setting['text']['apply_join']}"{/if}>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+			<button type="submit" name="submit" value="yes" class="btn btn-primary">提交</button>
+			<input type="hidden" name="token" value="{$_W['token']}">
+		</div>
+	</div>
+</form>
+<script>
+	require(['jquery'], function($){
+		$('input[name="setting[partner][join_condition][type]"]').click(function(){
+			$('input[name="setting[partner][join_condition][limit]"]').attr("disabled",true);
+			$('input[name="setting[partner][join_condition][limit]"]', $(this).parent().parent().parent().next()).removeAttr("disabled");
+		});
+	});
+</script>

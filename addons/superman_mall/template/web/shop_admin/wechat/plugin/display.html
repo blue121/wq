@@ -1,0 +1,242 @@
+<ul class="nav nav-tabs">
+    <li class="active"><a href="{php echo $this->createWebUrl('plugin', array('act' => 'display'));}">全部应用</a></li>
+</ul>
+<div class="plugin_list">
+    <div class="plugin_title font-weight-bold">业务</div>
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="plugin_list_row">
+                <a href="{php echo $this->createWebUrl('seckill');}">
+                    <table>
+                        <tr>
+                            <td width="60">
+                                <img class="img-circle plugin_list_img" src="{$_W['siteroot']}addons/superman_mall/template/web/shop_admin/wechat/resource/images/seckill.png" onerror="this.src='{php echo $this->superman_placeholder}'">
+                            </td>
+                            <td class="plugin_list_info">
+                                <div class="plugin_list_title">秒杀
+                                    <div class="pull-right plugin_isopen_text">
+                                        {if !is_error($list['seckill'])}
+                                        <span class="text-muted end_time" data-container="body" data-html="true" data-toggle="tooltip" data-placement="top" title="结束时间：{$list['seckill']['end']}">
+                                        已开启
+                                        </span>
+                                        {else}
+                                        <span class="text-danger font-weight-bold">!</span>
+                                        <span class="text-muted">
+                                        未开启
+                                        {/if}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="plugin_list_description text-muted">创建秒杀活动，可通过秒杀活动带来店铺关注度、访问量等</div>
+                            </td>
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="p-a-1 plugin_list_row">
+                <a href="{php echo $this->createWebUrl('mgroupon');}">
+                    <table>
+                        <tr>
+                            <td width="60">
+                                <img class="img-circle plugin_list_img" src="{$_W['siteroot']}addons/superman_mall/template/web/shop_admin/wechat/resource/images/mgroupon.png" onerror="this.src='{php echo $this->superman_placeholder}'">
+                            </td>
+                            <td class="plugin_list_info">
+                                <div class="plugin_list_title">拼团
+                                    <div class="pull-right plugin_isopen_text">
+                                        {if !is_error($list['mgroupon'])}
+                                        <span class="text-muted end_time" data-container="body" data-html="true" data-toggle="tooltip" data-placement="top" title="结束时间：{$list['mgroupon']['end']}">
+                                        已开启
+                                        </span>
+                                        {else}
+                                        <span class="text-danger font-weight-bold">!</span>
+                                        <span class="text-muted">
+                                        未开启
+                                        {/if}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="plugin_list_description text-muted">创建拼团活动，每个商品支持设置不同的拼团人数</div>
+                            </td>
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="plugin_list m-b-3">
+    <div class="plugin_title font-weight-bold">营销活动</div>
+    <div class="row m-t-1">
+        <div class="col-xs-4">
+            <div class="p-a-1 plugin_list_row">
+                <a href="{php echo $this->createWebUrl('discount', array('type' => 1));}">
+                    <table>
+                        <tr>
+                            <td width="60">
+                                <img class="img-circle plugin_list_img" src="{$_W['siteroot']}addons/superman_mall/template/web/shop_admin/wechat/resource/images/discount_tpye1.png" onerror="this.src='{php echo $this->superman_placeholder}'">
+                            </td>
+                            <td class="plugin_list_info">
+                                <div class="plugin_list_title">满包邮
+                                    <div class="pull-right plugin_isopen_text">
+                                        {if !is_error($list['discount'])}
+                                        <span class="text-muted end_time" data-container="body" data-html="true" data-toggle="tooltip" data-placement="top" title="结束时间：{$list['discount']['end']}">
+                                        已开启
+                                        </span>
+                                        {else}
+                                        <span class="text-danger font-weight-bold">!</span>
+                                        <span class="text-muted">
+                                        未开启
+                                        {/if}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="plugin_list_description text-muted">创建包邮活动，满n元(件)包邮，自动减去邮费</div>
+                            </td>
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="p-a-1 plugin_list_row">
+                <a href="{php echo $this->createWebUrl('discount', array('type' => 2));}">
+                    <table>
+                        <tr>
+                            <td width="60">
+                                <img class="img-circle plugin_list_img" src="{$_W['siteroot']}addons/superman_mall/template/web/shop_admin/wechat/resource/images/discount_type2.png" onerror="this.src='{php echo $this->superman_placeholder}'">
+                            </td>
+                            <td class="plugin_list_info">
+                                <div class="plugin_list_title">限时打折
+                                    <div class="pull-right plugin_isopen_text">
+                                        {if !is_error($list['discount'])}
+                                        <span class="text-muted end_time" data-container="body" data-html="true" data-toggle="tooltip" data-placement="top" title="结束时间：{$list['discount']['end']}">
+                                        已开启
+                                        </span>
+                                        {else}
+                                        <span class="text-danger font-weight-bold">!</span>
+                                        <span class="text-muted">
+                                        未开启
+                                        {/if}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="plugin_list_description text-muted">创建限时优惠活动，限时打折、限时减n元</div>
+                            </td>
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="p-a-1 plugin_list_row">
+                <a href="{php echo $this->createWebUrl('discount', array('type' => 3));}">
+                    <table>
+                        <tr>
+                            <td width="60">
+                                <img class="img-circle plugin_list_img" src="{$_W['siteroot']}addons/superman_mall/template/web/shop_admin/wechat/resource/images/discount_type3.png" onerror="this.src='{php echo $this->superman_placeholder}'">
+                            </td>
+                            <td class="plugin_list_info">
+                                <div class="plugin_list_title">满减优惠
+                                    <div class="pull-right plugin_isopen_text">
+                                        {if !is_error($list['discount'])}
+                                        <span class="text-muted end_time" data-container="body" data-html="true" data-toggle="tooltip" data-placement="top" title="结束时间：{$list['discount']['end']}">
+                                        已开启
+                                        </span>
+                                        {else}
+                                        <span class="text-danger font-weight-bold">!</span>
+                                        <span class="text-muted">
+                                        未开启
+                                        {/if}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="plugin_list_description text-muted">创建满减优惠，订单满n元(件)减n元(折)</div>
+                            </td>
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="plugin_list m-b-3">
+    <div class="plugin_title font-weight-bold">工具</div>
+    <div class="row m-t-1">
+        <div class="col-xs-4">
+            <div class="p-a-1 plugin_list_row">
+                <a href="{php echo $this->createWebUrl('printer');}">
+                    <table>
+                        <tr>
+                            <td width="60">
+                                <img class="img-circle plugin_list_img" src="{$_W['siteroot']}addons/superman_mall/template/web/shop_admin/wechat/resource/images/printer.png" onerror="this.src='{php echo $this->superman_placeholder}'">
+                            </td>
+                            <td class="plugin_list_info">
+                                <div class="plugin_list_title">打印机
+                                    <div class="pull-right plugin_isopen_text">
+                                        {if !is_error($list['printer'])}
+                                        <span class="text-muted end_time" data-container="body" data-html="true" data-toggle="tooltip" data-placement="top" title="结束时间：{$list['printer']['end']}">
+                                        已开启
+                                        </span>
+                                        {else}
+                                        <span class="text-danger font-weight-bold">!</span>
+                                        <span class="text-muted">
+                                        未开启
+                                        {/if}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="plugin_list_description text-muted">订单提交、付款时，关联打印机自动打印订单小票(需绑定打印机设备)</div>
+                            </td>
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="p-a-1 plugin_list_row">
+                <a href="{php echo $this->createWebUrl('tbast');}">
+                    <table>
+                        <tr>
+                            <td width="60">
+                                <img class="img-circle plugin_list_img" src="{$_W['siteroot']}addons/superman_mall/template/web/shop_admin/wechat/resource/images/tbast.png" onerror="this.src='{php echo $this->superman_placeholder}'">
+                            </td>
+                            <td class="plugin_list_info">
+                                <div class="plugin_list_title">淘宝助手
+                                    <div class="pull-right plugin_isopen_text">
+                                        {if !is_error($list['tbast'])}
+                                        <span class="text-muted end_time" data-container="body" data-html="true" data-toggle="tooltip" data-placement="top" title="结束时间：{$list['tbast']['end']}">
+                                        已开启
+                                        </span>
+                                        {else}
+                                        <span class="text-danger font-weight-bold">!</span>
+                                        <span class="text-muted">
+                                        未开启
+                                        {/if}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="plugin_list_description text-muted">淘宝、天猫商品一键采集，功能强大，使用灵活</div>
+                            </td>
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var initEndTime;
+    require(['bootstrap', 'util'], function($, u){
+        initEndTime = function() {
+            $('.end_time').hover(function(){
+                $(this).tooltip('show');
+            }, function (){
+                $(this).tooltip('hide');
+            });
+        };
+        initEndTime();
+    });
+</script>

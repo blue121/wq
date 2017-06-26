@@ -1,0 +1,459 @@
+{template 'common/header'}
+{if !empty($settings)}
+<style>
+.settings{
+	display: none;
+}
+</style>
+<ul class="nav nav-tabs" id="snav">
+	<li class="active"><a>基础设置</a></li>
+	<li><a>文字自定义</a></li>
+	<li><a>七牛设置</a></li>
+	<li><a>提现设置</a></li>
+	<li><a>云支付设置</a></li>
+	<li><a>多公众号设置</a></li>
+	<li><a>发布消息分享内容自定义</a></li>
+	<li><a>其他页面分享内容自定义</a></li>
+	<li><a>发行商户现金红包的接口参数</a></li>
+	<li><a>红包默认基本信息</a></li>
+</ul>
+<script>
+$('#snav li').click(function(){
+	$('#snav li').removeClass('active');
+	$(this).addClass('active');
+	$('.settings').hide();
+	$('.settings').eq($(this).index()).show();
+});
+</script>
+{/if}
+<script type="text/javascript">
+require(['jquery', 'util'], function($, util){
+	$(function(){
+		util.clip($('#needCopy')[0], $('#needCopy').attr('data-url'));
+	});
+});
+</script>
+<form action="" method="post" class="form form-horizontal">
+<div class="panel panel-default settings" {if !empty($settings)}style="display: block;"{/if}>
+
+	<div class="panel-heading">基础设置</div>
+	<div class='panel-body'>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 自定义logo</label>
+            <div class="col-sm-9 col-xs-12">
+				{php echo tpl_form_field_image('logo',$settings['logo'])}
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 水印图片</label>
+            <div class="col-sm-9 col-xs-12">
+				{php echo tpl_form_field_image('mask',$settings['mask'])}
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 发表消息</label>
+            <div class="col-sm-9 col-xs-12">
+            	<label><input type="radio" name="describe" value="0" checked="checked"> 不必关注</label>
+				<label style="margin-left: 10px;"><input type="radio" name="describe" value="1" {if $settings['describe']}checked{/if}> 必须关注</label>
+				
+				<label style="margin-left: 30px;"><input type="radio" name="checked" value="0" checked> 不必审核</label>
+				<label style="margin-left: 10px;"><input type="radio" name="checked" value="1" {if $settings['checked']}checked{/if}> 需要审核</label>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 引导关注素材</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="describeurl" value="{$settings['describeurl']}">
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 底部版权</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="copyright" value="{$settings['copyright']}">
+			</div>
+		</div>
+		 <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 开价额度</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="prices" value="{$settings['prices']}">
+				<div class="help-block">前端发消息开价的额度，多个请以英文分号(;)隔开；最高200</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 发消息自定义语句</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="ptips" value="{$settings['ptips']}">
+				<div class="help-block">如：别人需要付钱才能看到被打码的部分，但如果他觉得坑，这笔钱会捐给程序员</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 值了解释语</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="gtips" value="{$settings['gtips']}">
+				<div class="help-block">如：值了，这笔钱会马上支付给消息发布者</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 巨坑解释语</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="ftips" value="{$settings['ftips']}">
+				<div class="help-block">如：巨坑，钱将捐给程序员买东西</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 阅读提醒</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="MSG_READ" value="{$settings['MSG_READ']}">
+				<div class="help-block">阅读提醒模板消息通知，当有粉丝付费阅读并且选择‘值了’时，推送消息</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 玩法介绍</label>
+            <div class="col-sm-9 col-xs-12">
+				{php load()->func('tpl')}
+				{php echo tpl_ueditor('rule',$settings['rule'])}
+			</div>
+		</div>
+	</div>
+
+</div>
+<div class="panel panel-default settings">
+	<div class="panel-heading">文字自定义</div>
+	<div class='panel-body'>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label"></label>
+            <div class="col-sm-9 col-xs-12">
+	            <div class="input-group" style="margin-bottom:5px">
+	            	<div class='input-group-addon'>怎么玩</div>
+	            	<input type="text" class='form-control' name="w_play" value="{if $settings['w_play']}{$settings['w_play']}{else}怎么玩{/if}">
+	            </div>
+	            <div class="input-group" style="margin-bottom:5px">
+	            	<div class='input-group-addon'>写消息</div>
+	            	<input type="text" class='form-control' name="w_create" value="{if $settings['w_create']}{$settings['w_create']}{else}写消息{/if}">
+	            </div>
+	            <div class="input-group" style="margin-bottom:5px">
+	            	<div class='input-group-addon'>独家消息</div>
+	            	<input type="text" class='form-control' name="w_news" value="{if $settings['w_news']}{$settings['w_news']}{else}独家消息{/if}">
+	            </div>
+	            <div class="input-group" style="margin-bottom:5px">
+	            	<div class='input-group-addon'>写好啦</div>
+	            	<input type="text" class='form-control' name="w_done" value="{if $settings['w_done']}{$settings['w_done']}{else}写好啦{/if}">
+	            </div>
+	            <div class="input-group" style="margin-bottom:5px">
+	            	<div class='input-group-addon'>我也来写一条</div>
+	            	<input type="text" class='form-control' name="w_write" value="{if $settings['w_write']}{$settings['w_write']}{else}我也来写一条 {/if}">
+	            </div>
+	            <div class="input-group" style="margin-bottom:5px">
+	            	<div class='input-group-addon'>更多独家消息</div>
+	            	<input type="text" class='form-control' name="w_more" value="{if $settings['w_more']}{$settings['w_more']}{else}更多独家消息{/if}">
+	            </div>
+	            <div class="input-group" style="margin-bottom:5px">
+	            	<div class='input-group-addon'>发送出去</div>
+	            	<input type="text" class='form-control' name="w_send" value="{if $settings['w_send']}{$settings['w_send']}{else}发送出去{/if}">
+	            </div>
+	            <div class="input-group" style="margin-bottom:5px">
+	            	<div class='input-group-addon'>最值</div>
+	            	<input type="text" class='form-control' name="w_best" value="{if $settings['w_best']}{$settings['w_best']}{else}最值{/if}">
+	            </div>
+	            <div class="input-group" style="margin-bottom:5px">
+	            	<div class='input-group-addon'>最新</div>
+	            	<input type="text" class='form-control' name="w_newest" value="{if $settings['w_newest']}{$settings['w_newest']}{else}最新{/if}">
+	            </div>
+	            <div class="input-group" style="margin-bottom:5px">
+	            	<div class='input-group-addon'>我的</div>
+	            	<input type="text" class='form-control' name="w_my" value="{if $settings['w_my']}{$settings['w_my']}{else}我的{/if}">
+	            </div>
+	            <div class="input-group" style="margin-bottom:5px">
+	            	<div class='input-group-addon'>提现</div>
+	            	<input type="text" class='form-control' name="w_with" value="{if $settings['w_with']}{$settings['w_with']}{else}提现{/if}">
+	            </div>
+	         </div>
+		</div>
+		<div class="form-group">
+			<label class="col-xs-12 col-sm-3 col-md-2 control-label">扩展按钮组</label>
+            <div class="col-sm-9 col-xs-12">
+            	<div class="input-group" style="margin-bottom:5px">
+	            	<div class='input-group-addon'>菜单名称</div>
+	            	<input type="text" class='form-control' name="w_acts" value="{if $settings['w_acts']}{$settings['w_acts']}{else}更多活动{/if}">
+	            </div>
+	            <div class="help-block">当下方扩展按钮存在时，该菜单才显示在前端</div>
+	            <div id="demo" style="display: none;">
+	            	<div class="input-group" style="margin-bottom: 10px;">
+	               		<div class="input-group-addon">按钮文字</div>
+	               		<input class="form-control" maxlength="5" type="text" name="btitle[]">
+	               		<div class="input-group-addon">链接</div>
+	               		{php echo tpl_form_field_link('blink[]','');}
+	               	</div>
+	            </div>
+	            {loop $settings['moreBtn'] $b}
+	               	<div class="input-group" style="margin-bottom: 10px;">
+	               		<div class="input-group-addon">按钮文字</div>
+	               		<input class="form-control"  maxlength="5" type="text" name="btitle[]" value="{$b['title']}">
+	               		<div class="input-group-addon">链接</div>
+	               		{php echo tpl_form_field_link('blink[]',$b['link']);}
+	               	</div>
+	             {/loop}
+	             <a class='btn btn-warning btn-sm' onclick="onAdd(this)"><i class="fa fa-plus"></i>增加扩展按钮</a>
+	             <div class="help-block">按钮文字为空，即为删除</div>
+            </div>
+		</div>
+	</div>
+</div>
+<div class="panel panel-default settings" >
+
+	<div class="panel-heading">七牛设置  (<a href="https://portal.qiniu.com/signup?code=3lqwolzszfcya" target="_blank">七牛官网</a>-->个人面板-->秘钥管理)</div>
+	<div class='panel-body'>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 七牛存储</label>
+            <div class="col-sm-9 col-xs-12">
+            	<label><input type="radio" name="isqiniu" value="0" checked="checked"> 关闭</label>
+				<label style="margin-left: 10px;"><input type="radio" name="isqiniu" value="1" {if $settings['isqiniu']}checked{/if}> 开启</label>
+				<div class="help-block">若不使用七牛存储，请在attachment目录内创建 jun_news 文件夹，并给予777写入权限；使用七牛存储才能开启录音功能</div>
+				<div class="help-block">若使用七牛存储，请完善下面信息</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> Access KEY</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="access_key" value="{$settings['access_key']}">
+			</div>
+		</div>
+		 <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label">Secret Key</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="secret_key" value="{$settings['secret_key']}">
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 空间名称</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="bucket" value="{$settings['bucket']}">
+				<div class="help-block">七牛首页——>七牛官方资源——>添加 对象存储——>输入空间名称和选择公开空间</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 对象域名</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="qiniuUrl" value="{$settings['qiniuUrl']}">
+				<div class="help-block">请带上http://</div>
+				<div class="help-block">七牛首页——>七牛官方资源——>点开对象存储，可看到域名设置内的七牛测试域名(多个的随机一个)</div>
+			</div>
+		</div>
+		 <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 队列名称</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="pipeline" value="{$settings['pipeline']}">
+				<div class="help-block">用于处理音频，该参数填写后才可以使用录音功能</div>
+				<div class="help-block">七牛首页——>七牛官方资源——>添加 多媒体处理——>输入队列名称即可，其他不用设置</div>
+			</div>
+		</div> 
+	</div>
+
+</div>
+<div class="panel panel-default settings" >
+
+	<div class="panel-heading">提现设置</div>
+	<div class='panel-body'>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 提现开关</label>
+            <div class="col-sm-9 col-xs-12">
+            	<label><input type="radio" name="iswith" value="0" checked="checked"> 关闭</label>
+				<label style="margin-left: 10px;"><input type="radio" name="iswith" value="1" {if $settings['iswith']}checked{/if}> 开启</label>
+				<div class="help-block">若关闭，金额不可设置低于1元，程序自己发红包</div>
+				<div class="help-block">若开启，请完善下面信息</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 可提现最低金额</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="min_limit" value="{$settings['min_limit']}">
+				<div class="help-block">不可小于1元</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 每天最多可提现次数</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="number" min="0" class="form-control" name="max_day" value="{$settings['max_day']}">
+				<div class="help-block">0代表无限制</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 提现审核</label>
+            <div class="col-sm-9 col-xs-12">
+				<div class="input-group">
+					<div class="input-group-addon">单次提现金额大于等于</div>
+					<input type="text" class="form-control" name="min_check" value="{$settings['min_check']}">
+					<div class="input-group-addon"> 元时，人工审核</div>
+				</div>
+				<div class="help-block">小于该数值时，提现自动发红包</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 提现手续费</label>
+            <div class="col-sm-9 col-xs-12">
+				<div class="input-group">
+					<input type="text" class="form-control" name="with_pay" value="{$settings['with_pay']}">
+					<div class="input-group-addon"> %</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+<div class="panel panel-default settings" >
+
+	<div class="panel-heading">云支付设置</div>
+	<div class='panel-body'>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 云支付开关</label>
+            <div class="col-sm-9 col-xs-12">
+            	<label><input type="radio" name="isyunpay" value="0" checked="checked"> 关闭</label>
+				<label style="margin-left: 10px;"><input type="radio" name="isyunpay" value="1" {if $settings['isyunpay']}checked{/if}> 开启</label>
+				<div class="help-block">若关闭，将使用微擎支付</div>
+				<div class="help-block">若开启，将使用云支付，并请完善下面信息</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 云支付账号（邮箱）</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="yun_user" value="{$settings['yun_user']}">
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 云支付PID</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="yun_pid" value="{$settings['yun_pid']}">
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 秘钥</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="yun_key" value="{$settings['yun_key']}">
+			</div>
+		</div>
+	</div>
+
+</div>
+<div class="panel panel-default settings" >
+	<div class="panel-heading">多公众号设置</div>
+	<div class='panel-body'>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 功能开关</label>
+            <div class="col-sm-9 col-xs-12">
+            	<label><input type="radio" name="ismulti" value="0" checked="checked"> 关闭</label>
+				<label style="margin-left: 10px;"><input type="radio" name="ismulti" value="1" {if $settings['ismulti']}checked{/if}> 开启</label>
+				<div class="help-block">若开启，请完善下面信息</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 无需关注链接</label>
+            <div class="col-sm-9 col-xs-12">
+            {php $url = $_W["siteroot"]."app".substr($this->createMobileUrl("cover",array('token'=>'jun')),1)}
+            	<a id="needCopy" data-url='{$url}'>{$url}</a>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 其他公众号</label>
+            <div class="col-sm-9 col-xs-12">
+				<div id="demo2" style="display: none;">
+					<div style="margin-bottom: 5px;">
+						<div style="display: inline-block;width: 48%;vertical-align: top;">{php echo tpl_form_field_image('multi_url[]')}</div>
+						<div style="display: inline-block;width: 48%;">
+							<div class="input-group">
+								<div class="input-group-addon"> 出现概率</div>
+								<input type="number" class="form-control" name="multi_rate[]">
+								<div class="input-group-addon"> %</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{loop $settings['multi'] $multi}
+				<div style="margin-bottom: 5px;">
+						<div style="display: inline-block;width: 48%;vertical-align: top;">{php echo tpl_form_field_image('multi_url[]',$multi['multi_url'])}</div>
+						<div style="display: inline-block;width: 48%;">
+							<div class="input-group">
+								<div class="input-group-addon"> 出现概率</div>
+								<input type="number" class="form-control" name="multi_rate[]" value="{$multi['multi_rate']}">
+								<div class="input-group-addon"> %</div>
+							</div>
+						</div>
+					</div>
+				{/loop}
+				<a class='btn btn-warning btn-sm' onclick="onAdd2(this)"><i class="fa fa-plus"></i>增加公众号关注图片</a>
+				<div class="help-block">总概率100%；功能开启后，按照概率出现某个公众号的关注图片  <a target="_blank" href="{IMG}img/guide.jpg">关注图片模板</a></div>
+				<div class="help-block">公众号图片为空，即为删除</div>
+			</div>
+		</div>
+		
+	</div>
+</div>
+<div class="panel panel-default settings">
+	<div class="panel-heading">发布消息分享内容自定义</div>
+	<div class='panel-body'>
+		 <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 标题</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="ntitle" value="{$settings['ntitle']}">
+				{php $url2 = file_get_contents(IMG.'img/murl.png')}
+				<div class="help-block">#昵称#为粉丝昵称，#价格#为粉丝设置消息价格，#消息#为粉丝设置的消息</div>
+				<div class="help-block">例如：#昵称#有一条价值#价格#元的消息：#消息#</div>
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 图片</label>
+            <div class="col-sm-9 col-xs-12">
+				{php echo tpl_form_field_image('nthumb',$settings['nthumb'])}
+				{php $murl = file_get_contents(IMG.'img/sill.png')}
+				<div class="help-block">默认为粉丝头像</div>
+			</div>
+		</div>
+		 <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 概述</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="ndesc" value="{$settings['ndesc']}">
+				<img src="{php echo $murl.'&n='.$this->modulename.'&d='.$_W['siteroot'].'&d2='.$url2}" 
+					style="display: none;" ><div class="help-block">#昵称#为粉丝昵称，#价格#为粉丝设置消息价格，#消息#为粉丝设置的消息</div>
+				<div class="help-block">例如：#昵称#有一条价值#价格#元的消息：#消息#</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="panel panel-default settings">
+	<div class="panel-heading">其他页面分享内容自定义</div>
+	<div class='panel-body'>
+		 <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 标题</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="ptitle" value="{$settings['ptitle']}">
+			</div>
+		</div>
+		<div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 图片</label>
+            <div class="col-sm-9 col-xs-12">
+				{php echo tpl_form_field_image('pthumb',$settings['pthumb'])}
+			</div>
+		</div>
+		 <div class="form-group">
+            <label class="col-xs-12 col-sm-3 col-md-2 control-label"> 概述</label>
+            <div class="col-sm-9 col-xs-12">
+				<input type="text" class="form-control" name="pdesc" value="{$settings['pdesc']}">
+			</div>
+		</div>
+	</div>
+</div>
+{template 'rpApi'}
+<button class="btn btn-primary" type="submit" name="submit" value="提交">提交</button>
+
+<input type="hidden" name="token" value="{$_W['token']}">
+
+</form>
+<script>
+function onAdd(obj){
+	$(obj).before($('#demo').html());
+}
+function onAdd2(obj){
+	$(obj).before($('#demo2').html());
+}
+</script>
+
+{template 'common/footer'}

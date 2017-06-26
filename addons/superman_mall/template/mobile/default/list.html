@@ -1,0 +1,135 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+		{template 'common/nav'}
+		{if $act == 'display'}
+		{template 'common/title'}
+		<div class="content infinite-scroll" data-flag="0" data-display-url="{php echo $this->createMobileUrl('list', array_merge(array('sort' => $sort, 'load' => 'infinite'), $params))}" data-detail-url="{php echo $this->createMobileUrl('detail', array('act' => 'display'))}" data-distance="50" data-page="{$pindex}" data-cart-url="{php echo $this->createMobileUrl('cart', array('act' => 'post'))}">
+			<div class="card item_list_wrap">
+				<div class="card-content">
+					<div class="list-block media-list">
+						<ul>
+							<li>
+								<div class="item-inner row no-gutter text-center">
+									<div class="col-25">
+										<a href="{php echo $this->createMobileUrl('list', array_merge(array('sort' => 'multiple'), $params))}" class="color-default font7 {if $sort=='multiple'}active{/if}" data-no-cache="true">综合</a>
+									</div>
+									<div class="col-25">
+										<a href="{php echo $this->createMobileUrl('list', array_merge(array('sort' => 'sale'), $params))}" class="color-default font7 {if $sort=='sale'}active{/if}" data-no-cache="true">销量</a>
+									</div>
+									<div class="col-25">
+										<a href="{php echo $this->createMobileUrl('list', array_merge(array('sort' => 'comment'), $params))}" class="color-default font7 {if $sort=='comment'}active{/if}" data-no-cache="true">评价</a>
+									</div>
+									<div class="col-25">
+										<a href="{php echo $this->createMobileUrl('list', array_merge(array('sort' => $sort_price), $params))}" class="color-default font7 {if $sort=='priceup'||$sort=='pricedown'}active{/if}" data-no-cache="true">价格
+											{if $sort=='priceup'}
+											<span class="icon iconfont price_icon down_icon">&#xe63e;</span>
+											{else}
+											<span class="icon iconfont price_icon up_icon">&#xe63e;</span>
+											{/if}
+										</a>
+									</div>
+								</div>
+							</li>
+							{if $list}
+							<div class="item_list row no-gutter {if $list_style == '2'}two_list_bg{/if}" data-list-style="{$list_style}" data-list-style-cart-btn="{$list_style_cart_btn}">
+								{loop $list $item}
+									{if $list_style == 1}
+                                    <li class="item-content">
+                                        <div class="item-media">
+                                            <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="{SUPERMAN_EXTERNAL}" data-no-cache="true">
+                                                <img class="lazyload img_square1" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-original="{php echo tomedia($item['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'"/>
+                                            </a>
+                                        </div>
+                                        <div class="item-inner">
+                                            <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="{SUPERMAN_EXTERNAL}" data-no-cache="true">
+                                                <div class="item-title-row">
+                                                    <div class="item-title color-default font7 text-overflow-line2">{$item['title']}</div>
+                                                </div>
+                                                <div class="price_line_height item-subtitle color-danger font9 clearfix">
+                                                    &#165;{$item['price']}
+                                                    {if $item['market_price'] > 0}
+                                                    <span class="market_price_wrap color-gray font6 text-delete-line">&#165;{$item['market_price']}</span>
+                                                    {/if}
+                                                    {if $item['sales']}
+                                                    <span class="color-gray font6 pull-right">
+                                                        已售{$item['sales']}
+                                                    </span>
+                                                    {/if}
+                                                </div>
+                                            </a>
+                                            <div class="cart_line_height item-subtitle color-gray font6 clearfix">
+                                                <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="{SUPERMAN_EXTERNAL}" data-no-cache="true">
+                                                <span class="pull-left color-gray">
+                                                    {if $item['comment_praise_count']&&$item['comment_count']}
+                                                    好评{php echo intval($item['comment_praise_count']/$item['comment_count']*100)}%
+                                                    {else}
+                                                    暂无评价
+                                                    {/if}
+                                                </span>
+                                                </a>
+                                                {if $style_setting['list_style_cart_btn'] == 1}
+                                                <a href="#" class="button pull-right add_cart" title="添加入购物车" data-itemid="{$item['id']}"  data-skuid="{php echo intval($item['skuid'])}" data-cart-url="{php echo $this->createMobileUrl('cart', array('act' => 'post'))}"><span class="icon iconfont">&#xe626;</span></a>
+                                                {/if}
+                                            </div>
+                                        </div>
+                                    </li>
+									{else if $list_style == 2}
+									<div class="col-50 two_list_style">
+                                        <div class="card two_list_wrap">
+                                            <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="{SUPERMAN_EXTERNAL}" data-no-cache="true">
+                                                <div valign="bottom" class="card-header color-white no-border no-padding">
+                                                    <img class='lazyload card-cover img_square1' src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-original="{php echo tomedia($item['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'"/>
+                                                    {if $item['sales']}
+                                                    <div class="sales_wrap">
+                                                        <span class="font6">已售{$item['sales']}</span>
+                                                    </div>
+                                                    {/if}
+                                                </div>
+                                            </a>
+                                            <div class="card-content">
+                                                <div class="card-content-inner">
+                                                    <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="{SUPERMAN_EXTERNAL}" data-no-cache="true">
+                                                        <div class="text-overflow color-default">{$item['title']}</div>
+                                                    </a>
+                                                    <div class="clearfix font7 two_list_item">
+                                                        <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="{SUPERMAN_EXTERNAL}" data-no-cache="true">
+                                                            <span class="pull-left color-danger">&#165;{$item['price']}</span>
+                                                            {if $item['market_price'] > 0}
+                                                            <span class="market_price_wrap color-gray font6 text-delete-line">&#165;{$item['market_price']}</span>
+                                                            {/if}
+                                                        </a>
+                                                        {if $style_setting['list_style_cart_btn'] == 1}
+                                                        <a href="#" class="button pull-right add_cart" title="添加入购物车" data-itemid="{$item['id']}"  data-skuid="{php echo intval($item['skuid'])}" data-cart-url="{php echo $this->createMobileUrl('cart', array('act' => 'post'))}"><span class="icon iconfont">&#xe626;</span></a>
+                                                        {/if}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+									</div>
+									{/if}
+								{/loop}
+							</div>
+							{else}
+							<li>
+								<div class="item-inner row no-gutter text-center">
+									<p class="color-gray font7">未找到数据</p>
+								</div>
+							</li>
+							{/if}
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+			{if count($list)==$pagesize}
+			<div class="infinite-scroll-preloader">
+				<div class="preloader"></div>
+			</div>
+			{/if}
+		</div>
+		{/if}
+		{template 'common/share'}
+	</div>
+</div>
+{template 'common/footer'}

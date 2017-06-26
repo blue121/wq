@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="{RES}css/weui.css" />
+<link rel="stylesheet" href="{RES}css/style.css?v={TIMESTAMP}" />
+<script src="../app/resource/js/lib/jquery-1.11.1.min.js"></script>
+<title>{$_W['account']['name']}</title>
+</head>
+<body>
+<div class="header">
+{if $cfg['logo']}<img src="{php echo toimage($cfg['logo'])}" class="logo">{/if}
+	我发布的消息
+</div>
+<div style="background: white;margin: 20px 10px;padding: 10px 5px;">
+	<div style="line-height: 40px;height: 40px;"><img class="avatar" src="{$news['avatar']}"> {$news['nickname']}<font style="float: right;">赚了 ￥{$price}</font></div>
+	<div style="margin: 5px 0;">{$news['words']}</div>
+	{template 'com_show'}
+	<div style="margin: 10px 0;"><span><img class="icon" src="{RES}img/smile.png"> {$good}人觉得值</span><span style="margin-left: 10px;"><img class="icon" src="{RES}img/sad.png"> {$fail}人觉得坑</span></div>
+</div>
+{if !$cfg['checked'] || $news['checked']}
+<a class="weui_btn weui_btn_primary" style="width: 95%;margin-top: 20px;" onclick="$('#share').show()">{if $cfg['w_send']}{$cfg['w_send']}{else}发送出去{/if}</a>
+{else}
+<a class="weui_btn weui_btn_warn" style="width: 95%;margin-top: 20px;">请耐心等候审核...</a>
+{/if}
+<a class="weui_btn weui_btn_plain_default" style="width: 95%;margin-top: 20px;" href="{php echo $this->createMobileUrl('list')}">{if $cfg['w_more']}{$cfg['w_more']}{else}更多独家消息{/if}</a>
+<div id="share" onclick="$(this).hide()"><img style="width: 60%;" src="{RES}img/share.png"></div>
+{template 'share'}
+</body>
+</html>

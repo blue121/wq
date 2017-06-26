@@ -1,0 +1,13 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+    <li class="{if $act=='display'}active{/if}"><a href="{php echo $this->createWebUrl('mgroupon')}">拼团商品</a></li>
+    <li class="{if $act=='post'&&!isset($_GPC['id'])}active{/if}"><a href="{php echo $this->createWebUrl('mgroupon', array('act' => 'post'))}">添加商品</a></li>
+    {if $act=='post'&&isset($_GPC['id'])}<li {if $act=='post'}class="active"{/if}><a href="{php echo $this->createWebUrl('mgroupon', array('act' => 'post', 'id' => $id));}">编辑商品</a></li>{/if}
+    <li class="{if $act=='setting'}active{/if}"><a href="{php echo $this->createWebUrl('mgroupon', array('act' => 'setting'))}">参数设置</a></li>
+</ul>
+{if is_error($plugin_permission)}
+<div class="alert alert-danger">{$plugin_permission['message']}</div>
+{else}
+{template $this->do.'/'.$this->act}
+{/if}
+{template 'common/footer'}

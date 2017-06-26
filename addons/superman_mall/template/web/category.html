@@ -1,0 +1,262 @@
+{template 'web/header'}
+<ul class="nav nav-tabs">
+	<li {if $act == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('category', array('act' => 'display'));}">商品分类</a></li>
+	{if empty($item['id'])}
+	<li {if $act == 'post'}class="active"{/if}><a href="{php echo $this->createWebUrl('category', array('act' => 'post', 'pid' => 0))}">添加分类</a></li>
+	{else}
+	<li class="active"><a href="{php echo $this->createWebUrl('category', array('act' => 'post', 'id' => $id));}">编辑分类</a></li>
+	{/if}
+</ul>
+
+{if $act == 'display'}
+<style>
+.category_img {
+	width: 40px;
+	height: 40px;
+}
+.category_child {
+	padding-left:50px;
+	background:url('./resource/images/bg_repno.gif') no-repeat -245px -545px;
+}
+.category_input {
+	display:inline-block;
+	width:230px;
+}
+.child_input {
+	display:inline-block;
+	width:135px;
+}
+.category_childs_none {
+	display: none;
+}
+</style>
+<form method="post">
+	<div class="panel panel-default ">
+		<div class="table-responsive panel-body">
+			<table class="table table-hover">
+				<thead class="navbar-inner">
+				<tr>
+					<th width="60"></th>
+					<th width="90">排序</th>
+					<th width="500">分类名称</th>
+					<th width="80">状态</th>
+					<th class="text-right">操作</th>
+				</tr>
+				</thead>
+				<tbody id="category_body">
+					{if $list}
+						{loop $list $parent}
+							<tr>
+								<td>
+									<a href="javascript:;" class="toggle_collapse">
+										<i class="fa fa-plus"></i>
+									</a>
+									<!--<i class="fa fa-minus minus_menu"></i>-->
+								</td>
+								<td>
+									<input type="text" class="form-control text-center" name="displayorder[{$parent['id']}]" value="{$parent['displayorder']}">
+								</td>
+								<td>
+									<input style="width: 100%" type="text" disabled class="form-control category_input" value="{$parent['title']}">
+								</td>
+								<td>
+									{if $parent['isshow'] == 1}
+									<span class="label label-success">显示</span>
+									{else}
+									<span class="label label-danger">隐藏</span>
+									{/if}
+								</td>
+								<td class="text-right">
+									<a href="{php echo $this->createWebUrl('category', array('act' => 'post', 'id' => $parent['id'], 'pid' => 0, 'level' => 1))}"><i class="fa fa-pencil"></i> 编辑</a>
+									<a href="{php echo $this->createWebUrl('category', array('act' => 'delete', 'id' => $parent['id']))}" class="text-danger"  style="padding: 0 .5rem" onclick="return confirm('确认删除此分类吗？\n删除分类后该分类下子分类将一并删除\n该分类及子分类下商品将初始化为无分类状态');return false;"><i class="fa fa-remove"></i> 删除</a>
+									<a href="{php echo $this->createWebUrl('category', array('act' => 'post', 'pid' => $parent['id']))}" class="text-warning"><i class="fa fa-plus"></i> 添加二级分类</a>
+								</td>
+							</tr>
+					</tbody>
+					<tbody class="category_childs_none">
+						{if $parent[childs] != ''}
+							{loop $parent['childs'] $child}
+							<tr>
+								<td>
+								</td>
+								<td>
+								</td>
+								<td>
+									<div class="row">
+										<div class="col-xs-3" style="width:16%; padding-left: 0">
+											<input type="text" class="form-control text-center" name="displayorder[{$child['id']}]" value="{$child['displayorder']}" >
+										</div>
+										<div class="col-xs-9" style="width: 84%; padding-right: 0">
+											<div>
+												<input type="text" disabled style="width: 100%"  class="form-control child_input" value="{$child['title']}">
+											</div>
+										</div>
+									</div>
+								</td>
+								<td>
+									{if $child['isshow'] == 1}
+									<span class="label label-success">显示</span>
+									{else}
+									<span class="label label-danger">隐藏</span>
+									{/if}
+								</td>
+								<td>
+									<a href="{php echo $this->createWebUrl('category', array('act' => 'post', 'id' => $child['id'], 'pid' => $parent['id'], 'level' => 2))}"><i class="fa fa-pencil"></i> 编辑</a>
+									<a href="{php echo $this->createWebUrl('category', array('act' => 'delete', 'id' => $child['id']))}"  class="text-danger" style="padding: 0 .5rem" onclick="return confirm('确认删除此子分类吗？\n该分类下商品将初始化为无分类状态');return false;"><i class="fa fa-remove"></i> 删除</a>
+									<a href="{php echo $this->createWebUrl('category', array('act' => 'post', 'pid' => $child['id']))}" class="text-warning"><i class="fa fa-plus"></i> 添加三级分类</a>
+								</td>
+							</tr>
+							{if $child[childs] != ''}
+								{loop $child[childs] $v}
+								<tr>
+									<td>
+									</td>
+									<td>
+									</td>
+									<td>
+										<div class="row">
+											<div class="col-xs-3" style="width:16%; padding-left: 0">
+												<input type="text" class="form-control text-center" name="displayorder[{$v['id']}]" value="{$v['displayorder']}" >
+											</div>
+											<div class="col-xs-9" style="width: 84%">
+												<div class="category_child">
+													<img class="category_img" src="{php echo tomedia($v['cover'])}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'"/>
+													<input type="text" disabled style="width: 91%"  class="form-control child_input" value="{$v['title']}">
+												</div>
+											</div>
+										</div>
+									</td>
+									<td>
+										{if $v['isshow'] == 1}
+										<span class="label label-success">显示</span>
+										{else}
+										<span class="label label-danger">隐藏</span>
+										{/if}
+									</td>
+									<td>
+										<a href="{php echo $this->createWebUrl('category', array('act' => 'post', 'id' => $v['id'], 'pid' => $child['id'], 'level' => 3))}"><i class="fa fa-pencil"></i> 编辑</a>
+										<a href="{php echo $this->createWebUrl('category', array('act' => 'delete', 'id' => $v['id']))}"  class="text-danger" style="padding: 0 .5rem" onclick="return confirm('确认删除此子分类吗？\n该分类下商品将初始化为无分类状态');return false;"><i class="fa fa-remove"></i> 删除</a>
+									</td>
+								</tr>
+								{/loop}
+							{/if}
+							{/loop}
+						{/if}
+					</tbody>
+				{/loop}
+			{/if}
+			</table>
+		</div>
+	</div>
+	<input name="submit" type="submit" value="更新排序" class="btn btn-primary col-lg-1" />
+	<input type="hidden" name="token" value="{$_W['token']}" />
+</form>
+<script>
+	require(['jquery', 'util'], function($, u){
+		$('.toggle_collapse').click(function(){
+			if ($('i', this).hasClass('fa-plus')) {
+				$('i', this).removeClass('fa-plus').addClass('fa-minus');
+				$(this).parent().parent().parent().next().fadeIn();
+
+			} else if ($('i', this).hasClass('fa-minus')) {
+				$('i', this).removeClass('fa-minus').addClass('fa-plus');
+				$(this).parent().parent().parent().next().fadeOut();
+			}
+		});
+	})
+</script>
+{else if $act == 'post'}
+<style>
+	.qrcode_wrap {
+		position: fixed;
+		top: 10rem;
+		right: 2rem;
+	}
+	.qrcode_wrap img {
+		width:11rem;
+	}
+	.qrcode_wrap > span {
+		display: block;
+		text-align: center;
+	}
+</style>
+{if $id > 0}
+<div class="qrcode_wrap">
+	<img src="{php echo $this->createWebUrl('qrcode', array('content' => urlencode($itemurl)))}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'"/>
+	<span>微信扫一扫</span>
+</div>
+{/if}
+<form class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="id" value="{$item['id']}">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			{if empty($item['id'])}
+			添加分类
+			{else}
+			编辑分类
+			{/if}
+		</div>
+		<div class="panel-body">
+			{if $id > 0}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">访问地址</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<div class="form-control-static">
+						<a href="{$itemurl}" target="_blank">{$itemurl}</a>
+					</div>
+					<span class="help-block">本网址为当前商品的唯一链接，可以拷贝到其他地方使用</span>
+				</div>
+			</div>
+			{/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">分类名称</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" placeholder="" name="title" value="{$item['title']}">
+				</div>
+			</div>
+			{if isset($parent) && $parent['pid'] > 0}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">封面</label>
+				<div class="col-sm-8 col-xs-12">
+					{php echo tpl_form_field_image('cover', $item['cover'])}
+					<span class="help-block">推荐尺寸：100*100</span>
+				</div>
+			</div>
+			{/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">是否显示</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="isshow" value="1" {if $item['isshow']}checked{/if}> 是
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="isshow" value="0" {if !$item['isshow']}checked{/if}> 否
+						</label>
+					</div>
+					<span class="help-block">选择不显示该分类时，则该分类下商品亦不显示</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+			<input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</div>
+</form>
+<script>
+	require(['jquery', 'util'], function($, u){
+		$('form').submit(function(){
+			var title = $('input[name=title]');
+			if (title.val() == '') {
+				u.message('请输入分类名称！', '', 'error');
+				return false;
+			}
+			return true;
+		});
+	})
+</script>
+{/if}
+{template 'web/footer'}

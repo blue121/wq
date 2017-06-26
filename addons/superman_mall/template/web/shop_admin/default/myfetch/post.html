@@ -1,0 +1,108 @@
+<form class="form-horizontal form" method="post" enctype="multipart/form-data">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {if $id}
+            编辑自提门店
+            {else}
+            添加自提门店
+            {/if}
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">排序</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <input class="form-control" name="displayorder" type="text" value="{$item['displayorder']}">
+                    <span class="help-block">由大到小，排序值越大越靠前</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"><span class="star">*</span>门店名称</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <input class="form-control" name="title" type="text" value="{$item['title']}">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"><span class="star">*</span>门店地址</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    {php echo tpl_form_field_district('area', array('province' => $item['province'], 'city' => $item['city'], 'district' => $item['district']));}
+                    <br/>
+                    <input class="form-control" name="address" type="text" value="{$item['address']}">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"><span class="star">*</span>联系人</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <input class="form-control" name="username" type="text" value="{$item['username']}">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"><span class="star">*</span>联系电话</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <input class="form-control" name="mobile" type="text" value="{$item['mobile']}">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">是否启用</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <label class="radio-inline">
+                        <input type="radio" name="isshow" value="1" {if !isset($item['isshow'])||$item['isshow']}checked{/if}/>是
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="isshow" value="0" {if isset($item['isshow'])&&!$item['isshow']}checked{/if}/>否
+                    </label>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+            <input type="hidden" name="token" value="{$_W['token']}">
+        </div>
+    </div>
+</form>
+<script>
+    $('form').submit(function(){
+        var title = $('input[name=title]');
+        if (title.val() == '') {
+            util.message('门店名称为空，请重新填写', '', 'error');
+            return false;
+        }
+        var pid = $('select[name="area[province]"]');
+        if (pid.val() <= 0) {
+            util.message('请选择省/直辖市！', '', 'error');
+            return false;
+        }
+        var cid = $('select[name="area[city]"]');
+        if (cid.val() <= 0) {
+            util.message('请选择市！', '', 'error');
+            return false;
+        }
+        var district = $('select[name="area[district]"]');
+        if (district.val() <= 0) {
+            util.message('请选择区/县！', '', 'error');
+            return false;
+        }
+        var address = $('input[name=address]');
+        if (address.val() == '') {
+            util.message('门店详细地址为空，请填写！', '', 'error');
+            return false;
+        }
+        var username = $('input[name=username]');
+        if (username.val() == '') {
+            util.message('联系人为空，请填写！', '', 'error');
+            return false;
+        }
+        var mobile = $('input[name=mobile]');
+        if (mobile.val() == '') {
+            util.message('联系电话为空，请填写！', '', 'error');
+            return false;
+        }
+        return true;
+    });
+</script>

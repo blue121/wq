@@ -1,0 +1,74 @@
+{template 'common/header'}
+<div class = "main">
+	<div class="panel-body">
+		<ul class="nav nav-tabs" id="myTab">
+			<li ><a href="{php echo $this->createweburl('users');}"> 管理商户</a></li>
+			<li ><a href="{php echo $this->createweburl('cards',array('userid'=>$userid));}"> 管理卡券</a></li>
+			<li class="active"><a href="#"> {$card_id}</a></li>				
+		</ul>
+	</div>
+<div class = "panel-default">
+
+</div>
+	{$pager}
+	<div class="panel-body table-responsive" style="background:$f0f;">
+		<table class="table table-hover" style="background:$f0f;">
+		<thead class="navbar-inner" style="">
+	    <tr class="success">	
+		 <th style="width:8%;">流水号</th>
+		 <th style="width:20%;color:red;">卡券ID(点击看完整)</th> 
+		 <th style="width:20%;">使用者</th>
+		 <th style="width:8%;">状态</th>
+		 <th style="width:15%;">赠送者</th>
+         <th style="width:16%;">时间</th>
+         <th style="width:8%;">红包金额</th>
+		 <th style="width:8%;">幸运者</th>
+         <!-- <th style="width:30%;">操作</th> -->
+		</tr>
+		</thead>
+		<tbody>
+		{loop $logs $item}
+		<tr>
+	      <td>{$item['id']}</td> 
+ 		  <td style="color:red;"><a class ="btn btn-defaulf" href="javascript:;" onclick="displayUrl('{$item['card_id']}');">{$item['card_id']}</a></td>  
+		  <td>{$item['card_user']}</td>
+          <td>{if $item['status']=='get'&&$item['isfriend']==0}
+		  <h4><span class="label label-success">领取</span></h4>
+		  {elseif $item['status']=='consume'}
+		  <h4><span class="label label-primary">核销</span></h4>
+		  {elseif $item['status']=='get'&&$item['isfriend']==1}
+		  <h4><span class="label label-warning">获赠</span></h4>
+		  {/if}</td> 
+		  <td>{$item['friend']}</td>
+		  <td>{php echo date('Y-m-d H:i:s',$item['time']);}</td>
+          <td>{php echo $item['sendhb']/100;}</td>
+		  <td>{$item['hbopenid']}</td>
+		  <td>		  </td>				
+		</tr>
+		{/loop}
+		</tbody>		
+		</table>
+		
+	</div>
+	{$pager}
+</div>
+<script type = "text/javascript">
+function displayUrl(lurl) {
+		require(['jquery', 'util'], function($, u) {
+			var content = '<p class="form-control-static" style="word-break:break-all">结果: <br>' + lurl + '</p>';
+			
+			var footer =
+					'<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>' +
+					'<button type="button" class="btn btn-primary">复制</button>';
+			var diaobj = u.dialog('查看', content, footer);
+			diaobj.find('.btn-default').click(function() {
+				diaobj.modal('hide');
+			});
+			diaobj.on('shown.bs.modal', function(){
+				u.clip(diaobj.find('.btn-primary')[0], lurl);
+			});
+			diaobj.modal('show');
+		});
+	}
+</script>
+{template 'common/footer'}

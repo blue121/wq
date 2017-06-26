@@ -1,0 +1,40 @@
+<div class="main">
+	<form class="form-horizontal form" id="setting_form" action="" method="post">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				客服中心
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">第三方客服</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<input type="text" class="form-control" name="service[link]" value="{php echo $this->module['config']['service']['link']}" placeholder="http://">
+						<span class="help-block">第三方客服链接网址，填写网址后，将替换个人中心的联系客服链接</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">联系客服</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						{if defined('IN_SUPERMAN_MALL_ADMIN')}
+						{php echo superman_tpl_ueditor('service[content]', $this->module['config']['service']['content'])}
+						{else}
+						{php echo tpl_ueditor('service[content]', $this->module['config']['service']['content'])}
+						{/if}
+						<span class="help-block">填写第三方客服网址后，本内容将不再显示到手机端</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input name="token" type="hidden" value="{$_W['token']}" />
+			<input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交" />
+		</div>
+	</form>
+</div>
+<script>
+	require(['jquery', 'util'], function($){
+		$('#setting_form').submit(function(){
+			return true;
+		});
+	});
+</script>

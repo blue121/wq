@@ -1,0 +1,40 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do} page-current" id="superpage_{$do}_{$act}">
+		{template "$do/$act"}
+        {template 'common/share'}
+	</div>
+    <!--商户入驻协议内联页-->
+    {if $act=='join' && !empty($shop_setting['content'])}
+    <div class="page" id='agreement'>
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back" href="#">
+                <span class="icon icon-left"></span>
+                返回
+            </a>
+            <h1 class='title'>商户入驻协议</h1>
+        </header>
+        <div class="content">
+            <div class="content-padded font7">
+                {php echo htmlspecialchars_decode($shop_setting['content'])}
+            </div>
+        </div>
+    </div>
+    {/if}
+    <!--商户简介内链页-->
+    <div class="page" id='superpage_shop_description'>
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back" href="#">
+                <span class="icon icon-left"></span>
+                返回
+            </a>
+            <h1 class='title'>商户简介</h1>
+        </header>
+        <div class="content">
+            <div class="content-padded font7">
+                {$shop['description']}
+            </div>
+        </div>
+    </div>
+</div>
+{template 'common/footer'}

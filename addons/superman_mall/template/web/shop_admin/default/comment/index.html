@@ -1,0 +1,6 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+    <li {if $act == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('comment');}">评价管理</a></li>
+</ul>
+{template $this->do.'/'.$this->act}
+{template 'common/footer'}

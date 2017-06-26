@@ -1,0 +1,11 @@
+{template 'web/header'}
+{template 'web/common/shop-nav'}
+<ul class="nav nav-tabs">
+	<li {if $type == 'item'}class="active"{/if}><a href="{php echo $this->createWebUrl('stat', array('type' => 'item'))}">商品数据</a></li>
+</ul>
+{if $act == 'display'}
+	{if $type == 'item'}
+		{template 'web/stat-item'}
+	{/if}
+{/if}
+{template 'web/footer'}

@@ -1,0 +1,102 @@
+{template 'common/title'}
+<div class="content">
+    <div class="list-block">
+        <form action="" method="post">
+            <div class="list-block" {if !$shop_setting['international']}style="display: none"{/if}>
+                <ul>
+                    <div class="item-content item-link">
+                        <div class="item-inner">
+                            <div class="item-title label font7">国家地区</div>
+                            <div class="item-input">
+                                <select name="countryid">
+                                    {loop $countrys $ct}
+                                    <option value="{$ct['id']}" data-mobile-pattern="{$ct['mobile_pattern']}" {if $ct['id'] == $countryid_china}selected{/if}>{$ct['title']}(+{$ct['areacode']})</option>
+                                    {/loop}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+            </div>
+            <ul>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label font7">商户名称</div>
+                            <div class="item-input">
+                                <input name="title" type="text" class="font7" placeholder="店铺名称">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label font7">商户地址</div>
+                            <div class="item-input">
+                                <input name="address" type="text" class="font7" placeholder="店铺详细地址">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label font7">联系人</div>
+                            <div class="item-input">
+                                <input name="contact" type="text" class="font7" placeholder="店铺负责人姓名">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label font7">联系电话</div>
+                            <div class="item-input">
+                                <input name="phone" type="tel" class="font7" placeholder="店铺负责人电话">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label font7">经营品类</div>
+                            <div class="item-input">
+                                <input name="business_scope" type="text" class="font7" placeholder="填写经营品类">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label font7">商户简介</div>
+                            <div class="item-input">
+                                <textarea name="description" placeholder="选填"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            {if !empty($shop_setting['content'])}
+            <div class="row">
+                <div class="col-100 text-right agreement_wrap font6">
+                    <span class="color-gray">我已阅读并同意</span>
+                    <a href="#agreement"><span class="color-danger">《商户入驻协议》</span></a>
+                </div>
+            </div>
+            {/if}
+            <div class="content-padded">
+                <div class="row">
+                    <div class="col-100">
+                        <a href="#" data-url="{php echo $this->createMobileUrl('shop')}" class="button button-fill btn_join">提交</a>
+                        <input type="hidden" name="token" value="{$_W['token']}">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{template 'common/nav'}

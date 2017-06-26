@@ -1,0 +1,616 @@
+<style>
+    .star {
+        color: red;
+        margin-right: 5px;
+        font-weight: bold;
+    }
+    ul, li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .qrcode_wrap {
+        position: fixed;
+        top: 10rem;
+        right: 2rem;
+    }
+    .qrcode_wrap img {
+        width:11rem;
+    }
+    .qrcode_wrap > span {
+        display: block;
+        text-align: center;
+    }
+</style>
+{if $id > 0}
+<div class="qrcode_wrap">
+    <img src="{php echo $this->createWebUrl('qrcode', array('content' => urlencode($itemurl)))}" onerror="this.src='{php echo $this->superman_placeholder}'"/>
+    <span>微信扫一扫</span>
+</div>
+{/if}
+<form class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="{$id}">
+    <input type="hidden" name="copyid" value="{$copyid}">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            基本属性
+        </div>
+        <div class="panel-body">
+            {if $id > 0}
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">访问地址</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <div class="form-control-static">
+                        <a href="{$itemurl}" target="_blank">{$itemurl}</a>
+                    </div>
+                    <span class="help-block">本网址为当前商品的唯一链接，可以拷贝到其他地方使用</span>
+                </div>
+            </div>
+            {/if}
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">
+                    <span class="star">*</span>商品标题
+                </label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <input type="text" class="form-control" name="title" value="{$item['title']}">
+                    <span class="help-block">最多30个字符</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">
+                    <span class="star">*</span>商品分类
+                </label>
+                <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+                    <select class="form-control" id="pcid" name="pcid" data-pcid="{$item['pcid']}">
+                        <option value="0">请选择一级分类</option>
+                        {if $pcids}
+                        {loop $pcids $pcid}
+                        <option value="{$pcid['id']}" {if isset($item['pcid']) && $item['pcid'] == $pcid['id']}selected="selected"{/if}>
+                        {$pcid['title']}
+                        </option>
+                        {/loop}
+                        {/if}
+                    </select>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+                    <select class="form-control" id="cid" name="cid" data-cid="{$item['cid']}">
+                        <option value="0">请选择二级分类</option>
+                    </select>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+                    <select class="form-control" id="ccid" name="ccid" data-ccid="{$item['ccid']}">
+                        <option value="0">请选择三级分类</option>
+                    </select>
+                </div>
+                <script>
+                    require(['jquery', 'jquery.ui'], function($){
+                        $('#pcid').change(function () {
+                            var html = '<option value="0">请选择二级分类</option>';
+                            var pcid = $(this).val();
+                            if (pcid == 0) {
+                                $('#cid').html(html);
+                                $('#ccid').html('<option value="0">请选择三级分类</option>');
+                                return;
+                            }
+                            $.ajax({
+                                url:'{php echo $this->createWebUrl("item", array("act" => "getcate"))}',
+                                type: 'post',
+                                data: 'cid='+pcid,
+                                dataType: 'json',
+                                success: function(resp){
+                                    if (resp.length > 0) {
+                                        var cid = $('#cid').attr('data-cid');
+                                        var selected = '';
+                                        for(var i = 0; i< resp.length; i++){
+                                            if (cid == resp[i]['id']) {
+                                                selected = 'selected';
+                                            } else {
+                                                selected = '';
+                                            }
+                                            html += '<option '+selected+' value="'+resp[i]['id']+'">'+resp[i]['title']+'</option>';
+                                        }
+                                    }
+                                    $('#cid').html(html).trigger('change');
+                                }
+                            });
+                        });
+                        $('#pcid').trigger('change');
+                        $('#cid').change(function () {
+                            var html = '<option value="0">请选择三级分类</option>';
+                            var cid = $(this).val();
+                            if (cid == 0) {
+                                $('#ccid').html(html);
+                                return;
+                            }
+                            $.ajax({
+                                url:'{php echo $this->createWebUrl("item", array("act" => "getcate"))}',
+                                type: 'post',
+                                data: 'cid='+cid,
+                                dataType: 'json',
+                                success: function(resp){
+                                    if (resp.length > 0) {
+                                        var ccid = $('#ccid').attr('data-ccid');
+                                        var selected = '';
+                                        for(var i = 0; i< resp.length; i++){
+                                            if (ccid == resp[i]['id']) {
+                                                selected = 'selected';
+                                            } else {
+                                                selected = '';
+                                            }
+                                            html += '<option '+selected+' value="'+resp[i]['id']+'">'+resp[i]['title']+'</option>';
+                                        }
+                                    }
+                                    $('#ccid').html(html)
+                                }
+                            });
+                        });
+                    })
+                </script>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">商品类型</label>
+                <div class="col-sm-8 col-xs-12">
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="1" {if $item['type'] == 1}checked{/if}>实物商品
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="type" value="2" {if $item['type'] == 2}checked{/if}>虚拟商品
+                    </label>
+                    <span class="help-block">实物商品需要物流；虚拟商品无需物流</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">
+                    <span class="star">*</span>封面
+                </label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo tpl_form_field_image('cover', $item['cover'])}
+                    <span class="help-block">推荐尺寸：100*100</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">
+                    <span class="star">*</span>相册
+                </label>
+                <div class="col-sm-8 col-xs-12">
+                    {php echo tpl_form_field_multi_image('album', $item['album'])}
+                    <span class="help-block">推荐尺寸：400*300</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">邮费设置</label>
+                <div class="col-sm-8 col-xs-12">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="postage_select" value="1" {if $item['postage_select'] == 1}checked{/if}>
+                            统一邮费
+                        </label>
+                        <label class="input-inline">
+                            <input type="text" class="form-control" placeholder="" name="postage" value="{$item['postage']}" />
+                        </label>
+                        元
+                        <span class="help-block"></span>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="postage_select" value="2" {if $item['postage_select'] == 2}checked{/if}>
+                            邮费模板
+                        </label>
+                        <label class="select-inline">
+                            <select name="postage_tmplid" class="form-control" {if $item['postage_select'] != 2}disabled{/if} data-shopid="{$item['shopid']}">
+                            {if $postage_tmpl}
+                            {loop $postage_tmpl $value}
+                            <option value="{$value['id']}" {if $item['postage_tmplid'] == $value['id']}selected{/if}>{$value['title']}</option>
+                            {/loop}
+                            {/if}
+                            </select>
+                        </label>
+                        <a href="{php echo $this->createWebUrl('postage', array('act' => 'post'));}" target="_blank">
+                            <span class="fa fa-plus"></span>
+                            邮费模板
+                        </a>&nbsp;&nbsp;
+                        <a href="javascript:;" class="refresh_postage_tmpl">
+                            <span class="fa fa-refresh"></span>
+                            刷新
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">邮费</label>
+                <div class="col-sm-6 col-md-8 col-xs-12">
+                    <div class="input-group col-sm-6">
+                        <input type="text" class="form-control" name="postage" value="{$item['postage']}" />
+                        <span class="input-group-addon">元</span>
+                    </div>
+                    <span class="help-block">设置每件商品的邮费，多件商品邮费累加</span>
+                </div>
+            </div>-->
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">状态</label>
+                <div class="col-sm-6 col-md-8 col-xs-12">
+                    <div class="input-group">
+                        <label class="radio-inline">
+                            <input type="radio" name="status" value="1" {if $item['status'] == 1}checked{/if}> 已上架
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="status" value="0" {if $item['status'] == 0}checked{/if}> 已下架
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="status" value="2" {if $item['status'] == 2}checked{/if}> 禁售
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">库存</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <input type="text" class="form-control" name="total" value="{$item['total']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">重量(kg)</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <input type="text" class="form-control" name="weight" value="{$item['weight']}">
+                    <span class="help-block">按重量计算的邮费模板将按此处设置的重量计算</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">市场价</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <div class="input-group col-sm-6">
+                        <input type="text" class="form-control" name="market_price" value="{$item['market_price']}" />
+                        <span class="input-group-addon">元</span>
+                    </div>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">
+                    <span class="star">*</span>单人价
+                </label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <div class="input-group col-sm-6">
+                        <input type="text" class="form-control" name="extend[single_price]" {if isset($item['extend']['single_price'])}value="{$item['extend']['single_price']}"{/if} />
+                        <span class="input-group-addon">元</span>
+                    </div>
+                    <span class="help-block">单人购买的价格，即商品正常售价</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">
+                    <span class="star">*</span>多人价
+                </label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <div class="input-group col-sm-6">
+                        <input type="text" class="form-control" name="price" value="{$item['price']}" />
+                        <span class="input-group-addon">元</span>
+                    </div>
+                    <span class="help-block">多人拼团购买的价格，即商品拼团促销的售价</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">
+                    <span class="star">*</span>拼团人数
+                </label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <div class="input-group col-sm-6">
+                        <input type="text" class="form-control" name="extend[multi_member_limit]" {if isset($item['extend']['multi_member_limit'])}value="{$item['extend']['multi_member_limit']}"{/if} />
+                        <span class="input-group-addon">人</span>
+                    </div>
+                    <span class="help-block">成团人数，拼团最少需要2人</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            其它属性
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">排序</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" class="form-control" placeholder="" name="displayorder" value="{$item['displayorder']}">
+                    <span class="help-block">由大到小，排序值越大越靠前</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">副标题</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" class="form-control" placeholder="" name="subtitle" value="{$item['subtitle']}">
+                    <span class="help-block">商品被分享时，副标题的内容会展示在分享描述中</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">货号</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" class="form-control" placeholder="" name="number" value="{$item['number']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">减库存方式</label>
+                <div class="col-sm-9 col-xs-12">
+                    <label class="radio-inline">
+                        <input type="radio" name="minus_total" value="1" {if $item['minus_total']==1}checked{/if}>付款减
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="minus_total" value="2" {if $item['minus_total']==2}checked{/if}>拍下减
+                    </label>
+                    <span class="help-block">选择付款减库存时，提交订单页面将提示如下信息：订单创建后，请尽快支付，否则可能出现库存不足</span>
+                    <span class="help-block">选择拍下减库存时，由于提交订单未支付问题，请注意补充库存</span>
+                    <span class="help-block" style="color: red">当设置为付款减时，由于支付时间差问题，存在超出库存的销售订单，如对库存有严格要求，可使用拍下减</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">每单最多购买数</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" class="form-control" name="other_attr[order_buy_num]" value="{if isset($item['extend']['other_attr'])}{$item['extend']['other_attr']['order_buy_num']}{/if}">
+                    <span class="help-block">每订单可买商品数，默认为空不限制</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">账号最多购买数</label>
+                <div class="col-sm-8 col-xs-12">
+                    <input type="text" class="form-control" name="other_attr[max_buy_num]" value="{if isset($item['extend']['other_attr'])}{$item['extend']['other_attr']['max_buy_num']}{/if}">
+                    <span class="help-block">每账号可买商品数，默认为空不限制</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">是否有发票</label>
+                <div class="col-sm-6 col-md-8 col-xs-12">
+                    <div class="input-group">
+                        <label class="radio-inline">
+                            <input type="radio" name="isreceipt" value="1" {if $item['isreceipt'] == 1}checked{/if}> 是
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="isreceipt" value="0" {if $item['isreceipt'] == 0}checked{/if}> 否
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">是否保修</label>
+                <div class="col-sm-6 col-md-8 col-xs-12">
+                    <div class="input-group">
+                        <label class="radio-inline">
+                            <input type="radio" name="isrepair" value="1" {if $item['isrepair'] == 1}checked{/if}> 是
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="isrepair" value="0" {if $item['isrepair'] == 0}checked{/if}> 否
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">是否可核销</label>
+                <div class="col-sm-6 col-md-8 col-xs-12">
+                    <div class="input-group">
+                        <label class="radio-inline">
+                            <input type="radio" name="ischeckout" value="1" {if $item['ischeckout']}checked{/if}> 是
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="ischeckout" value="0" {if !$item['ischeckout']}checked{/if}> 否
+                        </label>
+                    </div>
+                    <span class="help-block">设置可核销后，提交的订单默认具有可核销属性</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">简介</label>
+                <div class="col-sm-8 col-xs-12">
+                    <textarea class="form-control" rows="8" name="summary">{$item['summary']}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">详细描述</label>
+                <div class="col-sm-8 col-xs-12">
+                    {if defined('IN_SUPERMAN_MALL_ADMIN')}
+                    {php echo superman_tpl_ueditor('description', $item['description'])}
+                    {else}
+                    {php echo tpl_ueditor('description', $item['description'])}
+                    {/if}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">成本价</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <input type="text" class="form-control" name="cost_price" value="{$item['cost_price']}">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">产品参数</label>
+                <div class="col-sm-8 col-xs-12">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th width="25"></th>
+                            <th width="200">属性名</th>
+                            <th width="600">属性值</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="list_wrap" class="ui-sortable">
+                        {if $item['params']}
+                        {loop $item['params'] $param}
+                        <tr>
+                            <td>
+                                <a href="javascript:;" class="fa fa-move" title="按住鼠标左键，拖动调整顺序">
+                                    <i class="fa fa-arrows"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <div class="form-group" style="margin-bottom: 0">
+                                    <div class="col-xs-12">
+                                        <input name="param_id[]" {if isset($copyid) && $copyid > 0}value=""{else}value="{$param['id']}"{/if} type="hidden" class="form-control"/>
+                                        <input name="param_name[]" value="{$param['name']}" type="text" class="form-control" placeholder=""/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group" style="margin-bottom: 0">
+                                    <div class="col-xs-12">
+                                        <input name="param_value[]" value="{$param['value']}" type="text" class="form-control" placeholder=""/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="javascript:;" class="del_param_link" onclick="delItem(this)" title="删除" data-id="{$param['id']}">
+                                    <i class='fa fa-remove'></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {/loop}
+                        {/if}
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-warning add_params" title="添加属性">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加属性
+                    </button>
+                </div>
+            </div>
+        </div>
+        {if $_W['isfounder']}
+        <div class="panel-footer">
+            上次操作人: {$item['user']['username']}
+        </div>
+        {/if}
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+            <input type="hidden" name="token" value="{$_W['token']}">
+        </div>
+    </div>
+</form>
+<script>
+    require(['jquery', 'jquery.ui'], function($){
+        $('.btn').hover(function(){
+            $(this).tooltip('show');
+        },function(){
+            $(this).tooltip('hide');
+        });
+        $('.form').submit(function(){
+            var title = $('input[name=title]');
+            if (title.val() == '') {
+                util.message('商品标题为空，请填写！', '', 'error');
+                return false;
+            }
+            var pcid = $('select[name=pcid]');
+            if (pcid.val() <= 0) {
+                util.message('请选择一级分类！', '', 'error');
+                return false;
+            }
+            var cid = $('select[name=cid]');
+            if (cid.val() <= 0) {
+                util.message('请选择二级分类！', '', 'error');
+                return false;
+            }
+            /*var ccid = $('select[name=ccid]');
+             if (ccid.val() <= 0) {
+             util.message('请选择三级分类！', '', 'error');
+             return false;
+             }*/
+            var cover = $('input[name=cover]');
+            if (cover.val() == '') {
+                util.message('封面为空，请上传！', '', 'error');
+                return false;
+            }
+            var album = $('input[name="album[]"]');
+            if (!album.val()) {
+                util.message('相册为空，请上传！', '', 'error');
+                return false;
+            }
+            var single_price = $('input[name="extend[single_price]"]');
+            if (single_price.val() <= 0) {
+                if (!confirm('请确认是否设置单人价为0？')) {
+                    return false;
+                }
+            }
+            var price = $('input[name=price]');
+            if (price.val() <= 0) {
+                if (!confirm('请确认是否设置多人价为0？')) {
+                    return false;
+                }
+            }
+            var multi_member_limit = $('input[name="extend[multi_member_limit]"]');
+            var ex = /^\d+$/;
+            if (!ex.test(multi_member_limit.val())) {
+                util.message('请设置拼团人数为整数！', '', 'error');
+                return false;
+            }
+            if (multi_member_limit.val() < 2) {
+                util.message('拼团人数最少为2！', '', 'error');
+                return false;
+            }
+            return true;
+        });
+        //初始化产品参数排序功能
+        $('#list_wrap').sortable({handle: '.fa-move'});
+        //邮费切换
+        $('input[name=postage_select]').click(function () {
+            var tmpl = $(this).val();
+            if (tmpl == 2) {
+                loadPostageTmpl();
+                $('input[name=postage]').prop('disabled', true);
+            } else {
+                $('select[name=postage_tmplid]').prop('disabled', true);
+                $('input[name=postage]').prop('disabled', false);
+            }
+        });
+        $('.refresh_postage_tmpl').click(function(){
+            if ($('select[name=postage_tmplid]').prop('disabled')) {
+                return;
+            }
+            loadPostageTmpl();
+        });
+        var loadPostageTmpl = function(){
+            $('select[name=postage_tmplid]').prop('disabled', true);
+            var shopid = $('select[name=postage_tmplid]').attr('data-shopid');
+            $.ajax({
+                type: 'post',
+                url: '{php echo $this->createWebUrl("item", array("act" => "postage_tmpl"))}',
+                data: 'shopid='+shopid,
+                dataType: 'json',
+                success: function(resp){
+                    if (resp.length > 0) {
+                        var html = '', item;
+                        for (var i=0; i<resp.length; i++) {
+                            item = resp[i];
+                            html += '<option value="'+item.id+'">'+item.title+'</option>';
+                        }
+                        $('select[name=postage_tmplid]').html(html).prop('disabled', false);
+                    }
+                }
+            });
+        };
+        //添加产品参数
+        $('.add_params').click(function(){
+            $.ajax({
+                url: "{php echo $this->createWebUrl('item', array('act' => 'params', 'behavior' => 'add'))}",
+                success:function(response) {
+                    $('#list_wrap').append(response);
+                }
+            });
+        });
+        //删除产品参数
+        window.delItem = function(obj) {
+            var id = $(obj).attr('data-id');
+            if (!id) {	//new
+                $(obj).parent().parent().remove();
+                return;
+            }
+            $.ajax({
+                'url': "{php echo $this->createWebUrl('item', array('act' => 'params', 'behavior' => 'delete'))}"+'&paramid='+id,
+                success:function(response) {
+                    if (response == 'success') {
+                        $(obj).parent().parent().remove();
+                    } else {
+                        util.message(response, '', 'error');
+                    }
+                }
+            });
+        };
+    });
+</script>

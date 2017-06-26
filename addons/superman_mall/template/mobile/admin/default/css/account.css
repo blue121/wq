@@ -1,0 +1,9 @@
+.superpage_account .account_list_wrap {
+    margin: .5rem 0 3rem;
+}
+.superpage_account .account_list_wrap .shop_logo {
+    padding: 0.5rem 0 0.5rem 0.75rem;
+}
+.superpage_account .account_list_wrap .shop_logo img {
+    width: 2.8rem;
+}

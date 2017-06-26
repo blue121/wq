@@ -1,0 +1,37 @@
+.main_wrap .menmber_info {
+    width:130px;
+    display: block;
+}
+.main_wrap .menmber_info img {
+    width: 40px;
+    height: 40px;
+}
+.main_wrap .daterange_date input {
+    height: 35px;
+}
+.main_wrap .export_btn {
+    height: 37px;
+    line-height:21px;
+}
+.main_wrap .item_img {
+    height: 60px;
+    width: 60px;
+}
+.main_wrap .order_list_row .item_title {
+    max-width: 640px;
+}
+.main_wrap .order_list_row .item_sku {
+    font-size: .85rem;
+}
+.main_wrap .order_list_row .order_time_style {
+    font-size: 12px;
+}
+.main_wrap .order_type {
+    border-right: 0;
+}
+.main_wrap .batch_file {
+    width:100%;
+}
+.main_wrap .virtual_input_style {
+    border-collapse: collapse !important;
+}

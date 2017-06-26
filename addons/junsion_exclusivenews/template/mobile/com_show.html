@@ -1,0 +1,32 @@
+{php $hideword = unserialize($news['hideword'])}
+<div class="mcontent">
+{if empty($hideword)}
+	{$news['hideword']}
+{else}
+	{if $hideword['word']}{$hideword['word']}<br>{/if}
+	
+	{if $hideword['links']}
+		{loop $hideword['links'] $v}
+			<p><a style="color: #00F;text-decoration: underline;" onclick="showFrame('{$v['url']}','{$v['title']}')">{$v['title']}</a></p>
+		{/loop}
+	{/if}
+	
+	{if $hideword['video']}
+		{loop $hideword['video'] $v}
+			<p><audio src="{$v}" controls="controls"></audio></p>
+		{/loop}
+	{/if}
+	
+	{if count($hideword['img']) == 1}
+		<img src="{$hideword['img'][0]}" style="width: 100%;">
+	{else}
+		{loop $hideword['img'] $img}
+			<img src="{$img}" class="mimg">
+		{/loop}
+	{/if}
+	{if $hideword['mp4']}
+	<video src="{$hideword['mp4']}" style="width: 100%" controls="controls" autoplay="autoplay"></video>
+	{/if}
+{/if}
+</div>
+{template 'frame'}

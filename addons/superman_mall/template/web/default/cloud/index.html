@@ -1,0 +1,7 @@
+{template 'header'}
+<ul class="nav nav-tabs">
+    <li {if $this->act == 'upgrade'}class="active"{/if}><a href="http://www.tanliu.cn">在线更新</a></li>
+    <li {if $this->act == 'site'}class="active"{/if}><a href="{php echo $this->createWebUrl('cloud', array('act' => 'register'));}">站点信息</a></li>
+</ul>
+{template $this->do.'/'.$this->act}
+{template 'footer'}

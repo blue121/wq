@@ -1,0 +1,178 @@
+{template "common/header"}
+<style type="text/css">
+	body{
+		/*padding: 0px 10px 0px 10px;*/
+		background: #e6e6e6;
+
+	}
+	.containar-fill{
+		padding:0px;
+		margin:0px;
+	}
+	.mui-card{
+		padding:0px;
+		margin:0px;
+	}
+	.mui-input-row{
+		border-bottom:1px solid #e6e6e6;
+		margin-bottom:5px;
+	}
+	#nickname{
+		margin:5px 10px;
+	}
+	#avatar{
+		margin-top:50px;
+	}
+	.lat{
+		display: none;
+	}
+	.mui-media{
+		border: 2px dashed #e6e6e6;
+	}
+	.mui-media-body{
+		height:30px;
+	}
+</style>
+<div class="containar container-fluid" >
+	<header id="header" style="background: #fff;" class="mui-bar mui-bar-nav">
+	<a onclick="javascript:window.history.back(-1);" class="mui-action-back mui-btn mui-btn-blue mui-btn-link mui-btn-nav mui-pull-left"><span class="mui-icon mui-icon-left-nav"></span> 返回</a>
+	<h1 class="mui-title">卡券列表</h1>
+	<a href="{php echo $this->createmobileurl('index')}" class="mui-btn mui-btn-blue mui-btn-link mui-btn-nav mui-pull-right"> 首页<span class="mui-icon mui-icon-forward"></span></a>
+	</header>
+
+	<div class="row" id="avatar">
+		<div class="col-xs-4" align="center">
+			<h4>卡券数量</h4><br>
+			<p style="font-size:50px;color:blue">{$nums}</p>
+		</div>
+		<img class="img-circle col-xs-4 " src="{php echo tomedia($shop['logo']);}" alt="">
+		<div class="col-xs-4" align="center">
+			
+		</div>
+	</div>
+	<div align="center" class="row" id="nickname">
+		<h3>
+		<span class="label label-info">{$shop['shopname']}</span>
+		</h3>
+	</div>
+	<!-- 9宫格 -->
+				<!--<di v id="Gallery" class="mui-slider" style="margin-top:15px;">
+				<div class="mui-slider-group">
+					<div class="mui-slider-item" >
+						<ul class="mui-table-view mui-grid-view mui-grid-9" style="background: #fff;">
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4"  >
+								<a href="#">
+									<span class="mui-icon mui-icon-home"></span>
+									<div class="mui-media-body" style="height:20px;">Home</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" >
+								<a href="#">
+									<span class="mui-icon mui-icon-email"><span class="mui-badge">5</span></span>
+									<div class="mui-media-body" style="height:20px;">Email</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+								<a href="#">
+									<span class="mui-icon mui-icon-chatbubble"></span>
+									<div class="mui-media-body" style="height:20px;">Chat</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+								<a href="#">
+									<span class="mui-icon mui-icon-location"></span>
+									<div class="mui-media-body" style="height:20px;">location</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+								<a href="#">
+									<span class="mui-icon mui-icon-search"></span>
+									<div class="mui-media-body" style="height:20px;">Search</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+								<a href="#">
+									<span class="mui-icon mui-icon-phone"></span>
+									<div class="mui-media-body" style="height:20px;">Phone</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+								<a href="#">
+									<span class="mui-icon mui-icon-gear"></span>
+									<div class="mui-media-body" style="height:20px;">Setting</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+								<a href="#">
+									<span class="mui-icon mui-icon-info"></span>
+									<div class="mui-media-body" style="height:20px;">about</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+								<a href="#">
+									<span class="mui-icon mui-icon-more"></span>
+									<div class="mui-media-body" style="height:20px;">more</div>
+								</a>
+							</li>
+						</ul>
+					</div>
+									
+
+				</div>
+				
+			</div> -->
+
+	<div class="mui-card">
+		<ul class="mui-table-view">
+			{loop $cards $v}
+			<li class="mui-table-view-cell">
+				<div class="mui-row">
+					<div class="mui-col-xs-8" align="left"><h4><span class="label label-primary">{$v['title']}</span></h4></div>
+					<div class="mui-col-xs-4" align="right">
+						
+					</div>
+				</div>
+				
+				<div class="mui-row" style="padding: 1px;">
+					<div class="mui-col-xs-3" style="height:60px;">
+						<span class="label label-danger" style="position: relative;top:30%;">奖{php echo $v['minhb']/100}-{php echo $v['maxhb']/100}元</span>
+					</div>	
+					<!-- <hr style="width:1px;height:50px;color:#c2c2c2;">	 -->	
+					<div class="mui-col-xs-5" align="center" style="background: ;border-left:1px dotted green;border-right:1px dotted green;border-radius:5px;">						
+						<h5>红包总数:{$v['hbnum']}个</h5>
+						<h5>已发个数:{$v['sendnum']}个</h5>					
+						<h5>已发红包:{php echo $v['sendhb']/100}元</h5>
+					</div>
+					<div class="mui-col-xs-4" align="right">
+						<div class="mui-row">
+							<a href="{php echo $this->createmobileurl('details',array('cardid'=>$v['id'],'userid'=>$userid))}"  class="mui-btn  mui-btn-success mui-btn-outlined">领取详情</a>
+						</div>
+						<div class="mui-row">
+							<a href=""  class="mui-btn  mui-btn-royal mui-btn-outlined">红包充值</a>	
+						</div>											
+					</div>
+				</div>
+			{/loop}
+		</ul>
+	</div>
+
+</div>
+<script type="text/javascript">
+wx.ready(function(){
+	wx.getLocation({
+	    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+	    success: function (res) {
+	        var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+	        var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+	        var speed = res.speed; // 速度，以米/每秒计
+	        var accuracy = res.accuracy; // 位置精度
+	         //swal(latitude+"-"+longitude);
+	        // var url = "http://api.map.baidu.com/geoconv/v1/?coords="+latitude+","+longitude+"&from=1&to=5&ak=SAWFFdzmw4fHr32dA7a1dL48";
+	   		$("#lng").val(longitude);
+	   		$("#lat").val(latitude);
+	    }
+	    
+	});
+});
+</script>
+{template "common/footer"}

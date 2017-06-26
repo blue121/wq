@@ -1,0 +1,51 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+		{template 'common/nav'}
+		{if $act == 'display'}
+		{template 'common/title'}
+		<div class="content infinite-scroll" data-flag="0" data-display-url="{php echo $this->createMobileUrl('browse', array('load' => 'infinite'))}" data-detail-url="{php echo $this->createMobileUrl('detail', array('act' => 'display'))}" data-distance="50" data-page="{$pindex}">
+			<div class="list-block media-list item_list">
+				{if $list}
+				<ul>
+					{loop $list $li}
+					<li>
+						<a href="{php echo $this->createMobileUrl('detail', array('itemid' => $li['itemid']))}" class="item-content external">
+							<div class="item-media">
+								<img class="img_square1" src="{php echo tomedia($li['item']['cover'])}" onerror="this.src='{$_W[siteroot]}addons/superman_mall/template/mobile/images/placeholder.gif'">
+							</div>
+							<div class="item-inner">
+								<div class="item-title-row">
+									<div class="item-title color-default font7">{$li['item']['title']}</div>
+								</div>
+								<div class="item-text font8 color-warning">&#165;{$li['item']['price']}</div>
+							</div>
+						</a>
+					</li>
+					{/loop}
+				</ul>
+				{else}
+				<div class="text-center color-gray font7 msg_tips">
+					{if $_W['member']['uid']}
+						<span>没有浏览记录</span>
+						<div class="content-padded">
+							<a href="{php echo $this->createMobileUrl('home')}">去首页逛逛</a>
+						</div>
+					{else}
+					<span>登录后可查看浏览记录</span>
+					<a href="{php echo url('auth/login', array('forward' => base64_encode($_SERVER['QUERY_STRING'])))}" class="external">登录</a>
+					{/if}
+				</div>
+				{/if}
+				<div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+			</div>
+			{if count($list)==$pagesize}
+			<div class="infinite-scroll-preloader">
+				<div class="preloader"></div>
+			</div>
+			{/if}
+		</div>
+		{/if}
+	</div>
+</div>
+{template 'common/footer'}

@@ -1,0 +1,49 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+		{template 'common/nav'}
+		{template 'common/title'}
+		<div class="content">
+			<div class="category_wrap">
+				<div class="category_left pull-left">
+					{if $list}
+					<ul>
+						{loop $list $key $item}
+						<li>
+							<a href="#tab{$key}" class="font7 tab-link {if $key==0}active{/if} text-overflow">{$item['title']}</a>
+						</li>
+						{/loop}
+					</ul>
+					{/if}
+				</div>
+				<div class="category_right pull-right tabs" style="height: 300px;">
+					{if $list}
+					{loop $list $key $item}
+					<div id="tab{$key}" class="tab {if $key==0}active{/if} category_right_right">
+						{loop $item['childs'] $c}
+						<div class="content-block-title">
+							<a href="{php echo $this->createMobileUrl('list', array('cid' => $c['id']))}" class="color-default {SUPERMAN_EXTERNAL}" data-no-cache="true">{$c['title']}</a>
+						</div>
+						<div class="row">
+							{if $c['childs']}
+							{loop $c['childs'] $cc}
+							<div class="col-33">
+								<a href="{php echo $this->createMobileUrl('list', array('ccid' => $cc['id']))}" class="{SUPERMAN_EXTERNAL}" data-no-cache="true">
+									<img class="lazyload img_square1" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-original="{php echo tomedia($cc['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'"/>
+									<span class="text-center font6 color-gray text-overflow">{$cc['title']}</span>
+								</a>
+							</div>
+							{/loop}
+							{/if}
+						</div>
+						{/loop}
+					</div>
+					{/loop}
+					{/if}
+				</div>
+			</div>
+		</div>
+		{template 'common/share'}
+	</div>
+</div>
+{template 'common/footer'}

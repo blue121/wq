@@ -1,0 +1,50 @@
+<div class="main">
+	<style>
+		.icon_wrap img {
+			width: 48px;
+			height: 48px;
+		}
+	</style>
+	<form action="" method="post">
+		<input type="hidden" class="form-control" name="id" value="{$id}">
+		<div class="alert alert-info">图标推荐尺寸：128*128</div>
+		<div class="panel panel-default">
+			<div class="table-responsive panel-body">
+				<table class="table">
+					<thead>
+					<tr>
+						<th width="80">排序</th>
+						<th width="320">图标</th>
+						<th>名称</th>
+						<th>链接</th>
+						<th width="120" class="text-right">是否显示</th>
+					</tr>
+					</thead>
+					<tbody>
+					{loop $apps $k $app}
+					<tr>
+						<td>
+							<input type="text" class="form-control text-center" name="displayorder[{$k}]" value="{$app['displayorder']}">
+						</td>
+						<td class="icon_wrap">
+							{php echo tpl_form_field_image('icon['.$k.']', $app['icon'])}
+						</td>
+						<td>
+							<input type="text" class="form-control" name="title[{$k}]" value="{$app['title']}">
+						</td>
+						<td>
+							<input type="text" class="form-control" name="url[{$k}]" value="{$app['url']}">
+						</td>
+						<td class="text-right">
+							<input type="checkbox" name="isshow[{$k}]" {if $app['isshow']}checked{/if}>
+						</td>
+					</tr>
+					{/loop}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+		<input type="hidden" name="token" value="{$_W['token']}" />
+	</form>
+</div>

@@ -1,0 +1,47 @@
+{template 'common/header-base'}
+<div class="page-group">
+    <div class="page page-current" style="background: #FFFFFF;">
+        <div class="content">
+            <div class="weui_msg">
+                <div class="weui_icon_area">
+                    {if $label == 'success'}
+                    <i class="weui_icon_msg weui_icon_success"></i>
+                    {else if $label == 'warn'}
+                    <i class="weui_icon_msg weui_icon_warn"></i>
+                    {else if $label == 'info'}
+                    <i class="weui_icon_msg weui_icon_info"></i>
+                    {else if $label == 'waiting'}
+                    <i class="weui_icon_msg weui_icon_waiting"></i>
+                    {else if $label == 'safe_success'}
+                    <i class="weui_icon_safe weui_icon_safe_success"></i>
+                    {else if $label == 'safe_warn'}
+                    <i class="weui_icon_safe weui_icon_safe_warn"></i>
+                    {/if}
+                </div>
+                <div class="weui_text_area">
+                    {if is_array($msg)}
+                    <h2 class="weui_msg_title">MYSQL 错误：</h2>
+                    <p class="weui_msg_desc">{php echo cutstr($msg['sql'], 300, 1);}</p>
+                    <p class="weui_msg_desc"><b>{$msg['error'][0]} {$msg['error'][1]}：</b>{$msg['error'][2]}</p>
+                    {else}
+                    <h2 class="weui_msg_title">{$caption}</h2>
+                    <h2 class="weui_msg_title" style="margin-bottom: 10px;">{$msg}</h2>
+                    {/if}
+                    {if $redirect}
+                    <a href="{$redirect}" class="weui_btn weui_btn_primary external redirect">确定</a>
+                    <script type="text/javascript">
+                        setTimeout(function () {
+                            location.href = "{$redirect}";
+                        }, 3000);
+                    </script>
+                    {else}
+                    <a href="javascript:history.go(-1);" class="weui_btn weui_btn_default back">点击这里返回上一页</a>
+                    <p>[<a href="javascript:history.go(-1);">点击这里返回上一页</a>] &nbsp; [<a href="{php echo wurl('site/entry/dashboard', array('m' => 'superman_mall'))}">首页</a>]</p>
+                    {/if}
+                </div>
+                <div class="weui_extra_area">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

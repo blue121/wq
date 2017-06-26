@@ -1,0 +1,564 @@
+{template 'header'}
+<ul class="nav nav-tabs">
+	<li {if $act == 'template'}class="active"{/if}><a href="{php echo $this->createWebUrl('message', array('act' => 'template'));}">模板消息</a></li>
+	<li {if $act == 'service'}class="active"{/if}><a href="{php echo $this->createWebUrl('message', array('act' => 'service'));}">客服消息</a></li>
+</ul>
+{if $act=='template'}
+<div class="alert alert-info">
+	<i class="fa fa-exclamation-circle"></i> 服务号（已认证）可使用模板消息接口，本模板消息设置支持各种行业分类的模板消息格式
+</div>
+<form action="" method="post" class="form-horizontal" role="form">
+	<div class="panel panel-default">
+		<div class="panel-heading clearfix">
+			设置订单消息&nbsp;&nbsp;
+		</div>
+		<div class="panel-body">
+			<div class="alert alert-warning">
+				<div class="row" id="super_var_wrap2">
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #777">变量</div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##订单号##}</strong> 表示订单号 <a data-content="{##订单号##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##创建时间##}</strong> 表示订单创建时间 <a data-content="{##创建时间##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##订单金额##}</strong> 表示订单支付金额 <a data-content="{##订单金额##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##操作时间##}</strong> 表示订单操作时间 <a data-content="{##操作时间##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##快递公司##}</strong> 表示订单快递公司 <a data-content="{##快递公司##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##快递单号##}</strong> 表示订单快递单号 <a data-content="{##快递单号##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##收货地址##}</strong> 表示订单收货地址 <a data-content="{##收货地址##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##订单商品##}</strong> 表示订单第一件商品名 <a data-content="{##订单商品##}" href="javascript:;" title="点击复制">点击复制</a></div>
+				</div>
+			</div>
+			<script>
+				require(['jquery', 'util'], function($, u){
+					$('#super_var_wrap2 a').each(function(){
+						var t = this;
+						u.clip(t, $(t).attr('data-content'));
+					});
+				});
+			</script>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">订单提交</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板ID</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="order[submit][tmpl_id]" value="{$message['order']['submit']['tmpl_id']}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="order[submit][tmpl_content]" rows="6">{$message['order']['submit']['tmpl_content']}</textarea>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板变量</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="order[submit][tmpl_variable]" rows="6">{$message['order']['submit']['tmpl_variable']}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">订单支付</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板ID</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="order[pay][tmpl_id]" value="{$message['order']['pay']['tmpl_id']}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="order[pay][tmpl_content]" rows="6">{$message['order']['pay']['tmpl_content']}</textarea>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板变量</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="order[pay][tmpl_variable]" rows="6">{$message['order']['pay']['tmpl_variable']}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">订单发货</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板ID</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="order[send][tmpl_id]" value="{$message['order']['send']['tmpl_id']}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="order[send][tmpl_content]" rows="6">{$message['order']['send']['tmpl_content']}</textarea>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板变量</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="order[send][tmpl_variable]" rows="6">{$message['order']['send']['tmpl_variable']}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">订单取消</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板ID</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="order[cancel][tmpl_id]" value="{$message['order']['cancel']['tmpl_id']}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="order[cancel][tmpl_content]" rows="6">{$message['order']['cancel']['tmpl_content']}</textarea>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板变量</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="order[cancel][tmpl_variable]" rows="6">{$message['order']['cancel']['tmpl_variable']}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">订单退款</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板ID</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="order[refund][tmpl_id]" value="{$message['order']['refund']['tmpl_id']}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="order[refund][tmpl_content]" rows="6">{$message['order']['refund']['tmpl_content']}</textarea>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板变量</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="order[refund][tmpl_variable]" rows="6">{$message['order']['refund']['tmpl_variable']}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading clearfix">
+			商户审核消息&nbsp;&nbsp;
+		</div>
+		<div class="panel-body">
+			<div class="alert alert-warning">
+				<div class="row" id="super_var_wrap3">
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #777">变量</div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##商户名称##}</strong> 表示审核商户的名称 <a data-content="{##商户名称##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##审核结果##}</strong> 表示审核商户的结果 <a data-content="{##审核结果##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##审核备注##}</strong> 表示审核商户时填写的备注 <a data-content="{##审核备注##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##操作时间##}</strong> 表示审核商户操作的时间 <a data-content="{##操作时间##}" href="javascript:;" title="点击复制">点击复制</a></div>
+				</div>
+			</div>
+			<script>
+				require(['jquery', 'util'], function($, u){
+					$('#super_var_wrap3 a').each(function(){
+						var t = this;
+						u.clip(t, $(t).attr('data-content'));
+					});
+				});
+			</script>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">审核通知</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板ID</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="shop[tmpl_id]" value="{if isset($message['shop']['tmpl_id'])}{$message['shop']['tmpl_id']}{/if}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="shop[tmpl_content]" rows="6">{if isset($message['shop']['tmpl_content'])}{$message['shop']['tmpl_content']}{/if}</textarea>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板变量</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="shop[tmpl_variable]" rows="6">{if isset($message['shop']['tmpl_variable'])}{$message['shop']['tmpl_variable']}{/if}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading clearfix">
+			触发器消息&nbsp;&nbsp;
+		</div>
+		<div class="panel-body">
+			<div class="alert alert-warning">
+				<div class="row" id="super_var_wrap4">
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #777">变量</div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##管理员##}</strong> 表示通知的管理员名称 <a data-content="{##管理员##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##动作##}</strong> 表示触发的动作 <a data-content="{##动作##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##时间##}</strong> 表示触发动作的时间 <a data-content="{##时间##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##备注##}</strong> 表示触发规则中设置的通知内容 <a data-content="{##备注##}" href="javascript:;" title="点击复制">点击复制</a></div>
+				</div>
+			</div>
+			<script>
+				require(['jquery', 'util'], function($, u){
+					$('#super_var_wrap4 a').each(function(){
+						var t = this;
+						u.clip(t, $(t).attr('data-content'));
+					});
+				});
+			</script>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">触发器通知</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板ID</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="trigger[tmpl_id]" value="{if isset($message['trigger']['tmpl_id'])}{$message['trigger']['tmpl_id']}{/if}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="trigger[tmpl_content]" rows="6">{if isset($message['trigger']['tmpl_content'])}{$message['trigger']['tmpl_content']}{/if}</textarea>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板变量</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="trigger[tmpl_variable]" rows="6">{if isset($message['trigger']['tmpl_variable'])}{$message['trigger']['tmpl_variable']}{/if}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading clearfix">
+			分销商审核消息&nbsp;&nbsp;
+		</div>
+		<div class="panel-body">
+			<div class="alert alert-warning">
+				<div class="row" id="super_var_wrap5">
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #777">变量</div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##审核结果##}</strong> 表示审核分销商的结果 <a data-content="{##审核结果##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##操作时间##}</strong> 表示审核分销商操作的时间 <a data-content="{##操作时间##}" href="javascript:;" title="点击复制">点击复制</a></div>
+				</div>
+			</div>
+			<script>
+				require(['jquery', 'util'], function($, u){
+					$('#super_var_wrap5 a').each(function(){
+						var t = this;
+						u.clip(t, $(t).attr('data-content'));
+					});
+				});
+			</script>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">审核通知</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板ID</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="partner[manage][tmpl_id]" value="{if isset($message['partner']['manage']['tmpl_id'])}{$message['partner']['manage']['tmpl_id']}{/if}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="partner[manage][tmpl_content]" rows="6">{if isset($message['partner']['manage']['tmpl_content'])}{$message['partner']['manage']['tmpl_content']}{/if}</textarea>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板变量</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="partner[manage][tmpl_variable]" rows="6">{if isset($message['partner']['manage']['tmpl_variable'])}{$message['partner']['manage']['tmpl_variable']}{/if}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="alert alert-warning">
+				<div class="row" id="super_var_wrap6">
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #777">变量</div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##下线昵称##}</strong> 表示该分销商的邀请下线的昵称 <a data-content="{##下线昵称##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##加入时间##}</strong> 表示被邀请分销商加入的时间 <a data-content="{##时间##}" href="javascript:;" title="点击复制">点击复制</a></div>
+				</div>
+			</div>
+			<script>
+				require(['jquery', 'util'], function($, u){
+					$('#super_var_wrap6 a').each(function(){
+						var t = this;
+						u.clip(t, $(t).attr('data-content'));
+					});
+				});
+			</script>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">下线邀请通知</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板ID</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="partner[invite][tmpl_id]" value="{if isset($message['partner']['invite']['tmpl_id'])}{$message['partner']['invite']['tmpl_id']}{/if}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="partner[invite][tmpl_content]" rows="6">{if isset($message['partner']['invite']['tmpl_content'])}{$message['partner']['invite']['tmpl_content']}{/if}</textarea>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">模板变量</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="partner[invite][tmpl_variable]" rows="6">{if isset($message['partner']['invite']['tmpl_variable'])}{$message['partner']['invite']['tmpl_variable']}{/if}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group col-sm-12">
+		<input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交">
+		<input type="hidden" name="token" value="{$_W['token']}">
+	</div>
+</form>
+<script type="text/javascript">
+	require(['jquery'],function($){
+		//do nothing
+	});
+</script>
+{else if $act == 'service'}
+<div class="alert alert-info">
+	<i class="fa fa-exclamation-circle"></i> 公众号（已认证）可使用客服消息接口，客服消息接口要求粉丝在过去的48小时内必须有过交互，否则将不能发送通知。
+</div>
+<form action="" method="post">
+	<div class="panel panel-default">
+		<div class="panel-heading clearfix">设置拼团消息</div>
+		<div class="panel-body">
+			<div class="alert alert-warning">
+				<div class="row" id="super_var_wrap1">
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #777">变量</div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##订单号##}</strong> 表示拼团订单号 <a data-content="{##订单号##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##人数##}</strong> 表示该拼团还差几人 <a data-content="{##人数##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##列表页##}</strong> 表示拼团列表页网址 <a data-content="{##列表页##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##我的拼团##}</strong> 表示我的拼团页网址 <a data-content="{##我的拼团##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##详情页##}</strong> 表示拼团详情页网址 <a data-content="{##详情页##}" href="javascript:;" title="点击复制">点击复制</a></div>
+					<div class="col-xs-12 col-sm-12 col-md-12" style="color: #000"><strong>{##好友昵称##}</strong> 表示参团好友的昵称，没有昵称显示uid=N <a data-content="{##好友昵称##}" href="javascript:;" title="点击复制">点击复制</a></div>
+				</div>
+			</div>
+			<script>
+				require(['jquery', 'util'], function($, u){
+					$('#super_var_wrap1 a').each(function(){
+						var t = this;
+						u.clip(t, $(t).attr('data-content'));
+					});
+				});
+			</script>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">发起拼团（团长）</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">标题</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="mgroupon[start][title]" value="{$message['mgroupon']['start']['title']}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">图片</label>
+							<div class="col-sm-9 col-xs-12">
+								{php echo tpl_form_field_image('mgroupon[start][picurl]', $message['mgroupon']['start']['picurl']);}
+								<span class="help-block">推荐尺寸：360*200</span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">链接</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="mgroupon[start][url]" value="{$message['mgroupon']['start']['url']}">
+								<span class="help-block">点击客服消息跳转链接，可直接填写网址</span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="mgroupon[start][content]" rows="4">{$message['mgroupon']['start']['content']}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">组团成功（团长）</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">标题</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="mgroupon[success][title]" value="{$message['mgroupon']['success']['title']}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">图片</label>
+							<div class="col-sm-9 col-xs-12">
+								{php echo tpl_form_field_image('mgroupon[success][picurl]', $message['mgroupon']['success']['picurl']);}
+								<span class="help-block">推荐尺寸：360*200</span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">链接</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="mgroupon[success][url]" value="{$message['mgroupon']['success']['url']}">
+								<span class="help-block">点击客服消息跳转链接，可直接填写网址</span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="mgroupon[success][content]" rows="4">{$message['mgroupon']['success']['content']}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">组团失败（团长）</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">标题</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="mgroupon[fail][title]" value="{$message['mgroupon']['fail']['title']}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">图片</label>
+							<div class="col-sm-9 col-xs-12">
+								{php echo tpl_form_field_image('mgroupon[fail][picurl]', $message['mgroupon']['fail']['picurl']);}
+								<span class="help-block">推荐尺寸：360*200</span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">链接</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="mgroupon[fail][url]" value="{$message['mgroupon']['fail']['url']}">
+								<span class="help-block">点击客服消息跳转链接，可直接填写网址</span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="mgroupon[fail][content]" rows="4">{$message['mgroupon']['fail']['content']}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">加入拼团（团员）</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">标题</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="mgroupon[join][title]" value="{$message['mgroupon']['join']['title']}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">图片</label>
+							<div class="col-sm-9 col-xs-12">
+								{php echo tpl_form_field_image('mgroupon[join][picurl]', $message['mgroupon']['join']['picurl']);}
+								<span class="help-block">推荐尺寸：360*200</span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">链接</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="mgroupon[join][url]" value="{$message['mgroupon']['join']['url']}">
+								<span class="help-block">点击客服消息跳转链接，可直接填写网址</span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="mgroupon[join][content]" rows="4">{$message['mgroupon']['join']['content']}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">参团提醒（团长）</label>
+				<div class="col-sm-9">
+					<div class="panel panel-default reply-container" style="padding-top:2em;">
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">标题</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="mgroupon[notice][title]" value="{$message['mgroupon']['notice']['title']}">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">图片</label>
+							<div class="col-sm-9 col-xs-12">
+								{php echo tpl_form_field_image('mgroupon[notice][picurl]', $message['mgroupon']['notice']['picurl']);}
+								<span class="help-block">推荐尺寸：360*200</span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">链接</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" class="form-control" name="mgroupon[notice][url]" value="{$message['mgroupon']['notice']['url']}">
+								<span class="help-block">点击客服消息跳转链接，可直接填写网址</span>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">内容</label>
+							<div class="col-sm-9 col-xs-12">
+								<textarea class="form-control" name="mgroupon[notice][content]" rows="4">{$message['mgroupon']['notice']['content']}</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group col-sm-12">
+		<input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交">
+		<input type="hidden" name="token" value="{$_W['token']}">
+	</div>
+</form>
+<script type="text/javascript">
+	require(['jquery'],function($){
+		//do nothing
+	});
+</script>
+{/if}
+{template 'footer'}

@@ -1,0 +1,17 @@
+<nav class="bar bar-tab">
+	{if $this->footer_nav}
+	{loop $this->footer_nav $nav}
+	<a class="{SUPERMAN_EXTERNAL} tab-item {if $nav['active']}active{/if}" href="{$nav['url']}" data-no-cache="true">
+		{if strstr($nav['icon'], '#xe6')}
+		<span class="icon iconfont">&{$nav['icon']}</span>
+		{else}
+		<span class="icon"><img class="img_icon" src="{php echo tomedia($nav['icon'])}" onerror="{php echo $this->superman_placeholder}"></span>
+		{/if}
+		{if SupermanUtil::is_cart_url($nav['url'])}
+		<span class="cart_corner font5" style="{if $this->cart_count<=0}display: none{/if}">{php echo $this->cart_count}</span>
+		{/if}
+		<span class="tab-label">{$nav['title']}</span>
+	</a>
+	{/loop}
+	{/if}
+</nav>

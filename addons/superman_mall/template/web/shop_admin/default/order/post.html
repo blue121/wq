@@ -1,0 +1,710 @@
+<style type="text/css">
+	.form .panel-default .form-group{margin-bottom:10px;}
+</style>
+<!--<div class="alert alert-info clearfix">
+	<div class="pull-left" style="width: 900px;">
+		<div>
+			<i class="fa fa-info-circle"></i>
+			如需要联系客户，请点击右侧发送消息按钮，可通过公众号下发客服消息，与粉丝实时聊天，快速沟通相关问题，无需添加微信好友
+		</div>
+		<div style="color: red">PS: 发送消息后会自动创建聊天会话模式，即粉丝发送的任何消息都到聊天窗口，不触发任何关键字回复，结束会话可直接点关闭按钮，超时时间为5分钟，在此时间内没有消息回复将自动关闭聊天会话模式</div>
+	</div>
+	<a href="{php echo wurl('mc/notice/tpl', array('id' => $order['fans']['fanid']))}" class="btn btn-success btn-sm sms pull-right" target="_blank">发送消息</a>
+</div>-->
+{if $order['status'] == -4}
+<form id="form2" class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+	<div class="panel panel-default">
+		<div class="panel-heading">退款操作</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">金额</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group ">
+						<input type="text" value="{$order['price']}" class="form-control" disabled>
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button">元</button>
+						</span>
+					</div>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			{if $order['pay_credit'] > 0}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">支付余额</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" value="{$order['pay_credit']}" class="form-control" disabled>
+				</div>
+			</div>
+			{/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">退款原因</label>
+				<div class="col-sm-8 col-xs-12">
+					<textarea style="height:150px;" class="form-control" disabled>{php echo isset($extend['refund']['remark'])?$extend['refund']['remark']:$extend['refund_remark']}</textarea>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">接收退款账户</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="refund_type" value="2" {if $order['pay_type'] != 2}disabled{/if}> 微信钱包
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="refund_type" value="1" checked> 账户余额
+						</label>
+					</div>
+					<span class="help-block">微信钱包：微信支付订单，可原路退回微信钱包，退款成功后，请用户在微信钱包查看（微信->我->钱包->零钱->零钱明细）</span>
+					<span class="help-block">账户余额：商城账户余额</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label"></label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="submit" name="self_refund" value="确认退款" class="btn btn-primary col-lg-2">
+					<input type="hidden" name="token" value="{$_W['token']}" />
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+{else if $order['status'] == -5}
+<form class="form-horizontal form">
+	<div class="panel panel-default">
+		<div class="panel-heading">退款操作</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">金额</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group ">
+						<input type="text" class="form-control" disabled value="{php echo isset($extend['refund']['price'])?$extend['refund']['price']:$order['price']}">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button">元</button>
+						</span>
+					</div>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">备注</label>
+				<div class="col-sm-8 col-xs-12">
+					<textarea style="height:150px;" class="form-control" disabled>
+						{php echo isset($extend['refund']['remark'])?$extend['refund']['remark']:$extend['refund_remark']}
+					</textarea>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">接收退款账户</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						{if isset($extend['refund_id']) || $extend['refund']['type'] == 2}
+						<label class="radio-inline">
+							<input type="radio" checked disabled> 微信钱包
+						</label>
+						{else}
+						<label class="radio-inline">
+							<input type="radio" checked disabled> 账户余额
+						</label>
+						{/if}
+					</div>
+					<span class="help-block">微信钱包：微信支付订单，可原路退回微信钱包，退款成功后，请用户在微信钱包查看（微信->我->钱包->零钱->零钱明细）</span>
+					<span class="help-block">账户余额：商城账户余额</span>
+				</div>
+			</div>
+			{if $extend['out_refund_no'] || $extend['refund']['out_refund_no']}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">退款单号</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">
+						{php echo $extend['out_refund_no']?$extend['out_refund_no']:$extend['refund']['out_refund_no']}
+					</p>
+				</div>
+			</div>
+			{/if}
+			{if $extend['refund_id'] || $extend['refund']['refund_id']}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">微信退款交易号</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{php echo $extend['refund']['refund_id']?$extend['refund']['refund_id']:$extend['refund_id']}</p>
+				</div>
+			</div>
+			{/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">退款时间</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{php echo $extend['refund_time']?date('Y-m-d H:i:s', $extend['refund_time']):date('Y-m-d H:i:s', $extend['refund']['time'])}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+{/if}
+
+<form id="form1" class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="id" value="{$order['id']}">
+	<div class="panel panel-default">
+		<div class="panel-heading">订单详情</div>
+		<div class="panel-body" style="line-height: 20px;">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">订单号</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['ordersn']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">件数</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['total']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">订单状态</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">
+						{if $order['type'] == 1}
+						<span class="label label-info">拼团订单</span>
+						{/if}
+						<span class="{php echo SupermanUtil::get_order_status_style($order['status'])}">{php echo SupermanUtil::get_order_status_title($order['status'], $order['dispatch_type'])}</span>
+					</p>
+				</div>
+			</div>
+			{if $order['reward_credit'] > 0}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">返{$credit_group[$order['credit_type']]['title']}</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">
+						<span>{$order['reward_credit']}</span>
+						{if isset($extend['discount_status']['reward_credit']) && $extend['discount_status']['reward_credit']}
+						<span class="btn btn-default btn-xs" style="border-color: #5cb85c;color: #5cb85c;">已返</span>
+						{else}
+						<span class="btn btn-default btn-xs" style="border-color: #d9534f;color: #d9534f;">未返</span>
+						{/if}
+					</p>
+					<span class="help-block">订单评价完成后，触发返积分逻辑，当订单下有多件商品时，需要评价全部商品后，统一返积分</span>
+				</div>
+			</div>
+			{/if}
+			{if $order['mgroupon']['statu'] != ''}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">拼团状态</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">
+						<span class="label label-info">{$order['mgroupon']['statu']}</span>
+					</p>
+				</div>
+			</div>
+			{/if}
+			{if isset($order['mgroupon']['refund_msg'])}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">自动退款状态</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">
+						{$order['mgroupon']['refund_msg']}
+					</p>
+				</div>
+			</div>
+			{/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">总金额</label>
+				<div class="col-sm-8 col-xs-12">
+					{if $order['status'] == 0}
+					<input type="text" class="form-control" name="price" placeholder="" value="{$order['price']}">
+					{else}
+					<p class="form-control-static">&#165;{$order['price']}</p>
+					{/if}
+					<span class="help-block" style="color: red">注意：该价格为用户所付的总价格，已包含快递费</span>
+				</div>
+			</div>
+			{if $order['pay_credit'] > 0}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">支付余额</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['pay_credit']}</p>
+				</div>
+			</div>
+			{/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">创建时间</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{php echo date('Y-m-d H:i:s', $order['createtime'])}</p>
+				</div>
+			</div>
+			{if $order['pay_time'] > 0}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">支付时间</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{php echo date('Y-m-d H:i:s', $order['pay_time'])}</p>
+				</div>
+			</div>
+			{/if}
+			{if $order['dispatch_type'] == 2}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">自提门店</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$myfetch}</p>
+				</div>
+			</div>
+			{/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">留言</label>
+				<div class="col-sm-8 col-xs-12">
+					<textarea style="height:150px;" class="form-control" name="remark">{$order['remark']}</textarea>
+					<span class="help-block">用户订单留言信息</span>
+				</div>
+			</div>
+			{if $order['dispatch_type'] != 2}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">快递费</label>
+				{if $order['status'] == 0}
+				<div class="col-sm-2 col-xs-12">
+					<input type="text" class="form-control" name="express_fee" placeholder="" value="{$order['express_fee']}">
+				</div>
+				{else}
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">&#165;{$order['express_fee']}</p>
+				</div>
+				{/if}
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">快递公司</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="express_title" placeholder="" value="{$order['express_title']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">快递单号</label>
+				<div class="col-sm-8 col-xs-12">
+					<input type="text" class="form-control" name="express_no" placeholder="" value="{$order['express_no']}">
+				</div>
+			</div>
+			{/if}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">自定义配送</label>
+				<div class="col-sm-8 col-xs-12">
+					<div class="input-group">
+						<input type="text" name="custom_delivery" class="form-control" aria-label="Text input with segmented button dropdown" placeholder="可输入自定义配送" value="{$order['custom_delivery']}">
+						<div class="input-group-btn">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="caret"></span>
+								<span class="sr-only">Toggle Dropdown</span>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-right">
+								{if $deliverys}
+								{loop $deliverys $de}
+								<li><a href="javascript:;" class="delivery_info">{$de['content']}</a></li>
+								{/loop}
+								{/if}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">订单状态</label>
+				<div class="col-sm-8 col-xs-12">
+					<select name="status" class="form-control">
+						<option value="-2" {if $order['status']==-2}selected{/if}>{php echo SupermanUtil::get_order_status_title(-2)}</option>
+						<option value="-1" {if $order['status']==-1}selected{/if}>{php echo SupermanUtil::get_order_status_title(-1)}</option>
+						<option value="0" {if $order['status']==0}selected{/if}>{php echo SupermanUtil::get_order_status_title(0)}</option>
+						<option value="1" {if $order['status']==1}selected{/if}>{php echo SupermanUtil::get_order_status_title(1)}</option>
+						<option value="2" {if $order['status']==2}selected{/if}>{php echo SupermanUtil::get_order_status_title(2)}</option>
+						<option value="3" {if $order['status']==3}selected{/if}>{php echo SupermanUtil::get_order_status_title(3)}</option>
+						<option value="4" {if $order['status']==4}selected{/if}>{php echo SupermanUtil::get_order_status_title(4)}</option>
+					</select>
+					{if $order['type'] == 1}<span class="help-block">拼团订单请确认是否拼团成功再发货</span>{/if}
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">是否可核销</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="checkout" value="1" {if $order['checkout']}checked{/if}> 是
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="checkout" value="0" {if !$order['checkout']}checked{/if}> 否
+						</label>
+					</div>
+					<span class="help-block">设置可核销后，手机端订单详情页将展示核销二维码和验证码等信息</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label"></label>
+				<div class="col-sm-8 col-xs-12">
+					<input id="btn_submit" type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1">
+					<input type="hidden" name="token" value="{$_W['token']}" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">收货人信息</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">姓名</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['username']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">手机</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['mobile']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">收货地址</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['address']}</p>
+				</div>
+			</div>
+			{if isset($extend['IDcard']['num'])}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">身份证</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$extend['IDcard']['num']}</p>
+				</div>
+			</div>
+			{/if}
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">用户信息</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">UID</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['uid']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">昵称</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{if $order['member']['nickname']}{$order['member']['nickname']}{else}未完善{/if}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">商品信息</div>
+		<div class="panel-body">
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th width="100">封面图</th>
+					<th>商品名称</th>
+					<th>规格</th>
+					<th width="100">单价</th>
+					<th width="80">数量</th>
+					<th width="80">是否评价</th>
+					<th width="100">小计</th>
+					<th width="360">操作</th>
+				</tr>
+				</thead>
+				<tbody>
+				{if $order['order_items']}
+				{loop $order['order_items'] $item}
+				<tr>
+					<td style="position: relative">
+						<img src="{php echo tomedia($item['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'" height="60px"/>
+					</td>
+					<td>{$item['title']}</td>
+					<td>{$item['sku']}</td>
+					<td>{$item['price']}</td>
+					<td>{$item['total']}</td>
+					<td>{if $item['iscomment']}是{else}否{/if}</td>
+					<td>{php echo SupermanUtil::float_format($item['total']*$item['price'])}</td>
+					<td>
+						{if $item['type'] == 2}
+						<div class="row">
+							<div class="col-sm-10 col-xs-12" style="padding: 0;">
+								<input type="text" id="virtual_info_{$item['id']}" class="form-control" placeholder="虚拟商品数据，如：激活码为123456" value="{if isset($item['extend']['virtual_info'])}{$item['extend']['virtual_info']}{/if}">
+							</div>
+							<div class="col-sm-2 col-xs-12" style="padding: 0">
+								<button type="button" class="btn btn-primary btn_virtual_send" data-value="{$item['extend']['virtual_info']}" data-id="{$item['id']}">更新</button>
+							</div>
+						</div>
+						{/if}
+					</td>
+				</tr>
+				{/loop}
+				{/if}
+				</tbody>
+			</table>
+			<label>
+				合计：{$order['price']}
+			</label>
+		</div>
+	</div>
+	{if isset($extend['discount_info']) && ($extend['discount_info']['free_ship'] || $extend['discount_info']['full_dec'] || $extend['discount_info']['cash_credit'])}
+	<div class="panel panel-default">
+		<div class="panel-heading">优惠信息</div>
+		<div class="panel-body">
+			{if isset($extend['discount_info']['free_ship']) && $extend['discount_info']['free_ship']}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">包邮</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">已包邮</p>
+				</div>
+			</div>
+			{/if}
+			{if isset($extend['discount_info']['full_dec']) && !empty($extend['discount_info']['full_dec'])}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">满减</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">满{$extend['discount_info']['full_dec']['limit']}减{$extend['discount_info']['full_dec']['minus']}</p>
+				</div>
+			</div>
+			{/if}
+			{if isset($extend['discount_info']['cash_credit']) && !empty($extend['discount_info']['cash_credit'])}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">积分抵现</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$extend['discount_info']['cash_credit']['credit']}积分抵现{$extend['discount_info']['cash_credit']['cash']}元</p>
+				</div>
+			</div>
+			{/if}
+		</div>
+	</div>
+	{/if}
+	{if $order['partner1_id']}
+	<div class="panel panel-default">
+		<div class="panel-heading">一级分销商</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">ID</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['partner1_id']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">头像/昵称</label>
+				<div class="col-sm-8 col-xs-12">
+					<div class="clear">
+						<div class="pull-left" style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+							<img src="{php echo tomedia($order['partner1']['member']['avatar'])}" onerror="this.src='{$_W['siteroot']}app/resource/images/heading.jpg'" style="width: 100%">
+						</div>
+						<div class="pull-left" style="line-height: 40px; margin-left: 5px; width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+							{$order['partner1']['member']['nickname']}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">姓名</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['partner1']['member']['realname']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">手机</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['partner1']['member']['mobile']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">佣金</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">&yen;{$order['partner1_commission']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">分销等级</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['partner1']['group']['title']}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	{/if}
+	{if $order['partner2_id']}
+	<div class="panel panel-default">
+		<div class="panel-heading">二级分销商</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">ID</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['partner2_id']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">头像/昵称</label>
+				<div class="col-sm-8 col-xs-12">
+					<div class="clear">
+						<div class="pull-left" style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+							<img src="{php echo tomedia($order['partner2']['member']['avatar'])}" onerror="this.src='{$_W['siteroot']}app/resource/images/heading.jpg'" style="width: 100%">
+						</div>
+						<div class="pull-left" style="line-height: 40px; margin-left: 5px; width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+							{$order['partner2']['member']['nickname']}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">姓名</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['partner2']['member']['realname']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">手机</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['partner2']['member']['mobile']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">佣金</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">&yen;{$order['partner2_commission']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">分销等级</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['partner2']['group']['title']}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	{/if}
+	{if $order['partner3_id']}
+	<div class="panel panel-default">
+		<div class="panel-heading">三级分销商</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">ID</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['partner3_id']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">头像/昵称</label>
+				<div class="col-sm-8 col-xs-12">
+					<div class="clear">
+						<div class="pull-left" style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+							<img src="{php echo tomedia($order['partner3']['member']['avatar'])}" onerror="this.src='{$_W['siteroot']}app/resource/images/heading.jpg'" style="width: 100%">
+						</div>
+						<div class="pull-left" style="line-height: 40px; margin-left: 5px; width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+							{$order['partner3']['member']['nickname']}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">姓名</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['partner3']['member']['realname']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">手机</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['partner3']['member']['mobile']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">佣金</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">&yen;{$order['partner3_commission']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">分销等级</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$order['partner3']['group']['title']}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	{/if}
+	<div class="modal fade" id="cancel-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">请选择</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">是否退款</label>
+						<div class="col-sm-6 col-md-8 col-xs-12">
+							<div class="input-group">
+								<label class="radio-inline">
+									<input type="radio" name="refund" value="1" checked> 是
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="refund" value="0"> 否
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">退款金额</label>
+						<div class="col-sm-6 col-md-8 col-xs-12">
+							<div class="input-group">
+								<input type="text" class="form-control" name="money" value="{$order['price']}">
+								<div class="input-group-addon">元</div>
+							</div>
+							<span class="help-block">退款将进入粉丝账户【{$credit_title}】中，<a href="{php echo wurl('mc/credit/strategy')}" target="_blank">点击查看</a></span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="submit" class="pull-right btn btn-primary" name="submit" value="确定">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+<script>
+	require(['jquery'], function($){
+		$('input[name=refund]').click(function(){
+			if ($(this).val() == 1) {
+				$('input[name=money]').attr('disabled', false);
+			} else {
+				$('input[name=money]').attr('disabled', true);
+			}
+		});
+		//自定义配送
+		$('.delivery_info').click(function () {
+			var delivery_info = $(this).html();
+			$('input[name=custom_delivery]').val(delivery_info);
+		});
+		$('#btn_submit').bind('click', function(){
+			var status = $('select[name=status]');
+			if ("{$order['status']}" > "0" && status.val() == '-1') {
+				$('#cancel-modal').modal('show');
+				return false;
+			}
+			$('#form1').submit();
+		});
+		$('.btn_virtual_send').bind('click', function(){
+			var t = this;
+			if ($(t).hasClass('disabled')) {
+				return;
+			}
+			$(t).attr('disabled', true);
+			var value = $('input[type=text]', $(t).parent().prev()).val();
+			if (value == '') {
+				util.message('数据为空，请输入！', '', 'error');
+				$(t).attr('disabled', false);
+				return;
+			}
+			var id = $(t).attr('data-id');
+			$.ajax({
+				url: '{php echo $this->createWebUrl("order", array("act" => "post", "virtualsubmit" => "yes"))}',
+				data: 'id='+id+'&value='+value,
+				success: function(resp) {
+					if (resp == 'success') {
+						util.message('更新成功！', '', 'success');
+					} else {
+						util.message('更新失败！('+resp+')', '', 'error');
+					}
+					$(t).attr('disabled', false);
+				}
+			});
+		});
+	});
+</script>

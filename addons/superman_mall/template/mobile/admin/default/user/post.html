@@ -1,0 +1,106 @@
+<div class="page-group">
+    <div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+        {template 'common/title'}
+        <div class="content">
+            <form class="form-horizontal user_post_form" method="post">
+                <div class="list-block media-list">
+                    <ul>
+                        <li class="item-content">
+                            {if isset($member['avatar']) && $member['avatar']}
+                            <div class="item-media">
+                                <img class="user_avatar" src="{php echo tomedia($member['avatar'])}" onerror="this.src='resource/images/heading.jpg'">
+                            </div>
+                            {/if}
+                            <div class="item-inner">
+                                <div class="item-title-row">
+                                    <div class="item-title font7">账号：{$item['username']}</div>
+                                </div>
+                                {if isset($member['nickname']) && $member['nickname']}
+                                <div class="item-title-row font7">
+                                    <div class="item-title">昵称：{$member['nickname']}</div>
+                                </div>
+                                {/if}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="list-block user_info_wrap">
+                    <ul>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label font7">身份</div>
+                                    <div class="item-input">
+                                        <select class="font7" name="groupid">
+                                            {if $item['groupid'] == 0}
+                                            <option value="0" {if $item['groupid'] == 0}selected{/if}>管理员</option>
+                                            {else}
+                                            {if $groups}
+                                            {loop $groups $g}
+                                            <option value="{$g['id']}" {if $item['groupid'] == $g['id']}selected{/if}>{$g['title']}</option>
+                                            {/loop}
+                                            {/if}
+                                            {/if}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label font7">手机号</div>
+                                    <div class="item-input">
+                                        <input type="number" class="font7" placeholder="请输入手机号" name="mobile" value="{$item['mobile']}">
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label font7">状态</div>
+                                    <div class="item-input">
+                                        <select class="font7" name="status">
+											{if $item['groupid'] == 0}
+											<option value="1" {if $item['status'] == 1}selected{/if}>正常</option>
+											{else}
+											<option value="0" {if $item['status'] == 0}selected{/if}>待审核</option>
+											<option value="1" {if $item['status'] == 1}selected{/if}>正常</option>
+											<option value="2" {if $item['status'] == 2}selected{/if}>禁用</option>
+											{/if}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label font7">备注</div>
+                                    <div class="item-input">
+                                        <textarea class="font7" placeholder="请输入备注" name="remark">{$item['remark']}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="row user_info_log">
+                        <div class="col-100 font6 color-gray">有效期：{php echo date('Y-m-d', $item['starttime'])} ~ {php echo $item['expiretime'] > 0?date('Y-m-d', $item['expiretime']):'永久'}</div>
+                        <div class="col-100 font6 color-gray">注册时间：{php echo date('Y-m-d H:i:s', $item['dateline'])}</div>
+                        <div class="col-100 font6 color-gray">上次登录时间：{php echo $item['lastvisit']>0?date('Y-m-d H:i:s', $item['lastvisit']):''}</div>
+                        <div class="col-100 font6 color-gray">上次登录IP：{$item['lastip']}</div>
+                    </div>
+                </div>
+                <input type="hidden" name="token" value="{$_W['token']}">
+                <input type="hidden" name="submit1" value="yes">
+            </form>
+        </div>
+        <div class="row stock_btn_wrap">
+            <div class="col-100">
+                <button type="button" class="button button-fill btn_submit">保存</button>
+            </div>
+        </div>
+        {template 'common/share'}
+    </div>
+</div>

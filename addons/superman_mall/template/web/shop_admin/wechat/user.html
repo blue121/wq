@@ -1,0 +1,7 @@
+{template 'common/header'}
+{if $act == 'user'}
+	{template 'user-user'}
+{else if $act == 'group'}
+	{template 'user-group'}
+{/if}
+{template 'common/footer'}

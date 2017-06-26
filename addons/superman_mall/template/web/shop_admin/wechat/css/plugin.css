@@ -1,0 +1,13 @@
+.main_wrap .plugin_list .plugin_list_title {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    padding-bottom: 1rem;
+}
+.main_wrap .plugin_list a {
+    width:64px;
+    display: block;
+}
+.main_wrap .plugin_list a img {
+    width: 64px;
+    height: 64px;
+    margin-bottom: .5rem;
+}

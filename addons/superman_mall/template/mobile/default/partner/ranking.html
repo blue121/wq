@@ -1,0 +1,55 @@
+{template 'common/title'}
+<div class="content partner_ranking infinite-scroll" data-flag="0" data-display-url="{php echo $this->createMobileUrl('partner', array('type' => $type, 'act' => 'ranking' , 'load' => 'infinite'))}" data-distance="50" data-page="{$pindex}">
+	{if $setting['base']['top']['img']}
+		<div class="ranking_banner">
+			{if $setting['base']['top']['url']}
+			<a href="{$setting['base']['top']['url']}" class="external">
+				<img src="{php echo tomedia($setting['base']['top']['img'])}"  onerror="this.src='{php echo $this->superman_placeholder}'">
+			</a>
+			{else}
+			<img src="{php echo tomedia($setting['base']['top']['img'])}"  onerror="this.src='{php echo $this->superman_placeholder}'">
+			{/if}
+		</div>
+	{/if}
+	<div class="buttons-tab">
+		<a href="{php echo $this->createMobileUrl('partner', array('act' => 'ranking', 'type' => 'week'))}" data-no-cache="true" class="{if $type == 'week'}active{/if} button">周排行榜</a>
+		<a href="{php echo $this->createMobileUrl('partner', array('act' => 'ranking', 'type' => 'month'))}" data-no-cache="true" class="{if $type == 'month'}active{/if} button">月排行榜</a>
+	</div>
+	<div class="content-block">
+		<div class="tabs">
+			<div class="tab active item_list">
+				{if $list}
+				{loop $list $li}
+					<div class="card">
+						<div class="card-header row">
+							<div class="col-15 text-center ranking_num{if $li['ranking'] < 4}_{$li['ranking']}{/if}">
+								{if $li['ranking'] == 1}
+								<i class="iconfont fonta2">&#xe608;</i>
+								{else if $li['ranking'] == 2}
+								<i class="iconfont fonta2">&#xe606;</i>
+								{else if $li['ranking'] == 3}
+								<i class="iconfont fonta2">&#xe607;</i>
+								{else}
+								<span>{$li['ranking']}</span>
+								{/if}
+							</div>
+							<div class="col-60 text-overflow">
+								<img class="rankingt_avatar" src="{php echo tomedia($li['avatar'])}" onerror="this.src='resource/images/heading.jpg'">
+								<span class="font7">{$li['nickname']}</span>
+							</div>
+							<div class="col-25 text-right font8">&yen;{$li['commission']}</div>
+						</div>
+					</div>
+				{/loop}
+				{/if}
+			</div>
+		</div>
+	</div>
+	<div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+	{if count($list)==$pagesize}
+	<div class="infinite-scroll-preloader">
+		<div class="preloader"></div>
+	</div>
+	{/if}
+</div>
+{template 'common/nav'}

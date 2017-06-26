@@ -1,0 +1,178 @@
+{template 'common/title'}
+<div class="content partner_reg">
+	{if !$this->partner}
+	{if $fromid > 0}
+	<div class="card invite_info_wrap">
+		<div class="inviter_avatar text-center">
+			<img src="{php echo tomedia($recommend['member']['avatar'])}" onerror="this.src='resource/images/heading.jpg'">
+		</div>
+		<div class="username font9">我是{$recommend['member']['nickname']}</div>
+		<div class="invite_info_content font6">
+			{php echo $this->setting['partner']['invite_text']}
+		</div>
+	</div>
+	<div class="list-block reg_input_wrap">
+		<form action="" method="post">
+			<input type="hidden" name="fromid" value="{$fromid}">
+			<ul>
+				{if $this->setting['partner']['member_info']}
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label font7">姓名</div>
+							<div class="item-input">
+								<input name="realname" type="text" class="font7" placeholder="姓名">
+							</div>
+						</div>
+					</div>
+				</li>
+				{if !isset($sms['setting']['partner_reg']['switch']) || $sms['setting']['partner_reg']['switch'] == 0}
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label font7">手机</div>
+							<div class="item-input">
+								<input name="mobile" type="tel" class="font7" placeholder="手机号">
+							</div>
+						</div>
+					</div>
+				</li>
+				{else}
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label font7">手机</div>
+							<div class="item-input">
+								<input name="mobile" type="tel" class="font7" placeholder="手机号">
+							</div>
+							<a href="#" class="btn_verify button font5 button-default" data-url="{php echo $this->createMobileUrl('partner', array('act' => 'reg'))}">获取验证码</a>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label font7">验证码</div>
+							<div class="item-input">
+								<input name="checkcode" type="tel" class="font7" placeholder="输入手机收到的验证码">
+							</div>
+						</div>
+					</div>
+				</li>
+				{/if}
+				{/if}
+			</ul>
+			<div class="content-padded">
+				<div class="row register_btn">
+					<div class="col-100">
+						<input name="token" type="hidden" value="{$_W['token']}" />
+						<a href="javascript:;" class="button btn_reg button-fill" data-url="{php echo $this->createMobileUrl('partner', array('act' => 'reg'))}">
+							{php echo $this->setting['text']['apply_join']}
+						</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	{else}
+	{if isset($this->setting['base']['top']['reg_img']) && $this->setting['base']['top']['reg_img']}
+	<div class="reg_banner">
+		{if isset($this->setting['base']['top']['reg_url']) && $this->setting['base']['top']['reg_url']}
+		<a href="{php echo $this->setting['base']['top']['reg_url']}" class="external">
+			<img src="{php echo tomedia($this->setting['base']['top']['reg_img'])}"  onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'">
+		</a>
+		{else}
+		<img src="{php echo tomedia($this->setting['base']['top']['reg_img'])}"  onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'">
+		{/if}
+	</div>
+	{/if}
+	<div class="list-block reg_input_wrap">
+		<form action="" method="post">
+			<ul>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label font7">姓名</div>
+							<div class="item-input">
+								<input name="realname" type="text" class="font7" placeholder="姓名">
+							</div>
+						</div>
+					</div>
+				</li>
+				{if !isset($sms['setting']['partner_reg']['switch']) || $sms['setting']['partner_reg']['switch'] == 0}
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label font7">手机</div>
+							<div class="item-input">
+								<input name="mobile" type="tel" class="font7" placeholder="手机号">
+							</div>
+						</div>
+					</div>
+				</li>
+				{else}
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label font7">手机</div>
+							<div class="item-input">
+								<input name="mobile" type="tel" class="font7" placeholder="手机号">
+							</div>
+							<a href="#" class="btn_verify button font5 button-default" data-url="{php echo $this->createMobileUrl('partner', array('act' => 'reg'))}">获取验证码</a>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label font7">验证码</div>
+							<div class="item-input">
+								<input name="checkcode" type="tel" class="font7" placeholder="输入手机收到的验证码">
+							</div>
+						</div>
+					</div>
+				</li>
+				{/if}
+			</ul>
+			<div class="content-padded">
+				<div class="row register_btn">
+					<div class="col-100">
+						<input name="token" type="hidden" value="{$_W['token']}" />
+						<a href="javascript:;" class="button btn_reg button-fill" data-url="{php echo $this->createMobileUrl('partner', array('act' => 'reg'))}">
+							{php echo $this->setting['text']['apply_join']}
+						</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	{/if}
+	{else if $this->partner['status'] == -1}
+	{if $this->setting['partner']['join_condition']['type'] == 3}
+	<div class="reg_banner">
+		<img {if isset($this->setting['base']['top']['img']) && $this->setting['base']['top']['img']}src="{php echo tomedia($this->setting['base']['top']['img'])}"{/if}  onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'">
+	</div>
+	<div class="card consumer_info_wrap font8">
+		本商城累计购物次数达到<span class="text-strong font9 color-warning">&nbsp;{php echo $this->setting['partner']['join_condition']['limit']}&nbsp;</span>次，可自动加入商城分销商，您已购物<span class="text-strong font9 color-warning">&nbsp;{$count}&nbsp;</span>次，请继续努力！
+	</div>
+	<div class="row btn_shopping">
+		<div class="col-100">
+			<a href="{php echo $this->createMobileUrl('home')}" class="button button-success button-fill">继续购物</a>
+		</div>
+	</div>
+	{else if $this->setting['partner']['join_condition']['type'] == 4}
+	<div class="reg_banner">
+		<img {if isset($this->setting['base']['top']['img']) && $this->setting['base']['top']['img']}src="{php echo tomedia($this->setting['base']['top']['img'])}"{/if}  onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'">
+	</div>
+	<div class="card consumer_info_wrap font8">
+		本商城累计消费达到<span class="text-strong font9 color-warning">&nbsp;{php echo $this->setting['partner']['join_condition']['limit']}&nbsp;</span>元，可自动加入商城分销商，您已消费<span class="text-strong font9 color-warning">&nbsp;{$count}&nbsp;</span>元，请继续努力！
+	</div>
+	<div class="row btn_shopping">
+		<div class="col-100">
+			<a href="{php echo $this->createMobileUrl('home')}" class="button button-success button-fill">继续购物</a>
+		</div>
+	</div>
+	{/if}
+	{/if}
+</div>
+{template 'common/nav'}

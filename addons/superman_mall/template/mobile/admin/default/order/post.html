@@ -1,0 +1,137 @@
+<div class="page-group">
+    <div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+        {template 'common/nav'}
+        {template 'common/title'}
+        <div class="content">
+            <div class="list-block media-list express_info_wrap">
+                <ul>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title font7 color_default pull-left">订单状态：{$order['status_title']}</div>
+                            {if $order['pay_type'] > 0}
+                            <div class="item-after pull-right font7">{php echo SupermanUtil::get_pay_type_title($order['pay_type'])}</div>
+                            {/if}
+                        </div>
+                    </li>
+                    {if $order['address']}
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title-row">
+                                <div class="item-title font7 color_default">收货人：{$order['username']}</div>
+                                <div class="item-after">
+                                    <a href="tel:{$order['mobile']}" class="font7 color_default">{$order['mobile']}</a>
+                                </div>
+                            </div>
+                            <div class="font7 color_default">收货地址：{$order['address']}</div>
+                            {if $order['express_no']}
+                            <div class="font7 color_default">物流公司：{$order['express_title']}</div>
+                            <div class="font7 color_default">快递单号：{$order['express_no']}</div>
+                            {/if}
+                            {if $order['remark']}
+                            <div class="font7 color_default">留言：{$order['remark']}</div>
+                            {/if}
+                        </div>
+                    </li>
+                    {/if}
+                </ul>
+            </div>
+            <div class="list-block media-list order_info_wrap">
+                <ul>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title-row">
+                                <div class="item-title font7 color_default">{$order['ordersn']}</div>
+                            </div>
+                        </div>
+                    </li>
+                    {if $items}
+                    {loop $items $item}
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['itemid']))}" class="item-content external">
+                            <div class="item-media">
+                                <img src="{php echo tomedia($item['cover'])}" class="order_item_img" onerror="this.src='{php echo $this->superman_placeholder}'">
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-subtitle row no-gutter">
+                                    <div class="col-66 text-overflow font7 color_default">{$item['title']}</div>
+                                    <div class="col-33 text-right font7 color_default">&yen;{$item['price']}</div>
+                                </div>
+                                <div class="item-title-row">
+                                    {if $item['sku']}
+                                    <div class="item-title font6 color-gray text-no-overflow">{$item['sku']}</div>
+                                    {/if}
+                                    <div class="item-after font7 color_default">×{$item['total']}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    {/loop}
+                    {/if}
+                    <li>
+                        <a href="javascript:;" class="item-content">
+                            <div class="item-inner">
+                                <div class="item-subtitle color_default font7">共{$order['total']}件，合计{$total_price}元</div>
+                            </div>
+                        </a>
+                    </li>
+                    {if $order['express_fee'] > 0}
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title-row">
+                                <div class="item-title font7 color_default">运费</div>
+                                <div class="item-after font7 color_default">
+                                    &yen;{$order['express_fee']}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {/if}
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class=" text-right">
+                                <div class="item-title font7">
+                                    <span class="color_default">实付款：</span>
+                                    <span class="color-danger">&yen;{$order['price']}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {if $order['status'] == 0}
+                    <li>
+                        <div class="item-inner row no-gutter text-center">
+                            <div class="col-50 edit_price" data-price="{$order['price']}" data-id="{$order['id']}" data-url="{php echo $this->createMobileUrl('admin', array('route' => 'order.modify'));}">
+                                <a href="javascript:;" data-no-cache="true" class="color_default font7"><i class="icon icon-app icon-f7"></i> 改价</a>
+                            </div>
+                            <div class="col-50 close_order" data-id="{$order['id']}" data-url="{php echo $this->createMobileUrl('admin', array('route' => 'order.modify'));}">
+                                <a href="javascript:;" data-no-cache="true" class="color_default font7"><i class="icon icon-app icon-f7"></i> 关闭</a>
+                            </div>
+                        </div>
+                    </li>
+                    {else if $order['status'] == 1}
+                    {if $order['type'] == 0 || ($order['type'] == 1 && $order['mg_status'] == 1)}
+                    <li>
+                        <div class="item-inner row no-gutter text-center">
+                            <div class="col-100">
+                                <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.send', 'id' => $order['id'], 'status' => $status, 'type' => $type, 'dispatch_type' => $dispatch_type, 'pay_type' => $pay_type));}" data-no-cache="true" class="font8 send_btn"><span class="iconfont font8">&#xe612;</span> 发货</a>
+                            </div>
+                        </div>
+                    </li>
+                    {/if}
+                    {/if}
+                </ul>
+                <div class="row order_log">
+                    <div class="col-100 font6 color-gray">
+						{if $order['payment_no']}
+						<div class="item-title font6 color-gray">微信支付单号：{$order['payment_no']}</div>
+						{/if}
+                        <div class="item-title font6 color-gray">下单时间：{php echo date('Y-m-d H:i:s', $order['createtime'])}</div>
+						{if $order['pay_time']}
+                        <div class="item-title font6 color-gray">付款时间：{php echo date('Y-m-d H:i:s', $order['pay_time'])}</div>
+						{/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {template 'common/share'}
+    </div>
+</div>

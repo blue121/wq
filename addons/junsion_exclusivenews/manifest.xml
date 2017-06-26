@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.tule5.com" versionCode="0.52,0.6,0.7">
+	<application setting="true">
+		<name><![CDATA[独家消息]]></name>
+		<identifie><![CDATA[junsion_exclusivenews]]></identifie>
+		<version><![CDATA[2.3.1]]></version>
+		<type><![CDATA[activity]]></type>
+		<ability><![CDATA[独家消息]]></ability>
+		<description><![CDATA[独家消息]]></description>
+		<author><![CDATA[图乐源码]]></author>
+		<url><![CDATA[http://www.tule5.com/]]></url>
+	</application>
+	<platform>
+		<subscribes>
+		</subscribes>
+		<handles>
+		</handles>
+		<rule embed="false" />
+		<card embed="true" />
+	</platform>
+	<bindings>
+		<cover>
+			<entry title="独家消息入口" do="cover" state="" direct="false" />
+		</cover>
+		<menu>
+			<entry title="消息管理" do="index" state="" direct="false" />
+		    <entry title="查看记录" do="order" state="" direct="false" />
+		</menu>
+	</bindings>
+	<install>
+	<![CDATA[
+
+CREATE TABLE IF NOT EXISTS `ims_junsion_exclusivenews_black` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `openid` varchar(50) DEFAULT '',
+  `avatar` varchar(200) DEFAULT '',
+  `nickname` varchar(50) DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+
+
+CREATE TABLE IF NOT EXISTS `ims_junsion_exclusivenews_news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `openid` varchar(50) DEFAULT '',
+  `avatar` varchar(200) DEFAULT '',
+  `nickname` varchar(50) DEFAULT '',
+  `words` varchar(200) DEFAULT '',
+  `hideword` text,
+  `price` decimal(11,2) DEFAULT '0.00',
+  `status` int(1) DEFAULT '0',
+  `checked` int(1) DEFAULT '0',
+  `createtime` int(11) DEFAULT '0',
+  `opened` tinyint(1) DEFAULT '0',
+  `opendays` int(10) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+
+
+CREATE TABLE IF NOT EXISTS `ims_junsion_exclusivenews_order` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `openid` varchar(50) DEFAULT '',
+  `avatar` varchar(200) DEFAULT '',
+  `nickname` varchar(50) DEFAULT '',
+  `paytransid` varchar(100) DEFAULT '',
+  `transid` varchar(50) DEFAULT '',
+  `ordersn` varchar(200) DEFAULT '',
+  `price` decimal(11,2) DEFAULT '0.00',
+  `nid` int(11) DEFAULT '0',
+  `checked` int(1) DEFAULT '0',
+  `status` int(1) DEFAULT '0',
+  `wstatus` int(1) DEFAULT '0',
+  `createtime` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `nid` (`nid`),
+  KEY `nidopenid` (`nid`,`openid`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+
+CREATE TABLE IF NOT EXISTS `ims_junsion_exclusivenews_with` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `weid` int(11) DEFAULT '0',
+  `openid` varchar(50) DEFAULT '',
+  `avatar` varchar(200) DEFAULT '',
+  `nickname` varchar(50) DEFAULT '',
+  `transid` varchar(50) DEFAULT '',
+  `price` decimal(11,2) DEFAULT '0.00',
+  `status` int(1) DEFAULT '0',
+  `checktime` int(11) DEFAULT '0',
+  `createtime` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+
+	
+	]]></install>
+	<uninstall><![CDATA[]]></uninstall>
+	<upgrade><![CDATA[]]></upgrade>
+</manifest>

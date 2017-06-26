@@ -1,0 +1,42 @@
+{loop $list $item}
+<div class="panel panel-default">
+    <div class="panel-heading clearfix">
+        <div class="pull-left">{$item['title']}</div>
+        <div class="pull-right">
+            更新时间：{php echo date('Y-m-d H:i:s', $item['updatetime'])}&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="{php echo $this->createWebUrl('postage', array('act' => 'copy', 'id' => $item['id']))}">复制模板</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{php echo $this->createWebUrl('postage', array('act' => 'post', 'id' => $item['id']))}">编辑</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{php echo $this->createWebUrl('postage', array('act' => 'delete', 'id' => $item['id'], 'type' => 'template'))}">删除</a>
+        </div>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>运送到</th>
+                <th width="85">{php echo M::t('superman_mall_postage_template')->get_thead_by_valuation($item['valuation'], 1)}</th>
+                <th width="85">{php echo M::t('superman_mall_postage_template')->get_thead_by_valuation($item['valuation'], 2)}</th>
+                <th width="85">{php echo M::t('superman_mall_postage_template')->get_thead_by_valuation($item['valuation'], 3)}</th>
+                <th width="85">{php echo M::t('superman_mall_postage_template')->get_thead_by_valuation($item['valuation'], 4)}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {loop $item['items'] $li}
+            <tr>
+                <td>{$li['area']}</td>
+                <td>{$li['start']}</td>
+                <td>{$li['postage']}</td>
+                <td>{$li['step']}</td>
+                <td>{$li['renew']}</td>
+            </tr>
+            {/loop}
+            </tbody>
+        </table>
+    </div>
+</div>
+{/loop}
+{$pager}
+<script type="text/javascript">
+    require(['bootstrap', 'util'],function($, u){
+    });
+</script>

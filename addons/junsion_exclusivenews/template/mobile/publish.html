@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="{RES}css/weui.css" />
+<link rel="stylesheet" href="{RES}css/style.css?v={TIMESTAMP}" />
+<link rel="stylesheet" href="{RES}css/sweetalert.css" />
+<script type="text/javascript" src="{RES}js/sweetalert.min.js"></script>
+<script src="../app/resource/js/lib/jquery-1.11.1.min.js"></script>
+<title>{$_W['account']['name']}</title>
+<style>
+.freeinput{
+    font-size: 15px;
+    width: 30px;
+    border: 1px solid gainsboro !important;
+    text-align: center;
+    padding: 2px;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+</style>
+</head>
+<body>
+<div class="header">
+	<a class="weui_btn weui_btn_mini  weui_btn_default" style="position: absolute;left: 10px;top: 25%;" href="{php echo $this->createMobileUrl('list')}">更多</a>
+	{if $cfg['w_news']}{$cfg['w_news']}{else}独家消息{/if}
+	<button class="weui_btn weui_btn_mini  weui_btn_primary rightbtn" style="margin: 0" onclick="$('#rule').show();">{if $cfg['w_play']}{$cfg['w_play']}{else}怎么玩{/if}</button>
+</div>
+<form action="" method="post" id="form" onsubmit="return oncheck()" enctype="multipart/form-data">
+<div style="text-align: center;background: white;margin: 20px 10px;padding: 20px;padding-bottom: 5px;">
+<div class="weui_cell">
+    <div class="weui_cell_bd weui_cell_primary">
+        <input class="weui_input" style="font-size: 12px" type="text" required="required" name="words" id="words" placeholder="写下你的独家消息"/>
+    </div>
+</div>
+<div class="weui_cell">
+    <div class="weui_cell_bd weui_cell_primary">
+        <textarea class="weui_input" style="font-size: 12px;height: 30px;" name="hideword" id="hideword" placeholder="写下打码区域的内容"></textarea>
+    </div>
+</div>
+<div class="weui_cell" style="padding: 0;text-align: right;">
+    <div class="weui_cell_bd weui_cell_primary">
+    	<img class="type_icon" onclick="onLink()" src="{RES}img/link.png">
+        <img class="type_icon" id="chooseimg" src="{RES}img/img.png">
+       {if $cfg['isqiniu'] && $cfg['pipeline']}
+       <img onclick="$('.voice').toggle();" class="type_icon" src="{RES}img/voice.png">
+       <img onclick="$('.vedio').toggle();" class="type_icon" src="{RES}img/vedio.png">
+       {/if}
+        
+    </div>
+</div>
+</div>
+<div class="link_groups">
+</div>
+<div class="voice_groups">
+</div>
+<div class="publishedAddImg">
+</div>
+<div class="video_groups">
+</div>
+<div class="weui_cells weui_cells_checkbox" style="margin: 0 10px;">
+    <label class="weui_cell weui_check_label" for="s11">
+        <div class="weui_cell_hd">
+            <input type="checkbox" class="weui_check" name="status" id="s11" value="1" checked="checked">
+            <i class="weui_icon_checked"></i>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary" style="margin-top: 5px;">
+            <p>发布到首页</p>
+        </div>
+    </label>
+</div>
+<div class="weui_cells weui_cells_checkbox" style="margin: 0 10px;">
+    <label class="weui_cell weui_check_label" for="opened">
+        <div class="weui_cell_hd">
+            <input type="checkbox" class="weui_check" name="opened" id="opened" value="1">
+            <i class="weui_icon_checked"></i>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary" style="margin-top: 5px;">
+            <p><input class="weui_input freeinput" type="number" name="opendays" id="opendays" value="10"/>天后免费公布</p>
+        </div>
+    </label>
+</div>
+
+<div style="text-align: center;background: white;margin: 10px;padding: 10px;">
+	<div>开个价吧</div>
+	<div>
+		{loop $prices $k $p}
+		<span onclick="$('#price').val({$p})" class="mprice {if $k == 0}active{/if}">￥{$p}</span>
+		{/loop}
+	</div>
+	<div style="text-align: left;">{$cfg['ptips']}</div>
+</div>
+<button class="weui_btn weui_btn_primary" id="submitbtn" type="submit" value="1" name="submit" style="width: 95%;margin-top: 20px;">{if $cfg['w_done']}{$cfg['w_done']}{else}写好啦{/if}</button>
+<input type="hidden" id="price" name="price" value="{$prices[0]}">
+<input type="hidden" name="token" value="{$_W['token']}">
+
+<div class="weui_dialog_confirm vedio" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">上传视频</strong></div>
+        <div class="weui_dialog_bd">
+			<div class="weui_cell">
+			    <div class="weui_cell_bd weui_cell_primary">
+			        <input class="weui_input" id="videodata" name="videodata" type="file" accept="video/*"/>
+			    </div>
+			</div>
+			<div class="weui_cell">
+			    <div class="weui_cell_bd weui_cell_primary">
+			        <input class="weui_input" type="text" id="videourl" name="videourl" placeholder="视频链接地址;请带上 http://"/>
+			    </div>
+			</div>
+			<div class="weui_cell" style="color: #04BE02;">上传视频或者输入视频链接地址,建议上传MP4格式</div>
+		</div>
+        <div class="weui_dialog_ft">
+            <a href="#" onclick="$('.vedio').hide()" class="weui_btn_dialog default">取消</a>
+            <a href="#" class="weui_btn_dialog primary" onclick="onVedioSure()">确定</a>
+        </div>
+    </div>
+</div>
+</form>
+<div id="rule" onclick="$(this).hide();">
+	<div class="content">
+		<div>{$cfg['rule']}</div>
+		<a class="weui_btn weui_btn_primary" style="width: 95%;margin-top: 20px;" onclick="$('#rule').hide();">知道了</a>
+		<a class="weui_btn weui_btn_plain_default" style="width: 95%;margin-top: 10px;" href="{php echo $this->createMobileUrl('list')}">先看看别人发的</a>
+	</div>
+</div>
+{if $cfg['describe'] && !$_W['fans']['follow'] && !$multi}
+ <div id="subscribe" onclick="$(this).hide()">
+   	<div class='sub_bg'>
+   		<div class="sub_step">第一步：长按二维码并识别</div>
+   		<p>请长按下图并选择识别图中二维码参与</p>
+   		<img src="{$_W['account']['qrcode']}">
+   		{if $cfg['describeurl']}
+   		<p>无法识别二维码请点击下面按钮参与</p>
+   		<a href="{$cfg['describeurl']}">立即关注</a>
+   		{/if}
+   		<div class="sub_step">第二步：进入公众号聊天框</div>
+   		<p>请输入关键字参与</p>
+   		<div>【<font>{$keyword}</font>】</div>
+   	</div>
+   </div>
+{/if}
+{if $multi}
+<div id="subscribe" onclick="$(this).hide()">
+	<img style="width: 100%;height: 100%;" src="{php echo toimage($multi)}">   	
+</div>
+{/if}
+
+<div class="voice">
+<div class="close">X</div>
+<span class='voice_img'></span>
+<div class="voice_txt">点击开始录音(限时 60s)</div>
+</div>
+
+<div class="weui_dialog_confirm link" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">生成超链接</strong></div>
+        <div class="weui_dialog_bd">
+			<div class="weui_cell">
+			    <div class="weui_cell_bd weui_cell_primary">
+			        <input class="weui_input" id="link_title" type="text" placeholder="链接标题"/>
+			    </div>
+			</div>
+			<div class="weui_cell">
+			    <div class="weui_cell_bd weui_cell_primary">
+			        <input class="weui_input" id="link_url" type="text" placeholder="链接地址;请带上 http://"/>
+			    </div>
+			</div>
+		</div>
+        <div class="weui_dialog_ft">
+            <a href="#" onclick="$('.link').hide()" class="weui_btn_dialog default">取消</a>
+            <a href="#" class="weui_btn_dialog primary" onclick="onLinkSure()">确定</a>
+        </div>
+    </div>
+</div>
+<div id="loadingToast" class="weui_loading_toast" style="display:none;">
+   <div class="weui_mask_transparent"></div>
+   <div class="weui_toast">
+       <div class="weui_loading">
+           <!-- :) -->
+           <div class="weui_loading_leaf weui_loading_leaf_0"></div>
+           <div class="weui_loading_leaf weui_loading_leaf_1"></div>
+           <div class="weui_loading_leaf weui_loading_leaf_2"></div>
+           <div class="weui_loading_leaf weui_loading_leaf_3"></div>
+           <div class="weui_loading_leaf weui_loading_leaf_4"></div>
+           <div class="weui_loading_leaf weui_loading_leaf_5"></div>
+           <div class="weui_loading_leaf weui_loading_leaf_6"></div>
+           <div class="weui_loading_leaf weui_loading_leaf_7"></div>
+           <div class="weui_loading_leaf weui_loading_leaf_8"></div>
+           <div class="weui_loading_leaf weui_loading_leaf_9"></div>
+           <div class="weui_loading_leaf weui_loading_leaf_10"></div>
+           <div class="weui_loading_leaf weui_loading_leaf_11"></div>
+       </div>
+       <p class="weui_toast_content">数据加载中</p>
+   </div>
+</div>
+{template 'frame'}
+{template 'share'}
+</body>
+<script>
+function onVedioSure(){
+	var url = $.trim($('#videourl').val());
+	var data = $('#videodata').val();
+	if(url == '' && data == ''){
+		swal('请选择视频！','','error');
+		return false;
+	}
+	if(data != ''){
+		url = data;	
+	}
+	$('.vedio').hide();
+	$('.video_groups').html('<div><a>'+url+'</a><span class="close">X</span></div>');
+	$('.video_groups').show();
+	$('.video_groups .close').click(function(){
+		$(this).parent().remove();
+		if($('.video_groups .close').length == 0){
+			$('.video_groups').hide();
+		}
+	});
+}
+
+$(function(){
+	Array.prototype.remove = function(index) {
+		if (index > -1) {
+			this.splice(index, 1);
+		}
+	};
+	
+	$('.voice .close').click(function(){
+		$(this).parent().hide();
+	});
+	
+	$('span.mprice').click(function(){
+		$('span.mprice').removeClass('active');
+		$(this).addClass('active');
+	});
+	
+});
+var images = new Array();
+wx.ready(function() {
+	// 选择照片
+		$("#chooseimg").click(function() {
+			wx.chooseImage({
+				count : 9 - $('.publishedAddImg img').length, // 默认9
+				success : function(res) {
+					for(var i = 0; i < res.localIds.length; i++){
+						$(".publishedAddImg").append('<div><span class="close">X</span><img src="'+res.localIds[i]+'"></div>');
+						images.push(res.localIds[i]);
+					}
+					$('.publishedAddImg').show();
+					$('.publishedAddImg img').click(function(){
+						wx.previewImage({
+						      current: $(this).attr('src'),
+						      urls: images
+						});     
+					});
+					$('.publishedAddImg span.close').click(function(){
+						$(this).parent().remove();
+						if($('.publishedAddImg img').length == 0){
+							$('.publishedAddImg').hide();
+						}
+						images.remove($(this).index());
+					});
+				}
+			});
+		});
+	
+		$('.voice_img').click(function(){
+			if($(this).hasClass('on')){
+				wx.stopRecord({
+				    success: function (res) {
+				    	voice_upload(res.localId);
+				    }
+				});
+			}else{
+				$('.voice_txt').text('点击完成录音');
+				$(this).addClass('on');
+				wx.startRecord();
+			}
+		});
+		
+		wx.onVoiceRecordEnd({
+		    // 录音时间超过一分钟没有停止的时候会执行 complete 回调
+		    complete: function (res) {
+		        voice_upload(res.localId);
+		    }
+		});
+});
+
+function voice_upload(mediaid){
+	videos.push(mediaid);
+	$('.voice_img').removeClass('on');
+	$('.voice_groups').append("<div><a onclick='onVPlay(this)' data-audio='"+mediaid+"'></a><span class='close'>X</span></div>");
+	$('.voice').hide();
+	$('.voice_groups').show();
+	$('.voice_groups .close').click(function(){
+		$(this).parent().remove();
+		if($('.voice_groups .close').length == 0){
+			$('.voice_groups').hide();
+		}
+		videos.remove($(this).index());
+	});
+}
+var videos = new Array();
+function onVPlay(obj){
+	var mid = $(obj).attr('data-audio');
+	if($(obj).hasClass('on')){
+		wx.stopVoice({
+		    localId: mid, // 需要停止的音频的本地ID，由stopRecord接口获得
+		});
+		$(obj).removeClass('on');
+	}else{
+		var vs = $('.voice_groups a');
+		$.each(vs,function(k,v){
+			$(v).removeClass('on');
+			wx.stopVoice({
+			    localId: $(v).attr('data-audio'), // 需要停止的音频的本地ID，由stopRecord接口获得
+			});
+		});
+		wx.playVoice({
+		    localId: mid, // 需要播放的音频的本地ID，由stopRecord接口获得
+		});
+		wx.onVoicePlayEnd({
+		    success: function (res) {
+		    	$(obj).removeClass('on');
+		    }
+		});
+		$(obj).addClass('on')
+	}
+}
+
+	var iii = 0;
+	var imgIndex = 0;
+	var urls = new Array();
+	var over = false;
+	var v_over = false;
+	function oncheck(){
+		{if $cfg['describe'] && !$_W['fans']['follow'] || $multi}
+			$('#subscribe').show();
+			return false;
+		{/if}
+		
+		if(over && v_over) return true;
+		if(iii != 0) return false;
+		var words = $.trim($('#words').val());
+		var hideword = $.trim($('#hideword').val());
+		if(words == ''){
+			swal('请输入您的独家消息！','','error');
+			return false;
+		}
+		if($.trim(hideword) == '' && $('.publishedAddImg img').length == 0 && $('.voice_groups a').length == 0 && $('.link_groups a').length == 0 && $('.video_groups a').length == 0){
+			swal('请写下打码区域的内容！','','error');
+			return false;
+		}
+		
+		if($('#opened').prop('checked')){
+			var day = $.trim($('#opendays').val());
+			if(day < 0){
+				swal('请输入正确的公布时间！','','error');
+				return false;
+			}
+		}
+		
+		if($('.link_groups a').length > 0){
+			$.each($('.link_groups a'),function(k,v){
+				$('#form').append('<input type="hidden" name="l_title[]" value="'+$(v).text()+'"><input type="hidden" name="l_url[]" value="'+$(v).attr('data-url')+'">');
+			});
+		}
+		
+		if($('.video_groups a').length == 0){
+			$('.video').remove();
+		}
+		$('.weui_loading_toast').show();
+		iii++;
+		if(images.length == 0 && videos.length == 0){
+			return true;
+		}
+		if(images.length != 0){
+			upload();
+		}else over = true;
+		if(videos.length != 0){
+			v_upload();
+		}else v_over = true;
+		return false;
+	}
+	
+	var voice_index = 0;
+	var voices = new Array();
+	function v_upload(){
+		wx.uploadVoice({
+		    localId: videos[voice_index++], // 需要上传的音频的本地ID，由stopRecord接口获得
+		    isShowProgressTips: 1, // 默认为1，显示进度提示
+		        success: function (res) {
+		        var serverId = res.serverId; // 返回音频的服务器端ID
+		        $.ajax({
+					type:"POST",
+					url:"{php echo $this->createMobileUrl('upload')}",
+					data:{imgid:res.serverId,type:1},
+					cache:false,
+					success:function(data){
+						voices.push(data);
+						$('#form').append('<input type="hidden" name="video[]" value="'+data+'">');
+						if(voices.length == videos.length){//最后一个图片
+							v_over = true;
+							$('#submitbtn').click();
+							return;
+						}
+						v_upload();
+					}
+				});
+		    }
+		});
+	}
+	
+	function upload(){
+		wx.uploadImage({
+			localId : images[imgIndex++], // 需要上传的图片的本地ID，由chooseImage接口获得
+			isShowProgressTips : 1, // 默认为1，显示进度提示
+			success : function(res) {
+				$.ajax({
+					type:"POST",
+					url:"{php echo $this->createMobileUrl('upload')}",
+					data:{imgid:res.serverId},
+					cache:false,
+					success:function(data){
+						urls.push(data);
+						$('#form').append('<input type="hidden" name="imgs[]" value="'+data+'">');
+						if(urls.length == images.length){//最后一个图片
+							over = true;
+							$('#submitbtn').click();
+							return;
+						}
+						upload();
+					}
+				});
+			}
+		});
+	}
+	
+	function onLink(){
+		$('#link_title').val('');
+		$('#link_url').val('');
+		$('.link').show();
+	}
+	
+	function onLinkSure(){
+		var title = $.trim($('#link_title').val());
+		var url = $.trim($('#link_url').val());
+		if(title == ''){
+			swal('请输入链接标题！');
+			return;
+		}
+		if(url == ''){
+			swal('请输入链接地址！');
+			return;
+		}
+		$('.link_groups').append('<div><a data-url="'+url+'">'+title+'</a><span class="close">X</span></div>');
+		$('.link_groups').show();
+		$('.link').hide();
+		$('.link_groups .close').click(function(){
+			$(this).parent().remove();
+			if($('.link_groups .close').length == 0){
+				$('.link_groups').hide();
+			}
+		});
+		
+		$('.link_groups a').click(function(){
+			showFrame($(this).attr('data-url'),$(this).text());
+		});
+	}
+</script>
+</html>

@@ -1,0 +1,13 @@
+{template 'common/header'}
+<style>
+    .star {
+        color: red;
+        margin-right: 5px;
+        font-weight: bold;
+    }
+</style>
+<ul class="nav nav-tabs">
+    <li class="active"><a href="{php echo $this->createWebUrl('shop', array('act' => 'post'));}">商户资料</a></li>
+</ul>
+{template $this->do.'/'.$this->act}
+{template 'common/footer'}

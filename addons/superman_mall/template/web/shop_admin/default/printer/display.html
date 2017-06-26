@@ -1,0 +1,66 @@
+<form action="" method="post" class="form-horizontal form">
+    <div class="panel panel-default">
+        <div class="table-responsive panel-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>名称</th>
+                    <th width="100">类型</th>
+                    <th width="120">设备编号</th>
+                    <th width="90">打印方式</th>
+                    <th width="90">打印次数</th>
+                    <th width="70">状态</th>
+                    <th width="170">更新时间</th>
+                    <th width="130" class="text-right">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if $list}
+                {loop $list $li}
+                <tr>
+                    <td>{$li['title']}</td>
+                    <td>
+                        {if $li['provider'] == 'feie'}
+                        <span class="label label-info">飞鹅打印机</span>
+                        {else if $li['provider'] == '365'}
+                        <span class="label label-info">365打印机</span>
+                        {/if}
+                    </td>
+                    <td>{$li['sn']}</td>
+                    <td>
+                        {if $li['print_type'] == 1}
+                        <span class="label label-warning">订单提交</span>
+                        {else if $li['print_type'] == 2}
+                        <span class="label label-success">订单付款</span>
+                        {/if}
+                    </td>
+                    <td>{$li['times']}</td>
+                    <td>
+                        {if $li['status'] == 1}
+                        <span class="label label-success">开启</span>
+                        {else}
+                        <span class="label label-danger">关闭</span>
+                        {/if}
+                    </td>
+                    <td>
+                        {php echo str_replace(' ', '<span style="padding-right: .8rem"></span>', date('Y-m-d H:i:s', $li['dateline']))}
+                    </td>
+                    <td style="white-space:nowrap;overflow: visible" class="text-right">
+                        <div class="btn-group">
+                            <a href="{php echo $this->createWebUrl('printer', array('act' => 'log', 'sn' => $li['sn']));}" title="打印记录" class="btn btn-default btn-sm"><i class="fa fa-file-text-o"></i></a>
+                            <a href="{php echo $this->createWebUrl('printer', array('act' => 'post', 'id' => $li['id']));}" title="编辑" class="btn btn-default btn-sm"><i class="fa fa-edit"></i></a>
+                            <a href="#" onclick="return confirm('此操作不可恢复，确认吗？'); return false;" title="删除" class="btn btn-default btn-sm"><i class="fa fa-times"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {/loop}
+                {/if}
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">
+            总共 <strong>{$total}</strong> 条
+        </div>
+    </div>
+    {$pager}
+</form>

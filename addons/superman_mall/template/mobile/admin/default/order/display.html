@@ -1,0 +1,176 @@
+<div class="page-group">
+    <div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+        {template 'common/nav'}
+        {template 'common/title'}
+        <div class="content infinite-scroll order_list" data-flag="0" data-list-url="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'load' => 'infinite'))}" data-orderpost-url="{php echo $this->createMobileUrl('admin', array('route' => 'order.post'));}" data-ordermodify-url="{php echo $this->createMobileUrl('admin', array('route' => 'order.modify'));}" data-ordersend-url="{php echo $this->createMobileUrl('admin', array('route' => 'order.send', 'id' => $li['id'], 'status' => $status, 'type' => $type, 'dispatch_type' => $dispatch_type, 'pay_type' => $pay_type));}" data-status="{$status}" data-type="{$type}" data-pay-type="{$pay_type}" data-dispatch-type="{$dispatch_type}" data-distance="50" data-page="{$pindex}">
+            <div class="buttons-tab">
+                <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'status' => '0'))}" class="button {if $status == '0'}active{/if}" data-no-cache="true">待付款</a>
+                <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'status' => '1'))}" class="button {if $status == '1'}active{/if}" data-no-cache="true">待发货</a>
+                <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'type' => '1'))}" class="button {if $type == '1'}active{/if}" data-no-cache="true">拼团</a>
+                <a href="#" class="button open-more" data-no-cache="true">更多
+                    <span class="icon iconfont down_icon">&#xe63e;</span>
+                </a>
+            </div>
+            <div class="content-block order_wrap">
+                <div class="tabs">
+                    <div class="tab active order_loop_wrap">
+                        {if $list}
+                        {loop $list $li}
+                        <div class="list-block media-list order_list_wrap">
+                            <ul class="order_list_ul">
+                                {if $type == 1}
+                                <!--如果组团成功，则显示组团成功图标-->
+                                {if $li['type'] == 1 && $li['mg_status'] == 1}
+                                <div class="mgroupon_success">
+                                    <img src="{php echo $this->mobile_path}/images/mgroupon_success.png" onerror="this.src='{php echo $this->superman_placeholder}'"/>
+                                </div>
+                                {/if}
+                                {/if}
+                                <li>
+                                    <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.post', 'id' => $li['id']));}" class="item-content" data-no-cache="true">
+                                        <div class="item-inner">
+                                            <div class="item-title-row font8">
+                                                <div class="item-after">{$li['ordersn']}</div>
+                                                <div class="font6 color-gray">{$li['status_title']}</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+								{if $li['items']}
+								{loop $li['items'] $item}
+								<li>
+									<a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.post', 'id' => $li['id']));}" class="item-content" data-no-cache="true">
+										<div class="item-media">
+											<img class="item_img" src="{php echo tomedia($item['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'">
+										</div>
+										<div class="item-inner">
+											<div class="item-subtitle order_item_title">{$item['title']}</div>
+											<div class="item-title-row">
+												<div class="item-title font6 color-gray">{$item['sku']}</div>
+												<div class="item-after">×{$item['total']}</div>
+											</div>
+										</div>
+									</a>
+								</li>
+								{/loop}
+								{/if}
+                                <li>
+                                    <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.post', 'id' => $li['id']));}" class="item-content" data-no-cache="true">
+                                        <div class="item-inner">
+                                            <div class="item-subtitle color_default">共{$li['total']}件，合计&yen;{$li['price']}</div>
+                                        </div>
+                                    </a>
+                                </li>
+                                {if $li['status'] == 0}
+                                <li>
+                                    <div class="item-inner row no-gutter text-center">
+                                        <div class="col-50 edit_price" data-price="{$li['price']}" data-id="{$li['id']}" data-url="{php echo $this->createMobileUrl('admin', array('route' => 'order.modify'));}">
+                                            <a href="javascript:;" data-no-cache="true" class="font8"><span class="iconfont font8">&#xe625;</span> 改价</a>
+                                        </div>
+                                        <div class="col-50 close_order" data-id="{$li['id']}" data-url="{php echo $this->createMobileUrl('admin', array('route' => 'order.modify'));}">
+                                            <a href="javascript:;" data-no-cache="true" class="font8"><span class="iconfont font8">&#xe62b;</span> 关闭</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                {else if $li['status'] == 1}
+                                {if $li['type'] == 0 || ($li['type'] == 1 && $li['mg_status'] == 1)}
+                                <li>
+                                    <div class="item-inner row no-gutter text-center">
+                                        <div class="col-100">
+                                            <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.send', 'id' => $li['id'], 'status' => $status, 'type' => $type, 'dispatch_type' => $dispatch_type, 'pay_type' => $pay_type));}" data-no-cache="true" class="font8 send_btn"><span class="iconfont font8">&#xe612;</span> 发货</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                {/if}
+                                {/if}
+                            </ul>
+                        </div>
+                        {/loop}
+                        {else}
+                        <div class="row">
+                            <div class="col-100 font6 text-center">
+                                暂无数据
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+            <div class="nodata font6 text-center color-gray" style="display: none;">没有了</div>
+            {if count($list)==$pagesize}
+            <div class="infinite-scroll-preloader">
+                <div class="preloader"></div>
+            </div>
+            {/if}
+        </div>
+        {template 'common/share'}
+    </div>
+    <div class="popup popup-more">
+        <header class="bar bar-nav">
+            <a class="icon icon-left pull-left close-popup"></a>
+            <h1 class="title">选择状态</h1>
+        </header>
+        <div class="content-block">
+            <div class="list-block">
+                <ul class="order_type_wrap font7">
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'status' => '-5'))}" class="item-content item-link external">
+                        <div class="item-inner">
+                            <div class="item-title {if $status == -5}active{/if}">已退款</div>
+                        </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'status' => '-3'))}" class="item-content item-link external">
+                            <div class="item-inner">
+                                <div class="item-title {if $status == -3}active{/if}">已关闭</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'pay_type' => '3'))}" class="item-content item-link external">
+                            <div class="item-inner">
+                                <div class="item-title  {if $pay_type == 3}active{/if}">货到付款</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'status' => '-4'))}" class="item-content item-link external">
+                            <div class="item-inner">
+                                <div class="item-title {if $status == -4}active{/if}">申请退款</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'status' => '2'))}" class="item-content item-link external">
+                            <div class="item-inner">
+                                <div class="item-title {if $status == 2}active{/if}">已发货</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'status' => '3'))}" class="item-content item-link external">
+                            <div class="item-inner">
+                                <div class="item-title {if $status == 3}active{/if}">已收货</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'status' => '4'))}" class="item-content item-link external">
+                            <div class="item-inner">
+                                <div class="item-title {if $status == 4}active{/if}">已完成</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'dispatch_type' => '2'))}" class="item-content item-link external">
+                            <div class="item-inner">
+                                <div class="item-title {if $dispatch_type == 2}active{/if}">待自提</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

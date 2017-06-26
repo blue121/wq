@@ -1,0 +1,132 @@
+{template 'common/title'}
+{if isset($member_info) && $member_info === false}
+<div class="content partner_getcash_apply">
+	<div class="row">
+		<div class="col-100 text-center font7 prompt_info_wrap">
+			<a href="{php echo $this->createMobileUrl('profile', array('act' => 'display'))}">完善资料</a> 后可以申请提现
+		</div>
+	</div>
+</div>
+{else if $op == 'display'}
+<div class="content partner_getcash_display infinite-scroll" data-flag="0" data-display-url="{php echo $this->createMobileUrl('partner', array('act' => 'getcash', 'op' => 'display', 'load' => 'infinite'))}" data-distance="50" data-page="{$pindex}">
+	{if $list}
+	<div class="list-block media-list">
+		<ul class="item_list">
+			{loop $list $li}
+			<li class=" item-content">
+				<div class="item-inner">
+					<div class="item-title-row">
+						<div class="item-title font7">提现申请</div>
+						<div class="item-after font7">&yen;{$li['money']}</div>
+					</div>
+					<div class="item-title-row">
+						<div class="item-title font6 color-gray">{$li['createtime']}</div>
+						<div class="font6 color-warning">
+							{if $li['status'] == -2 || $li['status'] == 1}
+							待打款
+							{else if $li['status'] == -3}
+							审核失败 归还金额
+							{else if $li['status'] == -1}
+							审核失败
+							{else if $li['status'] == 0}
+							待审核
+							{else if $li['status'] == 2}
+							已打款
+							{/if}
+						</div>
+					</div>
+				</div>
+			</li>
+			{/loop}
+		</ul>
+	</div>
+	{else}
+	<div class="text-center color-gray font7 msg_tips">
+		<span>暂无数据</span>
+		<div class="content-padded">
+			<div class="row">
+				<div class="col-50">
+					<a href="{php echo $this->createMobileUrl('home')}" class="button button-dark">去首页逛逛</a>
+				</div>
+				<div class="col-50">
+					<a href="{php echo $this->createMobileUrl('partner', array('act' => 'getcash', 'op' => 'apply'))}" class="button button-dark">我要提现</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	{/if}
+	<div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+	{if count($list)==$pagesize}
+	<div class="infinite-scroll-preloader">
+		<div class="preloader"></div>
+	</div>
+	{/if}
+</div>
+{else if $op == 'apply'}
+<div class="content partner_getcash_apply">
+	<form action="" method="post">
+		<div class="list-block">
+			<ul>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label font7">到账账户</div>
+							<div class="text-overflow">
+								<img class="myavatar" src="{php echo tomedia($member['avatar'])}" onerror="this.src='resource/images/heading.jpg'">
+								<span class="font7">{$member['nickname']}</span>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label font7">提现方式</div>
+							<span class="font7">微信钱包</span>
+						</div>
+					</div>
+				</li>
+				{if $this->setting['partner']['getcash_limit'] > 0}
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label font7">最低提现</div>
+							<span class="font7">&yen;{php echo SupermanUtil::float_format(floatval($this->setting['partner']['getcash_limit']), 2)}</span>
+						</div>
+					</div>
+				</li>
+				{/if}
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label font7">提现金额</div>
+							<div class="item-input">
+								<input type="text" class="text-right font7" name="money" data-min="{php echo SupermanUtil::float_format(floatval($this->setting['partner']['getcash_limit']), 2)}" data-max="{php echo round($this->partner['commission_balance'], 2)}" placeholder="请输入提现金额">
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label"></div>
+							<div class="font7">
+								<span class="color-gray">余额 &yen;{php echo SupermanUtil::float_format($this->partner['commission_balance'], 2)}，</span>
+								<a class="getcash_all" href="#">全部提现</a>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<div class="content-block btn">
+				<div class="row">
+					<div class="col-100">
+						<a href="#" class="button button-fill button-success btn_getcash" data-url="{php echo $this->createMobileUrl('partner', array('act' => 'getcash', 'op' => 'apply'))}">申请提现</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+{/if}
+{template 'common/nav'}

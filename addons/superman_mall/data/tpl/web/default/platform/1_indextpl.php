@@ -1,0 +1,3 @@
+<?php defined('IN_IA') or exit('Access Denied');?><?php (!empty($this) && $this instanceof WeModuleSite || 1) ? (include $this->template('header', TEMPLATE_INCLUDEPATH)) : (include template('header', TEMPLATE_INCLUDEPATH));?>
+<?php (!empty($this) && $this instanceof WeModuleSite || 1) ? (include $this->template('platform/'.$act, TEMPLATE_INCLUDEPATH)) : (include template('platform/'.$act, TEMPLATE_INCLUDEPATH));?>
+<?php (!empty($this) && $this instanceof WeModuleSite || 1) ? (include $this->template('footer', TEMPLATE_INCLUDEPATH)) : (include template('footer', TEMPLATE_INCLUDEPATH));?>

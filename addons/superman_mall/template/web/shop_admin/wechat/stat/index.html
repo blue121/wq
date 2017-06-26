@@ -1,0 +1,6 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+    <li {if $type == 'item'}class="active"{/if}><a href="{php echo $this->createWebUrl('stat', array('type' => 'item'))}">商品数据</a></li>
+</ul>
+{template $this->do.'/'.$this->act}
+{template 'common/footer'}

@@ -1,0 +1,289 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do} page-current" id="superpage_{$do}_{$act}">
+		{template 'common/nav'}
+		{template 'common/title'}
+		{if $act == 'display'}
+		<div class="content infinite-scroll shop_display" data-flag="0" data-display-url="{php echo $this->createMobileUrl('shop', array('act' => 'display', 'shopid' => $shopid, 'load' => 'infinite'))}" data-detail-url="{php echo $this->createMobileUrl('detail', array('act' => 'display'))}" data-distance="50" data-page="{$pindex}">
+			<div class="card item_list_wrap">
+				<div class="card-content">
+					<div class="list-block media-list">
+						<ul>
+							{if $list}
+							<div class="item_list row no-gutter two_list_bg">
+								{loop $list $item}
+								<div class="col-50 two_list_style">
+									<a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="external">
+										<div class="card two_list_wrap">
+											<div valign="bottom" class="card-header color-white no-border no-padding">
+												<img class='lazyload card-cover img_square1' src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-original="{php echo tomedia($item['cover'])}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'"/>
+												{if $item['sales']}
+												<div class="sales_wrap">
+													<span class="font6">已售{$item['sales']}</span>
+												</div>
+												{/if}
+											</div>
+											<div class="card-content">
+												<div class="card-content-inner">
+													<div class="text-overflow color-default">{$item['title']}</div>
+													<div class="clearfix font7 two_list_item">
+														<span class="pull-left color-danger">&#165;{$item['price']}</span>
+														{if $item['market_price'] > 0}
+														<span class="market_price_wrap color-gray font6 text-delete-line">&#165;{$item['market_price']}</span>
+														{/if}
+													</div>
+												</div>
+											</div>
+										</div>
+									</a>
+								</div>
+								{/loop}
+							</div>
+							{else}
+							<li>
+								<div class="item-inner row no-gutter text-center">
+									<p class="color-gray font7">没有商品</p>
+								</div>
+							</li>
+							{/if}
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+			{if count($list)==$pagesize}
+			<div class="infinite-scroll-preloader">
+				<div class="preloader"></div>
+			</div>
+			{/if}
+		</div>
+		{else if $act == 'reg'}
+		<div class="content">
+			<div class="list-block superpage_shop_reg">
+				<form action="" method="post">
+					<div class="list-block" {if !$shop_setting['international']}style="display: none"{/if}>
+						<ul>
+							<div class="item-content item-link">
+								<div class="item-inner">
+									<div class="item-title label font7">国家地区</div>
+									<div class="item-input">
+										<select name="countryid">
+										{loop $countrys $ct}
+											<option value="{$ct['id']}" data-mobile-pattern="{$ct['mobile_pattern']}" {if $ct['id'] == $countryid_china}selected{/if}>{$ct['title']}(+{$ct['areacode']})</option>
+										{/loop}
+										</select>
+									</div>
+								</div>
+							</div>
+						</ul>
+					</div>
+					<ul>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label font7">账号</div>
+									<div class="item-input">
+										<input name="username" type="text" class="font7" placeholder="由4-16位字母、数字、下划线组成">
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label font7">密码</div>
+									<div class="item-input">
+										<input name="password" type="password" class="font7" placeholder="6-16位密码">
+									</div>
+								</div>
+							</div>
+						</li>
+
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label font7">手机</div>
+									<div class="item-input">
+										<input name="mobile" type="tel" class="font7" placeholder="手机号">
+									</div>
+									{if isset($sms['setting']['shop_reg']['switch']) && $sms['setting']['shop_reg']['switch']}
+									<a href="#" class="btn_verify button font5 button-default">获取验证码</a>
+									{/if}
+								</div>
+							</div>
+						</li>
+						{if isset($sms['setting']['shop_reg']['switch']) && $sms['setting']['shop_reg']['switch']}
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label font7">验证码</div>
+									<div class="item-input">
+										<input name="checkcode" type="number" class="font7" placeholder="输入发送到手机的验证码">
+									</div>
+								</div>
+							</div>
+						</li>
+						{/if}
+					</ul>
+					<span class="font6 color-danger register_prompt">* 手机号仅做账号真实性验证，请认真填写。</span>
+					<div class="content-padded">
+						<div class="row">
+							<div class="col-100">
+								<input name="token" type="hidden" value="{$_W['token']}" />
+								<a href="javascript:;" class="button button-fill btn_reg" data-url="{php echo $this->createMobileUrl('shop')}">立即注册</a>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		{else if $act == 'join'}
+		<div class="content">
+			<div class="list-block">
+				<form action="" method="post">
+					<div class="list-block" {if !$shop_setting['international']}style="display: none"{/if}>
+						<ul>
+							<div class="item-content item-link">
+								<div class="item-inner">
+									<div class="item-title label font7">国家地区</div>
+									<div class="item-input">
+										<select name="countryid">
+											{loop $countrys $ct}
+											<option value="{$ct['id']}" data-mobile-pattern="{$ct['mobile_pattern']}" {if $ct['id'] == $countryid_china}selected{/if}>{$ct['title']}(+{$ct['areacode']})</option>
+											{/loop}
+										</select>
+									</div>
+								</div>
+							</div>
+						</ul>
+					</div>
+					<ul>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label font7">商户名称</div>
+									<div class="item-input">
+										<input name="title" type="text" class="font7" placeholder="店铺名称">
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label font7">商户地址</div>
+									<div class="item-input">
+										<input name="address" type="text" class="font7" placeholder="店铺详细地址">
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label font7">联系人</div>
+									<div class="item-input">
+										<input name="contact" type="text" class="font7" placeholder="店铺负责人姓名">
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label font7">联系电话</div>
+									<div class="item-input">
+										<input name="phone" type="tel" class="font7" placeholder="店铺负责人电话">
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label font7">经营品类</div>
+									<div class="item-input">
+										<input name="business_scope" type="text" class="font7" placeholder="填写经营品类">
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label font7">商户简介</div>
+									<div class="item-input">
+										<textarea name="description" placeholder="选填"></textarea>
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+					{if !empty($shop_setting['content'])}
+					<div class="row">
+						<div class="col-100 text-right agreement_wrap font6">
+							<span class="color-gray">我已阅读并同意</span>
+							<a href="#agreement"><span class="color-danger">《商户入驻协议》</span></a>
+						</div>
+					</div>
+					{/if}
+					<div class="content-padded">
+						<div class="row">
+							<div class="col-100">
+								<a href="#" data-url="{php echo $this->createMobileUrl('shop')}" class="button button-fill btn_join">提交</a>
+								<input type="hidden" name="token" value="{$_W['token']}">
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		{else if $act == 'list'}
+		<div class="content infinite-scroll shop_list" data-flag="0" data-list-url="{php echo $this->createMobileUrl('shop', array('act' => 'list', 'load' => 'infinite'))}" data-shop-url="{php echo $this->createMobileUrl('shop', array('act' => 'display'))}" data-distance="50" data-page="{$pindex}">
+			<div class="card shop_list_wrap">
+				{if $list}
+				<div class="row">
+					{loop $list $li}
+					<div class="col-33">
+						<a href="{php echo $this->createMobileUrl('shop', array('shopid' => $li['id']))}">
+							<img class="img_square1" src="{php echo tomedia($li['logo'])}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'"/>
+							<span class="text-center text-overflow color-default font6">{$li['title']}<!--({$li['distance']})--></span>
+						</a>
+					</div>
+					{/loop}
+				</div>
+				{else}
+				<div class="row text-center">
+					<p class="color-gray font7">未找到数据</p>
+				</div>
+				{/if}
+			</div>
+			<div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+			{if count($list)==$pagesize}
+			<div class="infinite-scroll-preloader">
+				<div class="preloader"></div>
+			</div>
+			{/if}
+		</div>
+		{/if}
+		{template 'common/share'}
+	</div>
+	<!--商户入驻协议内联页-->
+	{if $act=='join' && !empty($shop_setting['content'])}
+	<div class="page" id='agreement'>
+		<header class="bar bar-nav">
+			<a class="button button-link button-nav pull-left back" href="#">
+				<span class="icon icon-left"></span>
+				返回
+			</a>
+			<h1 class='title'>商户入驻协议</h1>
+		</header>
+		<div class="content">
+			<div class="content-padded font7">
+				{php echo htmlspecialchars_decode($shop_setting['content'])}
+			</div>
+		</div>
+	</div>
+	{/if}
+</div>
+{template 'common/footer'}

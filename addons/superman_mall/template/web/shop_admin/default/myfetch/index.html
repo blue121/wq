@@ -1,0 +1,16 @@
+{template 'common/header'}
+<style>
+    .star {
+        color: red;
+        margin-right: 5px;
+        font-weight: bold;
+    }
+</style>
+<ul class="nav nav-tabs">
+    <li {if $act == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('myfetch');}">自提门店</a></li>
+    <li {if $act == 'post' && !$_GPC['id']}class="active"{/if}><a href="{php echo $this->createWebUrl('myfetch', array('act' => 'post'));}">添加自提门店</a></li>
+    {if $_GPC['id']}<li {if $act == 'post'}class="active"{/if}><a href="{php echo $this->createWebUrl('myfetch', array('act' => 'post', 'id' => $id));}">编辑自提门店</a></li>{/if}
+    <li {if $act == 'setting'}class="active"{/if}><a href="{php echo $this->createWebUrl('myfetch', array('act' => 'setting'));}">参数设置</a></li>
+</ul>
+{template $this->do.'/'.$this->act}
+{template 'common/footer'}

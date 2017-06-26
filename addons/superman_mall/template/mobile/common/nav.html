@@ -1,0 +1,22 @@
+<nav class="bar bar-tab">
+	<a class="external tab-item {if $do=='home'}active{/if}" href="{php echo $this->createMobileUrl('home')}">
+		<span class="icon iconfont">&#xe622;</span>
+		<span class="tab-label">首页</span>
+	</a>
+    <a class="external tab-item {if $do=='shop'}active{/if}" href="{php echo $this->createMobileUrl('shop', array('act' => 'list'))}">
+        <span class="icon iconfont">&#xe609;</span>
+        <span class="tab-label">商户</span>
+    </a>
+	<a class="external tab-item {if $do=='category'}active{/if}" href="{php echo $this->createMobileUrl('category')}">
+		<span class="icon iconfont">&#xe62a;</span>
+		<span class="tab-label">分类</span>
+	</a>
+	<a class="external tab-item {if $do=='cart'}active{/if}" href="{php echo $this->createMobileUrl('cart')}">
+		<span class="icon iconfont">&#xe627;</span>
+		<span class="tab-label">购物车</span>
+	</a>
+	<a class="external tab-item {if $do=='my'}active{/if}" href="{php echo $this->createMobileUrl('my')}">
+		<span class="icon iconfont">&#xe629;</span>
+		<span class="tab-label">我的</span>
+	</a>
+</nav>

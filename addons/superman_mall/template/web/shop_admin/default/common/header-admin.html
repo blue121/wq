@@ -1,0 +1,122 @@
+	<div class="navbar navbar-inverse navbar-static-top" role="navigation" style="position:static;">
+		<div class="container-fluid">
+			<ul class="nav navbar-nav">
+				<li style="max-width: 200px;min-width: 150px;">
+					<a href="{php echo url('site/entry/dashboard', array('m' => 'superman_mall'))}" title="{php echo $this->shop['title']}" style="padding: 0; line-height: 50px;color: #aaa;font-size: 16px;">
+						{if !$this->shop['logo']}
+							{php echo $this->shop['title']}
+						{else}
+							<img src="{php echo tomedia($this->shop['logo'])}" title="{php echo $this->shop['title']}" height="50"/>
+						{/if}
+					</a>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown">
+					{if $this->shop_user}
+					<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="display:block; max-width:185px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; ">
+						<i class="fa fa-user"></i>{php echo $this->shop_user['username']}<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu">
+						{if $this->shop_user['groupid'] == 0}
+						<li><a href="{php echo url('site/entry/shop', array('act' => 'post', 'id' => $this->shop['id'], 'm' => 'superman_mall'))}"><i class="fa fa-cog fa-fw"></i> 商户资料</a></li>
+						<li class="divider"></li>
+						{/if}
+						<li><a href="{php echo url('site/entry/profile', array('m' => 'superman_mall'))}"><i class="fa fa-user fa-fw"></i> 我的账号</a></li>
+						<li><a href="{php echo url('user/logout', array('shopid' => $this->shop['id']))}"><i class="fa fa-sign-out fa-fw"></i> 退出系统</a></li>
+					</ul>
+					{/if}
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		{if defined('IN_MESSAGE')}
+		<div class="jumbotron clearfix alert alert-{$label}">
+			<div class="row">
+				<div class="col-xs-12 col-sm-3 col-lg-2">
+					<i class="fa fa-5x fa-{if $label=='success'}check-circle{/if}{if $label=='danger'}times-circle{/if}{if $label=='info'}info-circle{/if}{if $label=='warning'}exclamation-triangle{/if}"></i>
+				</div>
+				<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+					{if is_array($msg)}
+						<h2>MYSQL 错误：</h2>
+						<p>{php echo cutstr($msg['sql'], 300, 1);}</p>
+						<p><b>{$msg['error'][0]} {$msg['error'][1]}：</b>{$msg['error'][2]}</p>
+					{else}
+					<h2>{$caption}</h2>
+					<p>{$msg}</p>
+					{/if}
+					{if $redirect}
+					<p><a href="{$redirect}">如果你的浏览器没有自动跳转，请点击此链接</a></p>
+					<script type="text/javascript">
+						setTimeout(function () {
+							location.href = "{$redirect}";
+						}, 3000);
+					</script>
+					{else}
+						<p>[<a href="javascript:history.go(-1);">点击这里返回上一页</a>] &nbsp; [<a href="./?refresh">首页</a>]</p>
+					{/if}
+				</div>
+		{else}
+		<div class="row">
+			{php $navs = SuermanMallMenu::webShopNavs($this->web['user_permission']);}
+			{if !empty($navs)}
+				<div class="col-xs-12 col-sm-3 col-lg-2 big-menu">
+					{loop $navs $k $nav}
+					<div class="panel panel-default" style="margin-bottom: 10px; border-top-width: 1px;">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								{if $nav['icon']}<i class="{$nav['icon']}"></i>{/if} {$nav['title']}
+							</h4>
+							<a class="panel-collapse {if $nav['active']}collapsed{/if} nav_collapse_link" data-do="__nav_{$nav['xdo']}" data-toggle="collapse" href="#frame-{$k}">
+								<i class="fa fa-chevron-circle-down"></i>
+							</a>
+						</div>
+						<ul class="list-group collapse {$nav['active']}" id="frame-{$k}">
+							{loop $nav['items'] $link}
+							<li class="list-group-item {$link['active']}" onclick="window.location.href = '{$link[url]}';" style="cursor:pointer; overflow:hidden;">
+								{$link['title']}
+								{if $link['extra']}
+								<a class="pull-right" href="{$link['extra']['url']}" title="{$link['extra']['title']}">
+									<i class="{$link['extra']['icon']}"></i>
+								</a>
+								{/if}
+							</li>
+							{/loop}
+						</ul>
+					</div>
+					{/loop}
+					<script>
+						require(['jquery'],function($) {
+							$('.nav_collapse_link').click(function () {
+								util.cookie.prefix = window.sysinfo.cookie.pre;
+								var value = $(this).hasClass('collapsed')?0:1;
+								util.cookie.set($(this).attr('data-do'), value, 365*86400);
+							});
+						});
+					</script>
+				</div>
+				<div class="col-xs-12 col-sm-9 col-lg-10">
+					{if CRUMBS_NAV == 1}
+						{php global $module_types;global $module;global $ptr_title;}
+						<ol class="breadcrumb" style="padding:5px 0;">
+							<li><a href="{url 'home/welcome/ext'}"><i class="fa fa-cogs"></i> &nbsp; 扩展功能</a></li>
+							<li><a href="{url 'home/welcome/ext' array('m' => $module['name'])}">{$module_types[$module['type']]['title']}模块 - {$module['title']}</a></li>
+							<li class="active">{$ptr_title}</li>
+						</ol>
+					{elseif CRUMBS_NAV == 2}
+						{php global $module_types;global $module;global $ptr_title; global $site_urls; $m = $_GPC['m'];}
+						<ul class="nav nav-tabs">
+							<li><a href="{url 'platform/reply' array('m' => $m)}">管理{$module['title']}</a></li>
+							<li><a href="{url 'platform/reply/post' array('m' => $m)}"><i class="fa fa-plus"></i> 添加{$module['title']}</a></li>
+							{if !empty($site_urls)}
+								{loop $site_urls $site_url}
+									<li {if $_GPC['do'] == $site_url['do']} class="active"{/if}><a href="{$site_url['url']}"> {$site_url['title']}</a></li>
+								{/loop}
+							{/if}
+						</ul>
+					{/if}
+			{else}
+				<div class="col-xs-12 col-sm-12 col-lg-12">
+			{/if}
+		{/if}

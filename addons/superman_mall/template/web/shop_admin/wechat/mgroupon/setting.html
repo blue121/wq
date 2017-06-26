@@ -1,0 +1,69 @@
+<div class="main">
+    <form class="form-horizontal form" id="setting_form" action="" method="post" enctype="multipart/form-data">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                参数设置
+            </div>
+            <div class="panel-body">
+                <!--<div class="alert alert-info">
+                    <i class="fa fa-exclamation-circle"></i> 拼团自动执行说明：由于php程序无法在后台一直运行的限制，自动化处理需要触发执行，访问超级商城后台任何页面，都会自动触发自动执行，对于页面浏览没有任何影响。
+                </div>-->
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">自动成团</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <div class="input-group">
+                            <label class="radio-inline">
+                                <input type="radio" name="setting[autogroup]" value="1" {if $setting['autogroup']}checked{/if}> 是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="setting[autogroup]" value="0" {if !$setting['autogroup']}checked{/if}> 否
+                            </label>
+                        </div>
+                        <span class="help-block">开启后，未达到拼团人数和到达过期时间后，自动添加游客参团，保证拼团成功</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">自动退款</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <div class="input-group">
+                            <label class="radio-inline">
+                                <input type="radio" name="setting[autorefund]" value="1" {if $setting['autorefund']}checked{/if}> 是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="setting[autorefund]" value="0" {if !$setting['autorefund']}checked{/if}> 否
+                            </label>
+                        </div>
+                        <span class="help-block">开启后，拼团失败时，将自动退款到用户的账户余额</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">时间</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <div class="input-group col-sm-6">
+                            <input type="text" class="form-control" name="setting[expire]" value="{$setting['expire']}">
+                            <span class="input-group-addon">小时</span>
+                        </div>
+                        <span class="help-block">发起拼团后，组团的时间限制，推荐设置为24小时，时间超过后未达成团人数时，则失败</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">规则</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <div class="input-group">
+                            {if defined('IN_SUPERMAN_MALL_ADMIN')}
+                            {php echo superman_tpl_ueditor('setting[rule]', $setting['rule'])}
+                            {else}
+                            {php echo tpl_ueditor('setting[rule]', $setting['rule'])}
+                            {/if}
+                        </div>
+                        <span class="help-block">设置拼团规则，规则内容将展示在手机端拼团页面，方便粉丝了解和查看拼团的规则</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-sm-12">
+            <input name="token" type="hidden" value="{$_W['token']}" />
+            <input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交" />
+        </div>
+    </form>
+</div>

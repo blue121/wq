@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>{$title}</title>
+	<meta name="format-detection" content="telephone=no, address=no">
+	<meta name="apple-mobile-web-app-capable" content="yes" /> <!-- apple devices fullscreen -->
+	<meta name="apple-touch-fullscreen" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<meta name="keywords" content="{if empty($_W['page']['keywords'])}{if IMS_FAMILY != 'x'}微营销,微信,微信公众平台,we7.cc{/if}{else}{$_W['page']['keywords']}{/if}" />
+	<meta name="description" content="{if empty($_W['page']['description'])}{if IMS_FAMILY != 'x'}公众平台自助引擎（wyx.2345go.cn），简称微营销，微营销是一款免费开源的微信公众平台管理系统，是国内最完善移动网站及移动互联网技术解决方案。{/if}{else}{$_W['page']['description']}{/if}" />
+	<link rel="shortcut icon" href="{$_W['siteroot']}{$_W['config']['upload']['attachdir']}/{if !empty($_W['setting']['copyright']['icon'])}{$_W['setting']['copyright']['icon']}{else}images/global/wechat.jpg{/if}" />
+	 <link href="{$_W['siteroot']}app/resource/css/bootstrap.min.css" rel="stylesheet"> 
+	<link href="{MODULE_URL}js/sweetalert.css" rel="stylesheet" />
+	<script src="{MODULE_URL}js/sweetalert.min.js"></script>
+	<link href="{$_W['siteroot']}app/resource/css/font-awesome.min.css" rel="stylesheet">
+	<link href="{$_W['siteroot']}app/resource/css/animate.css" rel="stylesheet">
+	<link href="{$_W['siteroot']}app/resource/css/common.css" rel="stylesheet"> 
+	<link href="{$_W['siteroot']}app/{php echo str_replace('./', '', url('utility/style'))}" rel="stylesheet">
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script src="{$_W['siteroot']}app/resource/js/require.js"></script>
+	<script src="{$_W['siteroot']}app/resource/js/app/config.js"></script>
+	<script type="text/javascript" src="{$_W['siteroot']}app/resource/js/lib/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript">
+	if(navigator.appName == 'Microsoft Internet Explorer'){
+		if(navigator.userAgent.indexOf("MSIE 5.0")>0 || navigator.userAgent.indexOf("MSIE 6.0")>0 || navigator.userAgent.indexOf("MSIE 7.0")>0) {
+			alert('您使用的 IE 浏览器版本过低, 推荐使用 Chrome 浏览器或 IE8 及以上版本浏览器.');
+		}
+	}
+	{php define('HEADER', true);}
+	window.sysinfo = {
+{if !empty($_W['uniacid'])}
+		'uniacid': '{$_W['uniacid']}',
+{/if}
+{if !empty($_W['acid'])}
+		'acid': '{$_W['acid']}',
+{/if}
+{if !empty($_W['openid'])}
+		'openid': '{$_W['openid']}',
+{/if}
+{if !empty($_W['uid'])}
+		'uid': '{$_W['uid']}',
+{/if}
+		'siteroot': '{$_W['siteroot']}',
+		'siteurl': '{$_W['siteurl']}',
+		'attachurl': '{$_W['attachurl']}',
+{if defined('MODULE_URL')}
+		'MODULE_URL': '{MODULE_URL}',
+{/if}
+		'cookie' : {'pre': '{$_W['config']['cookie']['pre']}'}
+	};
+	
+	// jssdk config 对象
+	jssdkconfig = {php echo json_encode($_W['account']['jssdkconfig']);} || {};
+	
+	
+	
+	// 是否启用调试
+	jssdkconfig.debug = false;
+	
+	jssdkconfig.jsApiList = [
+		'checkJsApi',
+		'onMenuShareTimeline',
+		'onMenuShareAppMessage',
+		'onMenuShareQQ',
+		'onMenuShareWeibo',
+		'hideMenuItems',
+		'showMenuItems',
+		'hideAllNonBaseMenuItem',
+		'showAllNonBaseMenuItem',
+		'translateVoice',
+		'startRecord',
+		'stopRecord',
+		'onRecordEnd',
+		'playVoice',
+		'pauseVoice',
+		'stopVoice',
+		'uploadVoice',
+		'downloadVoice',
+		'chooseImage',
+		'previewImage',
+		'uploadImage',
+		'downloadImage',
+		'getNetworkType',
+		'openLocation',
+		'getLocation',
+		'hideOptionMenu',
+		'showOptionMenu',
+		'closeWindow',
+		'scanQRCode',
+		'chooseWXPay',
+		'openProductSpecificView',
+		'addCard',
+		'chooseCard',
+		'openCard'
+	];
+	
+	</script>
+	
+	<script>
+	function _removeHTMLTag(str) {
+		if(typeof str == 'string'){
+			str = str.replace(/<script[^>]*?>[\s\S]*?<\/script>/g,'');
+			str = str.replace(/<style[^>]*?>[\s\S]*?<\/style>/g,'');
+			str = str.replace(/<\/?[^>]*>/g,'');
+			str = str.replace(/\s+/g,'');
+			str = str.replace(/&nbsp;/ig,'');
+		}
+		return str;
+	}
+	</script>
+</head>
+<style>
+p[class=title]{
+	font-size:16px;
+	color:#fff;
+}
+img{
+	margin-top:4px;
+	height:90%;
+	float:left;
+} 
+</style>
+<div class="container">
+	<div class="row" style="background:#fff;min-height:480px;">
+		<div class = "col-xs-12" style="background:;padding:5px;" >	
+			{loop $cards $row}
+				<div class="card" style="height:100px;background:{$row['color']};margin-top:10px;border-radius:5px;padding:5px;">
+					 <div class="col-xs-3" style="height:90px;padding-left:0px;" > 
+						
+							<img class="img-circle"  src="{$row['logo_url']}"></img>
+						
+					 </div> 
+					<div class="col-xs-5" style="height:100%;margin:0 auto;padding:0px;background:;">
+						<div style="height:33%">
+							<p class="title" style="text-align:center;">{$row['title']}</p>
+						</div>
+						<div style="height:33%">
+							<p style="text-align:center;">剩余:{$row['quantity']}</p>
+						</div>
+						<div style="height:33%;overflow:hidden;">
+							<p style="color:#fff;text-align:center;"><span style="margin-left:auto;margin-right:auto;" >{$row['shopname']}</span></p>
+						</div>
+					</div>
+					
+					<div class="col-xs-4" style="height:100px;padding-right:0px;">
+						<div style="height:55%">
+							<p style="color:#fff;text-align:center;">奖:{php echo $row['minhb']/100}-{php echo $row['maxhb']/100}元</p>
+						</div>
+						<div style="height:33%">
+							<p style="width:99%;margin-left:auto;margin-right:auto;text-align:center;"><a cardid="{$row['card_id']}" class="btn btn-default"  type="button" >立即领取</a></p>
+						</div>
+					</div>
+					
+					
+				</div>
+			{/loop}
+		</div>
+		
+	</div>
+</div>
+<script type="text/javascript">
+// $('.card:odd').css({background:'#f0f'});
+/*$('.btn').click(function(){
+	cardid = $(this).attr('cardid');
+	$.post("{php echo $this->createmobileurl('Sendcard')}",{card_id:cardid},function(data){
+		jsdata = JSON.stringify(data);
+		swal(data);
+		
+	},"text")
+});*/
+ wx.ready(function(){
+	$('.btn').click(function(){
+		card_id = $(this).attr('cardid');
+		
+		$.post("{php echo $this->createmobileurl('Addcard');}",{cardid:card_id},function(data){
+			
+			//alert(data);
+			wx.addCard({
+			  cardList: [{
+					cardId: card_id,
+					cardExt: '{"code": "", "openid": "{$_W['fans']['openid']}","nonce_str":"'+data.nonceStr+'","timestamp": "'+data.timestamp+'", "signature":"'+data.signature+'"}'
+			  }],
+			  success: function (res) {
+				swal({
+					title:"领取成功了",
+					text:"把卡券赠送给朋友，朋友使用后，你就可以得到红包啦，一定要让他使用呦！"},
+					
+					function(){
+						location.href = "{$settings['href']}";				
+					});
+			  }
+			});
+		},"json");
+			
+	});
+	
+	sharedata = {
+		title: '{$title}',
+		desc: '{$desc}',
+		link: '',
+		imgUrl: '{$img}',
+		success: function(){
+			swal('分享成功了！谢谢支持');
+		},
+		cancel: function(){ 
+			swal({
+			title:"分享了可以得到奖励哦，真的要取消吗？",
+			showCancelButton:true
+			});
+		}
+	};
+	wx.onMenuShareAppMessage(sharedata);
+	wx.onMenuShareTimeline(sharedata);
+	wx.onMenuShareQZone(sharedata);
+	wx.onMenuShareQQ(sharedata);
+	
+});
+</script>		
+{template 'common/footer'}

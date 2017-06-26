@@ -1,0 +1,15 @@
+.main_wrap .item_img {
+    width:60px;
+    height: 60px;
+}
+.main_wrap .check_inline_style {
+    height: 40px;
+    line-height: 40px;
+}
+.main_wrap .update_btn {
+    height: 37px;
+    line-height:21px;
+}
+.main_wrap .open_spec {
+    position: static;
+}

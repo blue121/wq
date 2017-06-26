@@ -1,0 +1,73 @@
+<div class="panel panel-info">
+    <div class="panel-heading">筛选</div>
+    <div class="panel-body">
+        <form action="" method="post" class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 control-label">标题</label>
+                <div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+                    <input class="form-control" name="title" type="text" value="{$_GPC['title']}" placeholder="支持模糊搜索">
+                </div>
+                <div class="pull-right col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<form action="" method="post">
+    <div class="panel panel-default">
+        <div class="table-responsive panel-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>标题</th>
+                    <th width="150">状态</th>
+                    <th width="150">动作</th>
+                    <th width="240">通知</th>
+                    <th width="160">创建时间</th>
+                    <th width="90" class="text-right">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if $list}
+                {loop $list $li}
+                <tr>
+                    <td>{$li['title']}</td>
+                    <td>
+                        {if $li['status'] == 1}
+                        <span class="label label-success">已开启</span>
+                        {else}
+                        <span class="label label-danger">已关闭</span>
+                        {/if}
+                    </td>
+                    <td>{$li['action_title']}</td>
+                    <td>
+                        {loop $li['notices'] $v}
+                        {if $v['type'] == 1}
+                        <div style="height: 50px; line-height: 50px;">
+                            微信<img src="{$v['avatar']}" onerror="this.src='{$_W['siteroot']}app/resource/images/heading.jpg'" style="width: 40px; height: 40px; border-radius: 50%; margin-left: .5rem; overflow: hidden" alt=""/>
+                            <span style="padding-left: .3rem">{$v['nickname']}</span>
+                        </div>
+                        {else if $v['type'] == 2}
+                        <div style="height: 30px; line-height: 30px;">
+                            短信<span style="padding-left: .5rem">{$v['receiver']}</span>
+                        </div>
+                        {/if}
+                        {/loop}
+                    </td>
+                    <td>{php echo str_replace(' ', '<span style="padding-right: .8rem"></span>', date('Y-m-d H:i:s', $li['dateline']))}</td>
+                    <td style="white-space:nowrap;overflow: visible" class="text-right">
+                        <div class="btn-group">
+                            <a href="{php echo $this->createWebUrl('trigger', array('act' => 'post', 'id' => $li['id']))}" title="编辑" class="btn btn-default btn-sm"><i class="fa fa-edit"></i></a>
+                            <a href="{php echo $this->createWebUrl('trigger', array('act' => 'delete', 'id' => $li['id']))}" onclick="return confirm('此操作不可恢复，确认吗？'); return false;" title="删除" class="btn btn-default btn-sm"><i class="fa fa-times"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {/loop}
+                {/if}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {$pager}
+</form>

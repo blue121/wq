@@ -1,0 +1,42 @@
+{template 'header'}
+<ul class="nav nav-tabs">
+    <li {if $act == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('tools', array('act' => 'display'));}">工具</a></li>
+    <li {if $act == 'autotask'}class="active"{/if}><a href="{php echo $this->createWebUrl('tools', array('act' => 'autotask'));}">自动任务检测</a></li>
+</ul>
+{if $act == 'display'}
+<!--TODO-->
+{else if $act == 'autotask'}
+<div class="panel panel-default">
+    <div class="table-responsive panel-body">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>任务</th>
+                <th width="100">运行状态</th>
+                <th width="160">上次执行时间</th>
+                <th width="160">下次执行时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            {if $list}
+            {loop $list $li}
+            <tr>
+                <td>{$li['title']}</td>
+                <td>
+                    {if $li['status'] == 1}
+                    <span class="label label-success">正常</span>
+                    {else}
+                    <span class="label label-danger">失败</span>
+                    {/if}
+                </td>
+                <td>{$li['mtime']}</td>
+                <td>{$li['ntime']}</td>
+            </tr>
+            {/loop}
+            {/if}
+            </tbody>
+        </table>
+    </div>
+</div>
+{/if}
+{template 'footer'}

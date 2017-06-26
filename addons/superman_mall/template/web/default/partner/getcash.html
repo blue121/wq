@@ -1,0 +1,234 @@
+{if $op == 'display'}
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="" method="post" class="form-horizontal" role="form">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">状态</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<select class="form-control" name="status">
+						<option value="all" {if $status == 'all'}selected{/if}>全部</option>
+						<option value="0" {if $status == '0'}selected{/if}>待审核</option>
+						<option value="1" {if $status == '1'}selected{/if}>审核通过</option>
+						<option value="-1" {if $status == '-1'}selected{/if}>审核失败</option>
+						<option value="2" {if $status == '2'}selected{/if}>已付款</option>
+						<option value="-2" {if $status == '-2'}selected{/if}>付款失败</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">分销商</label>
+				<div class="col-sm-8 col-md-8 col-xs-12">
+					<input class="form-control" name="nickname" type="text" value="{$_GPC['nickname']}" placeholder="ID/昵称">
+				</div>
+				<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<form action="" method="post">
+	<div class="panel panel-default">
+		<div class="table-responsive panel-body">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th width="180">提现单号</th>
+						<th>分销商</th>
+						<th width="100">提现金额</th>
+						<th width="80">提现账户</th>
+						<th width="90">状态</th>
+						<th width="160">申请时间</th>
+						<th width="85" class="text-right">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{if $list}
+				{loop $list $li}
+				<tr>
+					<td>{$li['orderno']}</td>
+					<td>
+						<div style="height: 50px; line-height: 50px;">
+							<img src="{php echo tomedia($li['avatar'])}" onerror="this.src='{$_W['siteroot']}app/resource/images/heading.jpg'" style="width: 40px; height: 40px; border-radius: 50%; margin-left: .5rem; overflow: hidden" alt=""/>
+							<span style="padding-left: .3rem">{$li['nickname']}</span>
+						</div>
+					</td>
+					<td>&yen;{$li['money']}</td>
+					<td>{$li['account_title']}</td>
+					<td>
+						<span class="label {if $li['status'] == 0}label-default{else if $li['status'] == -2}label-danger {else if $li['status'] == -1 || $li['status'] == -3}label-warning{else if $li['status'] == 1}label-info{else if $li['status'] == 2}label-success{/if}
+">{$li['status_title']}</span>
+					</td>
+					<td>{php echo str_replace(' ', '<span style="padding-right: .8rem"></span>', date('Y-m-d H:i:s', $li['createtime']))}</td>
+					<td style="white-space:nowrap;overflow: visible" class="text-right">
+						<div class="btn-group">
+							<a href="{php echo $this->createWebUrl('partner', array('act' => 'getcash', 'op' => 'post', 'id' => $li['id']));}" title="编辑" class="btn btn-default btn-sm"><i class="fa fa-edit"></i></a>
+							<a href="{php echo $this->createWebUrl('partner', array('act' => 'getcash', 'op' => 'delete', 'id' => $li['id']));}" onclick="return confirm('此操作不可恢复，确认吗？'); return false;" title="删除" class="btn btn-default btn-sm"><i class="fa fa-times"></i></a>
+						</div>
+					</td>
+				</tr>
+				{/loop}
+				{/if}
+				</tbody>
+			</table>
+		</div>
+		<div class="panel-footer">
+			总共 <strong>{$total}</strong> 条
+		</div>
+	</div>
+	{$pager}
+</form>
+{else if $op == 'post'}
+<form class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+	<div class="panel panel-default">
+		<div class="panel-heading">基本信息</div>
+		<div class="panel-body" style="line-height: 20px;">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">分销商</label>
+				<div class="col-sm-8 col-xs-12">
+					<div class="clear">
+						<div class="pull-left" style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+							<img src="{php echo tomedia($row['avatar'])}" onerror="this.src='{$_W['siteroot']}app/resource/images/heading.jpg'" style="width: 100%">
+						</div>
+						<div class="pull-left" style="line-height: 40px; margin-left: 5px; width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+							{$row['nickname']}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">提现留言</label>
+				<div class="col-sm-8 col-xs-12">
+					<textarea style="height:150px;" class="form-control" name="apply_remark" disabled>{$row['apply_remark']}</textarea>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">申请时间</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{php echo str_replace(' ', '<span style="padding-right: .8rem"></span>', date('Y-m-d H:i:s', $row['createtime']))}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">提现操作</div>
+		<div class="panel-body" style="line-height: 20px;">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">提现单号</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$row['orderno']}</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">提现金额</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<input type="text" class="form-control" value="{$row['money']}" disabled name="money">
+						<span class="input-group-addon">元</span>
+					</div>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">提现账户</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="account_type" value="wechat" checked=""> 微信
+						</label>
+					</div>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">状态</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					{if $row['status'] == -3}
+					<span class="label label-warning">已归还</span>
+					{else if $row['status'] == 2}
+					<span class="label label-success">已打款</span>
+					{else}
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="status" value="0" {if $row['status'] ==0}checked{/if}> 待审核
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="status" value="1" {if $row['status'] ==1}checked{/if}> 审核通过
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="status" value="-1" {if $row['status'] ==-1}checked{/if}> 审核失败
+						</label>
+					</div>
+					<span class="help-block"></span>
+					{/if}
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">打款备注</label>
+				<div class="col-sm-8 col-xs-12">
+					<textarea style="height:150px;" class="form-control" name="remark">{$row['remark']}</textarea>
+					<span class="help-block">打款时可填写备注，更新状态操作不修改打款备注</span>
+				</div>
+			</div>
+			{if !empty($row['wxpay_result'])}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">支付结果</label>
+				<div class="col-sm-8 col-xs-12">
+					<textarea style="height:150px;" class="form-control" disabled name="wxpay_result">{$row['wxpay_result']}</textarea>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			{/if}
+			{if !empty($row['wxpay_paymentno'])}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">微信支付交易号</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{$row['wxpay_paymentno']}</p>
+				</div>
+			</div>
+			{/if}
+			{if !empty($row['paytime'])}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">支付时间</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{php echo str_replace(' ', '<span style="padding-right: .8rem"></span>', date('Y-m-d H:i:s', $row['paytime']))}</p>
+				</div>
+			</div>
+			{/if}
+			{if !empty($row['updatetime'])}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">更新时间</label>
+				<div class="col-sm-8 col-xs-12">
+					<p class="form-control-static">{php echo str_replace(' ', '<span style="padding-right: .8rem"></span>', date('Y-m-d H:i:s', $row['updatetime']))}</p>
+				</div>
+			</div>
+			{/if}
+		</div>
+		<div class="panel-footer">
+			操作人：{$row['operator']}
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+			{if $row['status'] != -3 && $row['status'] != 2}
+			<button type="submit" name="submit" value="yes" class="btn btn-primary">更新状态</button>
+			<button type="submit" name="btn_wxpay" value="yes" class="btn btn-success btn_wxpay">微信支付</button>
+			<button type="submit" name="btn_return" value="yes" onclick="return confirm('确认退回提现金额到用户账号吗？');return false;" class="btn btn-danger btn_return">退回提现金额</button>
+			{/if}
+			<input type="hidden" name="token" value="{$_W['token']}">
+		</div>
+	</div>
+</form>
+<script>
+	require(['jquery'], function($){
+		$('.btn_wxpay').click(function(){
+			if($('input[name=status]:checked').val() !=1){
+				util.message('提现状态未审核！', '', 'error');
+				return false;
+			}
+		});
+	});
+</script>
+{/if}

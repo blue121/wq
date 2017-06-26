@@ -1,0 +1,25 @@
+{php $navs = SuermanMallMenu::webShopNavs($this->web['user_permission']);}
+{if !empty($navs)}
+<div class="col-xs-12 col-sm-9 {if !defined('SUPERMAN_WEB_FULL_SCREEN')}col-lg-10{else}col-lg-12{/if} right_wrap">
+	{if CRUMBS_NAV == 1}
+	{php global $module_types;global $module;global $ptr_title;}
+	<ol class="breadcrumb" style="padding:5px 0;">
+		<li><a href="{url 'home/welcome/ext'}"><i class="fa fa-cogs"></i> &nbsp; 扩展功能</a></li>
+		<li><a href="{url 'home/welcome/ext' array('m' => $module['name'])}">{$module_types[$module['type']]['title']}模块 - {$module['title']}</a></li>
+		<li class="active">{$ptr_title}</li>
+	</ol>
+	{elseif CRUMBS_NAV == 2}
+	{php global $module_types;global $module;global $ptr_title; global $site_urls; $m = $_GPC['m'];}
+	<ul class="nav nav-tabs">
+		<li><a href="{url 'platform/reply' array('m' => $m)}">管理{$module['title']}</a></li>
+		<li><a href="{url 'platform/reply/post' array('m' => $m)}"><i class="fa fa-plus"></i> 添加{$module['title']}</a></li>
+		{if !empty($site_urls)}
+		{loop $site_urls $site_url}
+		<li {if $_GPC['do'] == $site_url['do']} class="active"{/if}><a href="{$site_url['url']}"> {$site_url['title']}</a></li>
+		{/loop}
+		{/if}
+	</ul>
+	{/if}
+	{else}
+	<div class="col-xs-12 col-sm-12 col-lg-12">
+	{/if}

@@ -1,0 +1,43 @@
+<header class="bar bar-nav">
+	<a class="icon icon-left pull-left back"></a>
+    {if $_GPC['route'] == 'order.display'}
+    <div class="bar bar-header-secondary list_search_style">
+        <form action="" method="get" class="clearfix">
+            <input type="hidden" name="i" value="{$_W['uniacid']}">
+            <input type="hidden" name="c" value="entry">
+            <input type="hidden" name="do" value="admin">
+            <input type="hidden" name="m" value="superman_mall">
+            <input type="hidden" name="route" value="{$_GPC['route']}">
+            <input type="hidden" name="status" value="{$_GPC['status']}">
+            <input type="hidden" name="type" value="{$_GPC['type']}">
+            <div class="searchbar">
+                <a class="searchbar-cancel">取消</a>
+                <div class="search-input">
+                    <label class="icon icon-search"></label>
+                    <input type="search" name="keyword" placeholder="搜索订单号..." value="{$keyword}">
+                </div>
+            </div>
+        </form>
+    </div>
+    {else if $_GPC['route'] == 'item.display'}
+    <div class="bar bar-header-secondary list_search_style">
+        <form action="" method="get" class="clearfix">
+            <input type="hidden" name="i" value="{$_W['uniacid']}">
+            <input type="hidden" name="c" value="entry">
+            <input type="hidden" name="do" value="admin">
+            <input type="hidden" name="m" value="superman_mall">
+            <input type="hidden" name="route" value="{$_GPC['route']}">
+            <input type="hidden" name="status" value="{$_GPC['status']}">
+            <div class="searchbar">
+                <a class="searchbar-cancel">取消</a>
+                <div class="search-input">
+                    <label class="icon icon-search"></label>
+                    <input type="search" name="keyword" placeholder="搜索商品名称..." value="{$keyword}">
+                </div>
+            </div>
+        </form>
+    </div>
+    {else}
+    <h1 class="title">{$title}</h1>
+    {/if}
+</header>

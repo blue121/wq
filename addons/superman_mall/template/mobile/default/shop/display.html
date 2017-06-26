@@ -1,0 +1,217 @@
+<div class="content infinite-scroll shop_display" data-flag="0" data-display-url="{php echo $this->createMobileUrl('shop', array('act' => 'display', 'shopid' => $shopid, 'load' => 'infinite'))}" data-detail-url="{php echo $this->createMobileUrl('detail', array('act' => 'display'))}" data-distance="50" data-page="{$pindex}" data-cart-url="{php echo $this->createMobileUrl('cart', array('act' => 'post'))}">
+    <!--商户幻灯片-->
+    {if !isset($_GPC['activityid'])}
+    {if $shop_slide}
+    <div class="swiper-container shop_swiper_warp" data-space-between='10' data-autoplay="3000">
+        <div class="swiper-wrapper">
+            {loop $shop_slide $slide}
+            <div class="swiper-slide">
+                <a href="{$slide['url']}" class="external">
+                    <img src="{php echo tomedia($slide['img'])}" onerror="this.src='{php echo $this->superman_placeholder}'"/>
+                </a>
+            </div>
+            {/loop}
+        </div>
+    </div>
+    {/if}
+    <!--商户简介-->
+    <div class="list-block media-list shop_description_wrap">
+        <ul>
+            <li>
+                <a href="#superpage_shop_description" class="item-content">
+                    <div class="item-media">
+                        <img src="{php echo tomedia($shop['logo'])}" onerror="this.src='{php echo $this->superman_placeholder}'"/>
+                    </div>
+                    <div class="item-inner">
+                        <div class="item-subtitle text-strong font8 color-default">{$shop['title']}</div>
+                        <div class="item-text font7">{$shop['description']}</div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!--商户电话&地址-->
+    {if $shop['phone'] || $shop['address']}
+    <div class="list-block media-list shop_contact">
+        <ul>
+            {if $shop['phone']}
+            <li>
+                <a href="tel:{php echo $shop['phone']}" class="item-link item-content">
+                    <div class="item-inner">
+                        <div class="item-subtitle font7 color-gray"><span class="iconfont color-gray font7">&#xe619;</span> {$shop['phone']}</div>
+                    </div>
+                </a>
+            </li>
+            {/if}
+            {if $shop['address']}
+            <li>
+                <a href="javascript:;" class="item-link item-content shop_map" data-url="{php echo $_W['siteroot'].'app/'.$this->createMobileUrl('shop', array('shopid' => $shopid))}" data-latitude="{$shop['latitude']}" data-longitude="{$shop['longitude']}" data-name="{$shop['title']}" data-address="{$shop['address']}">
+                    <div class="item-inner">
+                        <div class="item-subtitle font7 color-gray"><span class="iconfont color-gray font7">&#xe605;</span>
+                            {php echo $shop['province'].$shop['city'].$shop['district'].$shop['address']}
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {/if}
+        </ul>
+    </div>
+    {/if}
+    <!--营销活动-->
+    {if $activity}
+    <div class="list-block media-list shop_discount_wrap">
+        <ul>
+            {loop $activity $li}
+            <li>
+                <a href="{php echo $this->createMobileUrl('shop', array('shopid' => $shopid,'activityid' => $li['id']))}" class="item-link item-content external">
+                    <div class="item-inner">
+                        <div class="item-subtitle color-gray row no-gutter">
+                            <div class="col-25 text-center">
+                                <span class="button button-danger font6">{$li['title']}</span>
+                            </div>
+                            <div class="col-75 font6 activity_time">
+                                活动时间：{php echo date('Y-m-d H:i', $li['starttime'])} ~ {php echo date('Y-m-d H:i', $li['endtime'])}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {/loop}
+        </ul>
+    </div>
+    {/if}
+    <!--秒杀-->
+    {if $seckill_items}
+    <div class="list-block seckill">
+        <div class="item-link">
+            <a href="{php echo $this->createMobileUrl('seckill', array('type' => $seckill_params['key'], 'shopid' => $shopid))}" class="color-default external">
+                <div class="item-inner">
+                    <span class="seckill_name text-strong">秒杀</span>
+                    <span>{$seckill_params['key']}点场</span>
+                    <div class="seckill_countdown countdonw font7 color-gray" data-time="{$seckill_params['end']}">
+                        <span>00</span>:<span>00</span>:<span>00</span>
+                    </div>
+                    <div class="font6 color-gray pull-right seckill_more">更多</div>
+                </div>
+            </a>
+        </div>
+        <div class="row seckill_list_wrap">
+            <div class="swiper-container" data-space-between="10" data-slides-per-view="3.5" data-autoplay="3000">
+                <div class="swiper-wrapper">
+                    {loop $seckill_items $item}
+                    <div class="swiper-slide">
+                        <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="external">
+                            <div class="seckill_img">
+                                <img class="img_square3" src="{php echo tomedia($item['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'"/>
+                                {if $item['sale_percent']}
+                                <span class="font6">{if $item['sale_percent'] == 100}已售完{else}已售{$item['sale_percent']}%{/if}</span>
+                                {/if}
+                            </div>
+                            <span class="now_price font7 color-default">&#165;{$item['price']}</span>
+                            <span class="old_price font7 color-gray">&#165;{$item['market_price']}</span>
+                        </a>
+                    </div>
+                    {/loop}
+                </div>
+            </div>
+        </div>
+    </div>
+    {/if}
+    <!--拼团-->
+    {if $mgroupon_items}
+    <div class="list-block mgroupon">
+        <div class="item-link">
+            <a href="{php echo $this->createMobileUrl('mgroupon', array('shopid' => $shopid))}" class="color-default external">
+                <div class="item-inner clearfix">
+                    <span class="mgroupon_name text-strong">拼团</span>
+                    <div class="font6 color-gray pull-right mgroupon_more">更多</div>
+                </div>
+            </a>
+        </div>
+        <div class="row mgroupon_list_wrap">
+            <div class="swiper-container" data-space-between="10" data-slides-per-view="3.5" data-autoplay="3000">
+                <div class="swiper-wrapper">
+                    {loop $mgroupon_items $item}
+                    <div class="swiper-slide">
+                        <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="external">
+                            <div class="mgroupon_img">
+                                <img class="img_square3" src="{php echo tomedia($item['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'"/>
+                                <span class="font6">已售{$item['sales']}</span>
+                            </div>
+                            <span class="now_price font7 color-default">&#165;{$item['price']}</span>
+                            <span class="old_price font7 color-gray">&#165;{$item['market_price']}</span>
+                        </a>
+                    </div>
+                    {/loop}
+                </div>
+            </div>
+        </div>
+    </div>
+    {/if}
+    {/if}
+    <!--商品列表-->
+    <div class="card item_list_wrap">
+        <div class="card-content">
+            <div class="list-block media-list">
+                <ul class="shop_item_list" data-list-style-cart-btn="{$list_style_cart_btn}">
+                    {if $list}
+                    <div class="item_list row no-gutter two_list_bg">
+                        {loop $list $item}
+                        <div class="col-50 two_list_style">
+                            <div class="card two_list_wrap">
+                                <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="external">
+                                    <div valign="bottom" class="card-header color-white no-border no-padding">
+                                        <img class='lazyload card-cover img_square1' src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-original="{php echo tomedia($item['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'"/>
+                                        {if $item['sales']}
+                                        <div class="sales_wrap">
+                                            <span class="font6">已售{$item['sales']}</span>
+                                        </div>
+                                        {/if}
+                                    </div>
+                                </a>
+                                <div class="card-content">
+                                    <div class="card-content-inner">
+                                        <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="external">
+                                            <div class="text-overflow color-default">{$item['title']}</div>
+                                        </a>
+                                        <div class="clearfix font7 two_list_item">
+                                            <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="{SUPERMAN_EXTERNAL}" data-no-cache="true">
+                                            {if isset($item['act_price'])} <!--限时打折-->
+                                            <span class="pull-left color-danger">&#165;{$item['act_price']}</span>
+                                            <span class="market_price_wrap color-gray font6 text-delete-line">&#165;{$item['price']}</span>
+                                            {else}
+                                            <span class="pull-left color-danger">&#165;{$item['price']}</span>
+                                                {if $item['market_price'] > 0}
+                                                <span class="market_price_wrap color-gray font6 text-delete-line">&#165;{$item['market_price']}</span>
+                                                {/if}
+                                            {/if}
+                                            </a>
+                                            {if !isset($style_setting['list_style_cart_btn']) || $style_setting['list_style_cart_btn'] == 1}
+                                            <a href="#" class="button pull-right add_cart" title="添加入购物车" data-itemid="{$item['id']}"  data-skuid="{php echo intval($item['skuid'])}" data-cart-url="{php echo $this->createMobileUrl('cart', array('act' => 'post'))}"><span class="icon iconfont">&#xe626;</span></a>
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/loop}
+                    </div>
+                    {else}
+                    <li>
+                        <div class="item-inner row no-gutter text-center">
+                            <p class="color-gray font7">没有商品</p>
+                        </div>
+                    </li>
+                    {/if}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="nodata font6 text-center color-gray" style="display: none;">没有了</div>
+    {if count($list)==$pagesize}
+    <div class="infinite-scroll-preloader">
+        <div class="preloader"></div>
+    </div>
+    {/if}
+</div>
+{template 'common/nav'}

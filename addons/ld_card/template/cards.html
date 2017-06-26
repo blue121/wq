@@ -1,0 +1,152 @@
+{template 'common/header'}
+<div class="main">	
+	<div class="panel-body">
+		<ul class="nav nav-tabs" id="myTab">
+			<li ><a href="{php echo $this->createweburl('users');}"> 管理商户</a></li>
+			<li class="active"><a href="#"> {$shopname}</a></li>				
+		</ul>
+	</div>
+</div>
+<div class = "main">
+<div class="panel panel-default">
+<div class="panel-heading " style="font-size:20px;color:green">新增卡券----输入卡券核销后奖励上级的红包金额</div>
+<div class="panel-body">
+<form action="" method="post" enctype="multipart/form-data">
+	<div class="col-lg-12">
+		<table class="table table-hover" style="background:$f0f;">
+		<thead class="navbar-inner">
+	    <tr>	
+		 <th style="width:40%;">卡券ID</th>
+		<th style="width:20%;color:red;">红包最小值(元)</th> 
+		 <th style="width:20%;">红包最大值(元)</th>
+		 <th style="width:20%;">红包个数</th>
+         <th style="width:30%;">红包奖励语</th>
+
+		</tr>
+		</thead>
+		<tbody>
+		
+		<tr>
+	      <td><input type="text" class="form-control"  name="card_id" required="required" placeholder="请输入卡券ID" value="" /></td> 
+ 		  <td style="color:red;"><input type="number" class="form-control" step="1.00" required="required" name="minhb" placeholder="请输入红包最小值" value="" /></td>  
+		  <td><input type="number" class="form-control" step="1.00" name="maxhb" required="required" placeholder="请输入红包最大值" value="" /></td>
+          <td><input type="number" class="form-control" name="hbnum" required="required" placeholder="红包个数" value="" /></td> 
+		  <td><input type="text" class="form-control" name="sign" required="required" placeholder="红包奖励提示语" value="" /></td>
+          
+		 
+		  			
+		</tr>
+		
+		</tbody>		
+		</table>
+		
+
+    <div class="input-group">
+		<div class="col-xs-2 col-sm-2" style="margin-bottom: 0px;">
+			<span style='color:red'>*</span> 选择卡券分类
+		</div>
+
+		<div class="col-sm-10 col-xs-10" style="margin-bottom: 0px;">
+			<select name="category" class="form-control" required="required" id="category">
+				<option value="0">不分类</option>
+					{loop $list $row}
+					<option value="{$row['id']}">{$row['id']}-{$row['title']}</option>
+					{/loop}
+			</select>
+
+		</div>
+			<span class="input-group-btn">
+
+			<input class="btn btn-success" name="submit" type="submit" onclick="return confirm('确定参数都正确吗？');return false;" value="添加卡券" />
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		  </span>		
+      
+	  
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+  </form>
+  </div>
+ </div>
+ </div>
+</div>
+<div class = "main">
+
+<div class = "panel-default">
+
+</div>
+
+	<div class="panel-body table-responsive" style="background:$f0f;">
+		<table class="table table-hover" style="background:$f0f;">
+		<thead class="navbar-inner">
+	    <tr class="success">	
+		 <th style="width:4%;">ID</th>
+		<th style="width:25%;color:red;">卡券ID(点击看完整)</th> 
+		 <th style="width:12%;">卡券类型</th>
+		 <th style="width:20%;">卡券名</th>
+         <th style="width:30%;"><p style="font-family: 微软雅黑;"><b><font class="text-success">区间</font>/<font class="text-info">总数</font> /<font class="text-warning">已领</font> /<font class="text-danger">已发红包</font></b></p></th>
+         <th style="width:5%;">剩余</th>
+		 <th style="width:5%;">总数</th>
+		 <th style="width:10%;">分类</th>
+         <th style="width:15%;">操作</th>
+		</tr>
+		</thead>
+		<tbody>
+		{loop $cards $item}
+		<tr>
+	      <td>{$item['id']}</td> 
+ 		  <td style="color:red;"><a class ="btn btn-defaulf" href="javascript:;" onclick="displayUrl('{$item['card_id']}');">{$item['card_id']}</a></td>  
+		  <td><h4><span class="label label-success">{$item['card_type']}</span></h4></td>
+          <td><h4><span class="label label-primary">{$item['title']}</span></h4></td> 
+		  <td><h4><span class="label label-success ">{$item['hb']}</span>
+				<span class="label label-info ">{$item['hbnum']}</span>
+				<span class="label label-warning ">{php echo $item['sendnum']}</span>
+				<span class="label label-danger ">{$item['sendsum']}</span></h4>
+		  </td>
+          <td><h4><span class="label label-warning ">{$item['quantity']}</span></h4></td>
+		  <td><h4><span class="label label-info ">{$item['total_quantity']}</span></h4></td>
+		  <td><h4><span class="label label-primary">{$item['category']}</span></h4></td>
+		  <td>
+				<div style="">
+			        <!-- <a class="btn btn-default" href="javascript:;" onclick="displayUrl('{$item['url']}');">独立链接</a> -->
+					<a class="btn btn-default" href="{php echo $this->createWebUrl('details',array('userid'=>$item['userid'],'cardid'=>$item['card_id']))}" >领取详情</a>
+			       
+					 <a style="width:10px;color:red;font-size:20px;"  href="{php echo $this->createWebUrl('Delcards',array('id'=>$item['id']))}" onclick="return confirm('确认删除此卡券吗？删除同时此卡券的所有记录也将被删除');return false;">×</a>
+				</div>	
+			
+		  </td>				
+		</tr>
+		{/loop}
+		</tbody>		
+		</table>
+		
+	</div>
+	{$pager}
+</div>
+<script type = "text/javascript">
+require(['jquery', 'util'], function($, u) {
+			$(".btn btn-default").click(function(){
+			if($('.form-control').val()<"1"){
+				alert("红包金额，个数，必须大于1");
+			}
+			});
+		});
+
+function displayUrl(lurl) {
+		require(['jquery', 'util'], function($, u) {
+			var content = '<p class="form-control-static" style="word-break:break-all">结果: <br>' + lurl + '</p>';
+			
+			var footer =
+					'<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>' +
+					'<button type="button" class="btn btn-primary">复制</button>';
+			var diaobj = u.dialog('查看', content, footer);
+			diaobj.find('.btn-default').click(function() {
+				diaobj.modal('hide');
+			});
+			diaobj.on('shown.bs.modal', function(){
+				u.clip(diaobj.find('.btn-primary')[0], lurl);
+			});
+			diaobj.modal('show');
+		});
+	}
+</script>
+{template 'common/footer'}

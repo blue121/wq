@@ -1,0 +1,202 @@
+html {
+    font-size: 14px;
+}
+body {
+    background: #e7e8eb;
+    /*微信公众平台字体*/
+    font-family: "Helvetica Neue","Hiragino Sans GB","Microsoft YaHei","\9ED1\4F53",Arial,sans-serif;
+}
+.container {
+    max-width: 1200px;
+}
+/*去除圆角*/
+.no_border-radius {
+    border-radius: 0 !important;
+}
+/*版本信息*/
+.version_wrap {
+    font-size: .85rem;
+}
+/*顶部导航*/
+.top_nav_wrap {
+    background-color: #fff;
+    border-radius: 0;
+    border-bottom: 1px solid #d9dadc;
+}
+.top_nav_wrap .shop_logo {
+    display: inline-block;
+    float: left;
+    height: 60px;
+    line-height: 60px;
+}
+.top_nav_wrap .shop_logo img {
+    width: 248px;
+    height: 40px;
+}
+.top_nav_wrap .nav_list {
+    width:800px;
+    display: inline-block;
+    height: 60px;
+    float: left;
+    line-height: 57px;
+    margin-left: 30px;
+}
+.top_nav_wrap .nav_list ul {
+    padding-left: 0;
+    clear: both;
+}
+.top_nav_wrap .nav_list ul li a {
+    color: #222;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+}
+.top_nav_wrap .nav_list ul .active, .top_nav_wrap .nav_list ul .active:hover {
+    border-bottom: 3px solid #44b549;
+}
+.top_nav_wrap .nav_list ul li:hover {
+    border-bottom: 3px solid #a0a3ab;
+}
+.top_nav_wrap .nav_list ul li {
+    list-style: none;
+    float: left;
+    width: 100px;
+    text-align: center;
+}
+.top_nav_wrap .account_wrap {
+    padding: 13.5px 0 !important;
+}
+.top_nav_wrap .account_wrap .dropdown-menu {
+    top: 80%;
+}
+.container_wrap {
+    padding-top: 36px;
+}
+.container_wrap .category_title {
+    font-size: 16px;
+    line-height: 75px;
+    padding: 0 21px;
+}
+
+/*中间部分白的背景*/
+.container > .row {
+    background-color: #ffffff;
+    min-height: 200px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+/*左侧menu导航*/
+/*TODO JS计算左侧有的高度比较*/
+.menu_right_border {
+    /*border-right: 1px solid rgba(0, 0, 0, 0.125);*/
+}
+.menu_wrap {
+    width:208px;
+    float: left;
+    margin-top: 13px;
+}
+.menu_wrap .menu .lavel2_category {
+    font-size: 14px;
+    color: #b2b2b2;
+    padding: 0 30px 0;
+    line-height: 34px;
+}
+.menu_wrap .menu .lavel2_category i {
+    width: 20px;
+    height: 18px;
+    font-size: 18px;
+    margin-right: 10px;
+}
+.menu_wrap .menu .lavel3_category {
+    padding: 0 0 0 58px;
+}
+.menu_wrap .menu .lavel3_category_title {
+    color: #222;
+    line-height: 34px;
+}
+.menu_wrap .menu {
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+    padding-top: .5rem;
+}
+.menu_wrap .menu dd {
+    line-height: 2rem;
+}
+.menu_wrap .menu .lavel3_category.active, .menu_wrap .menu .lavel3_category.active:hover {
+    background: #44b549;
+}
+.menu_wrap .menu .active a {
+    color: #fff !important;
+}
+.menu_wrap .menu dd a {
+    text-decoration: none;
+    display: block;
+}
+.menu_wrap .menu .lavel3_category:hover {
+    background-color: #f4f5f9;
+}
+
+.menu_wrap .menu:first-child {
+    border-top: 0;
+}
+/*右侧main区域*/
+.main_left_border {
+    border-left: 1px solid rgba(0, 0, 0, 0.125);
+}
+.main_width {
+    width: 990px;
+    float: right;
+}
+.full_main_width {
+    width:1200px;
+}
+.main_wrap {
+
+}
+.main_wrap .main_content_wrap {
+    margin-top: -12px;
+}
+.main_wrap tbody tr td {
+    vertical-align: middle;
+}
+.main_wrap .screen_category select{
+    font-size:.85rem;
+}
+.main_wrap .list_title_style th {
+    border-bottom: 0 !important;
+}
+
+.main_wrap .lavel4_category_wrap {
+    border-bottom:1px #e7e7eb solid;
+    line-height: 40px;
+    height: 43px;
+    margin-top: -14px;
+}
+.main_wrap .lavel4_category_wrap li {
+    list-style: none;
+    float: left;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+}
+.main_wrap .lavel4_category_wrap li a {
+    color: #222;
+    text-decoration: none;
+}
+.main_wrap .lavel4_category_wrap .active, .main_wrap .lavel4_category_wrap .active:hover {
+    border-bottom: 3px solid #44b549;
+}
+.main_wrap .lavel4_category_wrap li:hover {
+    border-bottom: 3px solid #ccc;
+}
+/*必填项*/
+.star {
+    color: red;
+    margin-right: 5px;
+    font-weight: bold;
+}
+/*保存按钮*/
+.preser_btn {
+    position: fixed;
+    bottom: 90px;
+    z-index: 1000;
+}

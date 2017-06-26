@@ -1,0 +1,98 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+		{template 'common/nav'}
+		{if $act == 'display'}
+		{template 'common/title'}
+		<div class="content">
+			<input type="hidden" name="orderid" value="{$orderid}">
+			<input type="hidden" name="token" value="{$_W['token']}">
+			<div class="content-block-title">
+				<span class="pull-left">订单号：{$order['ordersn']}</span>
+				<span class="pull-right color-danger order_price">&#165;{$order['price']}</span>
+			</div>
+			<div class="list-block media-list pay_style_wrap" data-order-price="{$order['price']}">
+				{if !isset($payments_setting['wechat_open']) || $payments_setting['wechat_open'] == 1}
+				<ul>
+					<li class="pay_more_mode">
+						<div class="item-content">
+							<div class="item-media">
+								<span class="icon iconfont wechat_pay">&#xe63f;</span>
+							</div>
+							<div class="item-inner row">
+								<div class="col-80">
+									<div class="item-title-row">
+										<div class="item-title">微信支付</div>
+									</div>
+									<div class="item-subtitle color-gray">微信安全支付</div>
+								</div>
+								<div class="col-20">
+									<div class="item-media">
+										<div class="item-input">
+											<label class="label-checkbox item-content">
+												<input type="checkbox" name="wx_pay" data-checked="0">
+												<div class="item-media wx_pay"><i class="icon icon-form-checkbox"></i></div>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+				{/if}
+				{if $order['pay_credit'] == 0 && $order['shopid'] != 0 && (!isset($payments_setting['credit_open']) || $payments_setting['credit_open'] == 1)}
+				<ul class="credit_pay_wrap">
+					<li>
+						<div class="item-content">
+							<div class="item-media">
+								<span class="icon iconfont credit_pay_icon">&#xe640;</span>
+							</div>
+							<div class="item-inner row">
+								<div class="col-80">
+									<div class="item-title-row">
+										{if isset($setting['creditbehaviors']['currency']) && $credit_titles[$setting['creditbehaviors']['currency']]['title']}
+										<div class="item-title">{$credit_titles[$setting['creditbehaviors']['currency']]['title']}支付</div>
+										{else}
+										<div class="item-title">余额支付</div>
+										{/if}
+									</div>
+									<div class="item-subtitle color-gray">
+										可用余额 &yen;{$_W['member'][$setting['creditbehaviors']['currency']]}
+									</div>
+								</div>
+								<div class="col-20">
+									<div class="item-media">
+										<div class="item-input">
+											<label class="label-switch">
+												<input type="checkbox" name="credit_pay" data-checked="0">
+												<div class="checkbox credit_pay"></div>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+				{/if}
+				{if $order['pay_credit'] > 0}
+				<div class="credit_ispay color-primary font6 text-right">
+					已支付余额 &yen;{$order['pay_credit']}
+				</div>
+				{/if}
+				<!--支付按钮-->
+				<div class="weui_opr_area">
+					<p class="weui_btn_area">
+						<button disabled class="weui_btn weui_btn_primary weui_btn_disabled btn_pay" data-order-price="{$order['price']}" data-currency="{$_W['member'][$setting['creditbehaviors']['currency']]}" data-pay-price="{php echo $_W['member'][$setting['creditbehaviors']['currency']] - $order['price']}" data-credit="0" data-pay-type="">确认支付</button>
+					</p>
+				</div>
+				<div class="prompt_wrap color-gray font6 text-center">
+					未支付的订单进入：我的=》我的订单=》待支付
+				</div>
+			</div>
+		</div>
+		{/if}
+	</div>
+</div>
+{template 'common/footer'}

@@ -1,0 +1,212 @@
+{template 'common/header'}
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data" id="setting-form">
+		<div class="panel panel-default">
+			
+			<div class="panel-body">
+				<ul class="nav nav-tabs" id="myTab">
+					<li class="active"><a href="#tab_basic"> 支付参数配置</a></li>
+					
+
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane  active" id="tab_basic">
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">红包发送方式</label>
+							<div class="col-sm-9 col-xs-12 alert alert-info">
+								<input type="radio" name="sendtype" {if $settings['sendtype']==0}checked{/if} value="0">企业付款
+								<input type="radio" name="sendtype" {if $settings['sendtype']==1}checked{/if} value="1">红包方式
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">公众账号 ID</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="appid" value="{$settings['appid']}" required="required" class="form-control"> <span class="help-block">微信公众号的appid</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">公众账号 appSecret</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="appSecret" required="required" value="{$settings['appSecret']}" class="form-control"> <span class="help-block">微信公众号的appSecret</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">商户号</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="mch_id" value="{$settings['mch_id']}" required="required" class="form-control"> <span class="help-block">微信支付商户号</span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">支付密钥</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="appkey" value="{$settings['appkey']}" class="form-control"> <span class="help-block">微信支付密钥</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">服务器IP{$yz}</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="ip" value="{$settings['ip']}" class="form-control"> 
+								<span class="help-block">如自动获取不对或者为空，请手动填写</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">红包活动名称</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="act_name" value="{$settings['act_name']}" class="form-control"> 
+								<span class="help-block">活动名称</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">红包备注信息</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="remark" value="{$settings['remark']}" class="form-control"> 
+								<span class="help-block">红包备注信息</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">红包祝福语</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="wishing" value="{$settings['wishing']}" class="form-control"> 
+								<span class="help-block">红包祝福语</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">红包发送者名称</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="send_name" value="{$settings['send_name']}" class="form-control"> 
+								<span class="help-block">红包发送者名称</span>
+							</div>
+						</div>
+						<div class="form-group"><label class="col-xs-12 col-sm-3 col-md-2 control-label" for="">apiclient_cert.pem</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" disabled value="{php echo $this->module['config']['apiclient_cert']}" />					
+                    </div>
+					<div class="col-sm-2">
+						<input type="file" class="form-control" name="apiclient_cert" />
+					</div>
+                </div>		
+                <div class="form-group"><label class="col-xs-12 col-sm-3 col-md-2 control-label" for="">apiclient_key.pem</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" disabled value="{php echo $this->module['config']['apiclient_key']}" />					
+                    </div>
+					<div class="col-sm-2">
+						<input type="file" class="form-control" name="apiclient_key" />
+					</div>
+                </div>
+                <div class="form-group">
+                	<label class="col-xs-12 col-sm-3 col-md-2 control-label" for="">rootca.pem</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" disabled value="{php echo $this->module['config']['rootca']}" />					
+                    </div>
+					<div class="col-sm-2">
+						<input type="file" class="form-control" name="rootca" />
+					</div>					
+					
+                </div>
+                <div class="row">
+				<span class="help-block col-md-offset-2" style="color: red;">上传证书前，在系统附件设置的【音频视频附件设置-支持文件后缀】中添加【pem】<a href="{php echo url('system/attachment')}">点此前往设置</a></span>
+				</div>
+<!-- 				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">管理员ID</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="id" value="{$settings['id']}" class="form-control"> <span class="help-block">添加主管理员ID，方便接收通知</span>
+					</div>					
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">入驻申请通知模板ID</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="tplid" value="{$settings['tplid']}" class="form-control"> <span class="help-block">新用户入驻申请，OPENTM401619203</span>
+					</div>
+				</div>-->
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">平台标题</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="title" value="{$settings['title']}" class="form-control"> <span class="help-block">展示在首页标题及分享标题</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">分享语</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="desc" value="{$settings['desc']}" class="form-control"> <span class="help-block">分享到好友时的分享语</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">分享图片</label>
+					<div class="col-sm-9 col-xs-12">
+						{php echo tpl_form_field_image('erweima',$settings['erweima']);}
+						<span class="help-block">卡券首页分享时的图片，200*200</span>
+					</div>
+				</div> 
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">使用说明</label>
+					<div class="col-sm-9 col-xs-12">
+						{php echo tpl_ueditor('content', $settings['content']);}
+						<span class="help-block">关于卡券汇的使用说明，字数不要太多。</span>
+					</div>
+				</div> 
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">领取成功跳转链接</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="text" name="href" value="{$settings['href']}" class="form-control"> <span class="help-block">用户领取卡券成功，点击确认后会跳转到此地址，方便对接其它模块 http://开头</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="" class="control-label col-md-2">是否显示排行榜</label>
+					<div class="col-md-9">
+						<input type="radio" name="rankshow" {if $settings['rankshow']==0}checked{/if} value="0">是
+						<input type="radio" name="rankshow" {if $settings['rankshow']==1}checked{/if} value="1">否
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">排行榜显示数量</label>
+					<div class="col-sm-9 col-xs-12">
+						<input type="number" name="ranknum" value="{$settings['ranknum']}" class="form-control"> <span class="help-block">设置排行榜显示前多少名</span>
+					</div>
+				</div>
+					</div>	
+				</div>
+				
+			</div>	
+		</div>
+		<div class="form-group col-sm-12"  style="position:fixed;bottom:10px;">
+			<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" /> 
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+<script>
+	require(
+	[ 'jquery', 'util' ], function($, u)
+	{
+		$(function()
+		{
+			$('#setting-form').submit(function()
+			{
+				var message = '';
+				if ($.trim($(':text[name=appid]').val()) == '')
+				{
+					message += '必须输入公众账号 ID<br>';
+				}
+				if ($.trim($(':text[name=mch_id]').val()) == '')
+				{
+					message += '必须输入“商户号”<br>';
+				}
+				if ($.trim($(':text[name=appkey]').val()) == '')
+				{
+					message += '必须输入密钥<br>';
+				}
+				
+
+				if (message)
+				{
+					u.message(message);
+					return false;
+				}
+				return true;
+			});
+		});
+	});
+</script>		
+{template 'common/footer'}

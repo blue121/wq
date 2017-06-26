@@ -1,0 +1,25 @@
+{template 'common/header'}{template 'tab'}<div class="main" style="background: white;">
+    <div style="padding:15px;">
+        <table class="table table-hover">
+            <thead class="navbar-inner">
+                <tr>
+                    <th>发布人</th>					
+                    <th>发布内容</th>
+                    <th style="width: 270px;">隐藏内容</th>					<th style="width: 80px;">发布价格</th>										<th style="width: 100px;">值了/巨坑</th>										<th style="width: 60px;">赚了</th>										<th>首页</th>										{if $this->module['config']['checked']}					<th>状态<br><font style="font-size: 12px;">(点击修改)</font></th>					{/if}										<th>发布时间</th>					
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {loop $news $l}
+                <tr>
+                    <td><img style="width: 80px;height: 80px;" src="{$l['avatar']}"><br>{$l['nickname']}</td>
+                    <td>{$l['words']}</td>                    {php $hw = unserialize($l['hideword']);}                    {if empty($hw)}                    <td>{$l['hideword']}</td>                    {else}                    <td class="m_img">                    {if $hw['word']}{$hw['word']}<br>{/if}                    	{loop $hw['links'] $v}						<p><a target="_blank" href="{$v['url']}">{$v['title']}</a></p>						{/loop}                    	{loop $hw['video'] $v}						<p><audio style="width: 100%;" controls="controls"><source src="{$v}" /> </audio></p>						{/loop}                    	{loop $hw['img'] $m}						<a href="{$m}" class="aimg"><img src="{$m}" style="width: 80px;height: 80px;"></a>						{/loop}						{if $hw['mp4']}						视频链接：{$hw['mp4']}						{/if}                    </td>                    {/if}                    <td>{$l['price']}</td>                                        <td>{$l['good']}/{$l['fail']}</td>                                        <td>{$l['all']}</td>                                        <td>{if $l['status']}<label class='label label-default'>不显示</label>{else}<label class='label label-success'>显示</label>{/if}</td>					{if $this->module['config']['checked']}					<td>{if !$l['checked']}<label onclick='onChecked(this,{$l["id"]})' class='label label-default'>待审核</label>{else}<label onclick='onChecked(this,{$l["id"]})' class='label label-success'>已审核</label>{/if}</td>					{/if}
+                    <td>{php echo date('Y-m-d H:i:s',$l['createtime'])}</td>
+                    <td>                    	<a href="{php echo $this->createWebUrl('order',array('nid'=>$l['id']));}" class="btn btn-default btn-sm">记录</a>                    	{if !$_GPC['openid']}<a onclick="onBlack({$l['id']})" style="background: black;" class="btn btn-primary btn-sm">拉黑</a>{/if}						<a href="{php echo $this->createWebUrl('del',array('nid'=>$l['id']));}" onclick="return confirm('删除数据后，将无法恢复数据，确定吗？')" class="btn btn-danger btn-sm">删除</a>
+                    </td>
+                </tr>
+                {/loop}
+            </tbody>
+        </table>{$pager}
+    </div>
+</div><link href="{RES}css/photoswipe.css" type="text/css" rel="stylesheet"><script type="text/javascript" src="{RES}js/klass.min.js"></script><script type="text/javascript"	src="{RES}js/code.photoswipe-3.0.5.min.js"></script><script>function onBlack(nid){	if(confirm('拉黑后该粉丝所有内容将不显示,确定吗？')){		$.ajax({			url:"{php echo $this->createWebUrl('black')}",			type:'post',			data:{nid:nid},			success:function(res){				if(res == '1'){					alert('拉黑成功!');					location.reload();				}			}		});	}}function onChecked(obj,nid){	$.ajax({		url:"{php echo $this->createWebUrl('check')}",		type:'post',		data:{nid:nid},		success:function(res){			if(res == '1'){				if($(obj).hasClass('label-default')){					$(obj).removeClass('label-default').addClass('label-success');					$(obj).text('已审核');				}else{					$(obj).removeClass('label-success').addClass('label-default');					$(obj).text('待审核');				}			}		}	});}(function(window, PhotoSwipe) {	document.addEventListener('DOMContentLoaded', function() {		var options = {}, instance = PhotoSwipe.attach(window.document				.querySelectorAll('.table .m_img a.aimg'), options);	}, false);}(window, window.Code.PhotoSwipe));</script>{template 'common/footer'}

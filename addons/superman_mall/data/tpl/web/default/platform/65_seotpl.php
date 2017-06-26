@@ -1,0 +1,43 @@
+<?php defined('IN_IA') or exit('Access Denied');?><div class="main">
+	<form class="form-horizontal form" id="setting_form" action="" method="post" enctype="multipart/form-data">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				SEO参数
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">标题（title）</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" name="seo[title]" value="<?php  echo $this->module['config']['seo']['title']?>"/>
+						<span class="help-block"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">关键字（keywords）</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" name="seo[keywords]" value="<?php  echo $this->module['config']['seo']['keywords']?>"/>
+						<span class="help-block"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">描述（description）</label>
+					<div class="col-sm-9">
+						<textarea class="form-control" name="seo[description]"><?php  echo $this->module['config']['seo']['description']?></textarea>
+						<span class="help-block"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input name="token" type="hidden" value="<?php  echo $_W['token'];?>" />
+			<input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交" />
+		</div>
+	</form>
+</div>
+<script>
+	require(['jquery', 'util'], function($){
+		$('#setting_form').submit(function(){
+			return true;
+		});
+	});
+</script>

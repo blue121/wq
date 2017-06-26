@@ -1,0 +1,14 @@
+.superpage_user .list-block {
+    margin: .5rem 0;
+}
+.superpage_user .user_avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+}
+.superpage_user .user_info_wrap {
+    padding-bottom: 2rem;
+}
+.superpage_user .user_info_wrap .user_info_log {
+    padding: .5rem
+}

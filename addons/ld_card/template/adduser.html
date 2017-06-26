@@ -1,0 +1,117 @@
+{template 'common/header'}
+<div class="main">
+	
+		<div class="panel panel-default">
+			
+			<div class="panel-body">
+				<ul class="nav nav-tabs" id="myTab">
+					<li ><a href="{php echo $this->createweburl('users');}"> 管理商户</a></li>
+					<li class="active"><a href="{php echo $this->createweburl('adduser');}"> 添加商户</a></li>				
+				</ul>
+			</div>
+			
+			<div class="tab-content">
+					<div class="tab-pane  active" id="tab_basic">
+						<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data" id="setting-form">
+
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">商户名</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="shopname" value="{$users['shopname']}" required="required" class="form-control"> <span class="help-block">比如商户店铺名,简称，控制在6个字以内最好，卡券首页只显示6个字</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">店主姓名</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="username" value="{$users['username']}" required="required" class="form-control"> <span class="help-block">联系人姓名</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">店主微信ID</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="openid" value="{$users['openid']}" required="required" class="form-control"> <span class="help-block">店主在本公众号下的openid <a href="{php echo url('mc/fans')}">点此查询openid</a></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">联系电话</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="tel" value="{$users['tel']}" required="required" class="form-control"> <span class="help-block">真实的，方便联系</span>
+							</div>
+						</div>						
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">店铺地址</label>
+							<div class="col-sm-9 col-xs-12">
+								<input type="text" name="add" value="{$users['add']}" required="required" class="form-control"> <span class="help-block">店铺详细地址，只为方便管理商家使用，前台不显示</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">店铺LOGO</label>
+							<div class="col-sm-9 col-xs-12">
+								{php echo tpl_form_field_image('logo',$users['logo']);} 
+								<span class="help-block">展示在手机端卡券列表上，200*200以内，首页以圆形显示 </span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">相关证件</label>
+							<div class="col-sm-9 col-xs-12">
+								{php echo tpl_form_field_multi_image('yyzz',json_decode($users['yyzz'],true));} 
+								<span class="help-block">营业执照</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-xs-12 col-sm-3 col-md-2 control-label">店铺位置</label>
+							<div class="col-sm-9 col-xs-12">
+									<div class="input-group">
+									<span class="input-group-addon">经度</span> <input type="text" name="lng" value="{$users['lng']}" class="form-control">
+									<span class="input-group-addon">纬度</span> <input type="text" name="lat" value="{$users['lat']}" class="form-control">
+									<span class="input-group-btn"><a href="javascript:" class="btn btn-primary" id="map">选取地址</a> </span>
+									</div>
+									<span class="help-block">用于展示商家的实际位置坐标，请尽量精确</span>
+							</div>
+						</div>
+			<div class="form-group col-sm-12">
+				<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" /> 
+				<input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+			</form>
+		</div>
+
+	</div>		
+</div>
+</div>
+
+
+<script>
+require(['jquery','util'], function($, util){
+	$(function(){
+		$('#map').click(function(){
+			util.map({lng: $("input[name='lng']").val(),lat: $("input[name='lat']").val()}, function(location){
+				$("input[name='lng']").val(location.lng);
+				$("input[name='lat']").val(location.lat);
+				// util.message("lng: "+location.lng +";lat: "+location.lat+";label: "+location.label);
+			});
+		});
+	});
+});
+	
+	
+	function displayUrl(lurl,img) {
+		require(['jquery', 'util'], function($, u) {
+
+			var content = '<p class="form-control-static" style="word-break:break-all">结果: <br>' + lurl + '</p>';
+								
+			var footer ='<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>' +'<button type="button" class="btn btn-primary">复制</button>';
+			var diaobj = u.dialog('查看', content, footer);
+			diaobj.find('.btn-default').click(function() {
+				diaobj.modal('hide');
+			});
+			diaobj.on('shown.bs.modal', function(){
+				u.clip(diaobj.find('.btn-primary')[0], lurl);
+			});
+			diaobj.modal('show');
+		});
+	}
+				
+</script>
+
+{template 'common/footer'}

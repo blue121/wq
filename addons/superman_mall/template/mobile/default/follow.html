@@ -1,0 +1,59 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+		{template 'common/nav'}
+		{if $act == 'display'}
+		{template 'common/title'}
+		<div class="content infinite-scroll" data-flag="0" data-display-url="{php echo $this->createMobileUrl('follow', array('load' => 'infinite'))}" data-detail-url="{php echo $this->createMobileUrl('detail', array('act' => 'display'))}" data-distance="50" data-page="{$pindex}">
+			<div class="list-block media-list item_list">
+				{if $list}
+				<ul>
+					{loop $list $li}
+					<li>
+						<a href="{php echo $this->createMobileUrl('detail', array('itemid' => $li['id']))}" class="item-content {SUPERMAN_EXTERNAL}" data-no-cache="true">
+							<div class="item-media">
+								<img class="img_square1" src="{php echo tomedia($li['cover'])}">
+							</div>
+							<div class="item-inner">
+								<div class="item-title-row">
+									<div class="item-title color-default font7">{$li['title']}</div>
+								</div>
+								<div class="item-text font8 color-warning">&#165;{$li['price']}</div>
+								<!--<div class="item-text font6 color-gray">
+									<span>好评100%</span>
+									<span>688人</span>
+								</div>-->
+							</div>
+						</a>
+					</li>
+					{/loop}
+				</ul>
+				{else}
+				<div class="text-center color-gray font7 msg_tips">
+					{if $_W['member']['uid']}
+					<span>没有关注商品</span>
+					<div class="content-padded">
+						<div class="row">
+							<div class="col-100">
+								<a href="{php echo $this->createMobileUrl('home')}" class="button button-dark">去首页逛逛</a>
+							</div>
+						</div>
+					</div>
+					{else}
+					<span>登录后可查看关注商品</span>
+					<a href="{php echo url('auth/login', array('forward' => base64_encode($_SERVER['QUERY_STRING'])))}" class="external">登录</a>
+					{/if}
+				</div>
+				{/if}
+				<div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+			</div>
+			{if count($list)==$pagesize}
+			<div class="infinite-scroll-preloader">
+				<div class="preloader"></div>
+			</div>
+			{/if}
+		</div>
+		{/if}
+	</div>
+</div>
+{template 'common/footer'}

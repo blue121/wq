@@ -1,0 +1,18 @@
+{template 'common/header'}
+{if $act=='display' || $act=='setting'}
+<ul class="nav nav-tabs">
+    <li class="{if $act=='display'}active{/if}"><a href="{php echo $this->createWebUrl('mgroupon')}">拼团</a></li>
+    <li class="{if $act=='setting'}active{/if}"><a href="{php echo $this->createWebUrl('mgroupon', array('act' => 'setting'))}">参数设置</a></li>
+    {if $act=='display'}
+    <div class="pull-right">
+        <a href="{php echo $this->createWebUrl('mgroupon', array('act' => 'post'))}" class="btn btn-primary add_btn" role="button" target="_blank">添加</a>
+    </div>
+    {/if}
+</ul>
+{/if}
+{if is_error($plugin_permission)}
+<div class="alert alert-danger">{$plugin_permission['message']}</div>
+{else}
+{template $this->do.'/'.$this->act}
+{/if}
+{template 'common/footer'}

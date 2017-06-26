@@ -1,0 +1,81 @@
+.main_wrap .checkout_person {
+    width:170px;
+    display: block;
+    line-height: 60px;
+}
+.main_wrap .checkout_person img {
+    width:60px;
+    height: 60px;
+}
+/*É¨ÂëºËÏúÔ±*/
+.card_flow_box {
+    border: 1px solid #e7e7eb;
+    overflow: hidden;
+}
+.card_flow {
+    position: relative;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+.card_flow .flow_item {
+    position: relative;
+    width: 49%;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 0 45px;
+}
+.card_flow .flow_order {
+    position: absolute;
+    left: 10px;
+    top: 0;
+    font-family: Arial,Helvertica,sans-serif;
+    line-height: 76px;
+    font-style: italic;
+    font-size: 120px;
+    font-weight: bold;
+    color: #eee;
+    z-index: 1;
+}
+.card_flow .flow_title {
+    position: relative;
+    z-index: 2;
+    margin-top: 54px;
+    margin-bottom: 1em;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: left;
+}
+.card_flow .flow_content {
+    min-height: 104px;
+    text-align: left;
+    color: #555;
+}
+.methods_exp_qrcode {
+    padding: .5em .5em .5em 0;
+    overflow: hidden;
+}
+.methods_exp_img {
+    height: 90px;
+    margin-right: .5em;
+    float: left;
+}
+.methods_exp_qr_txt {
+    margin-top: 3em;
+}
+.methods_exp_qr_txt p {
+    margin-bottom: 0;
+}
+.card_flow .flow_item:after {
+    position: absolute;
+    width: 1px;
+    border-right: 1px solid #e7e7eb;
+    right: 0;
+    top: 70px;
+    height: 124px;
+    content: " ";
+}
+.card_flow .last-child:after {
+    border: 0;
+}

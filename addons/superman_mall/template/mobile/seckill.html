@@ -1,0 +1,108 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+		{template 'common/nav'}
+		{if $act == 'display'}
+		<div class="content infinite-scroll" data-distance="50" data-page="1" data-url="{php echo $this->createMobileUrl('seckill', array('load' => 'infinite', 'type' => $type))}" data-item-url="{php echo $this->createMobileUrl('detail')}">
+			<div class="card seckill_nav_wrap">
+				<div class="card-content">
+					<div class="list-block media-list">
+						<ul>
+							<li>
+								<div class="item-inner row no-gutter text-center list_nav">
+									{if $time_group}
+									{loop $time_group $k $time}
+									<div class="col-25">
+										<a href="{php echo $this->createMobileUrl('seckill', array('type' => $k))}" class="external color-default font7 {if $type == $k}active{/if}">
+											{php echo date('H:i', $time)}场
+											{if TIMESTAMP > $time && TIMESTAMP < $time+14399}
+											<span class="font6">进行中</span>
+											{else if TIMESTAMP < $time}
+											<span class="font6">等待中</span>
+											{else}
+											<span class="font6">已结束</span>
+											{/if}
+										</a>
+									</div>
+									{/loop}
+									{/if}
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			{if $list}
+			<div class="card seckill_wrap">
+				<div class="card-content">
+					<div class="list-block media-list list_wrap">
+						<ul>
+							{loop $list $li}
+                            {if $li['status'] == "1"}
+                            <li>
+                                <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $li['id']))}" class="item-content external">
+                                    <div class="item-media">
+                                        <img class="img_square1" src="{$li['cover']}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'"/>
+                                    </div>
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title color-default font7 text-overflow-line2">{$li['title']}</div>
+                                        </div>
+                                        <div class="item-subtitle color-danger font8">
+                                            &#165;{$li['price']} <span class="seckill_title">秒杀价</span>
+                                        </div>
+                                        <div class="item-subtitle color-gray font6">
+                                            <div class="pull-left">
+                                                <span class="text-delete-line">&#165;{$li['market_price']}</span>
+                                                {if $li['starttime'] <= TIMESTAMP && $li['sales'] != 0}
+                                                <span>&nbsp;已售{$li['sale_percent']}%</span>
+                                                {/if}
+                                            </div>
+                                            <div class="pull-right">
+                                                {if $li['starttime'] > TIMESTAMP || $seckill_time != $li['seckill_time']}
+                                                <button class="button button-warning">未开始</button>
+                                                {else if $li['endtime'] < TIMESTAMP}
+                                                <button class="button button-dark">已结束</button>
+                                                {else if $li['total'] == 0}
+                                                <button class="button button-dark">已抢完</button>
+                                                {else if $seckill_time == $li['seckill_time']}
+                                                <button class="button button-danger">去抢购</button>
+                                                {/if}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            {/if}
+							{/loop}
+						</ul>
+					</div>
+				</div>
+			</div>
+			{else}
+			<div class="text-center color-gray font7 msg_tips">
+				<span>该时间段暂时没有秒杀活动，请稍后查看</span>
+				<div class="content-padded">
+					<div class="row">
+						<div class="col-50">
+							<a href="{php echo $this->createMobileUrl('home')}" class="button button-dark">去首页逛逛</a>
+						</div>
+						<div class="col-50">
+							<a href="{php echo $this->createMobileUrl('follow')}" class="button button-dark">看看关注</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			{/if}
+			<div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+			{if count($list)==$pagesize}
+			<div class="infinite-scroll-preloader">
+				<div class="preloader"></div>
+			</div>
+			{/if}
+		</div>
+		{/if}
+		{template 'common/share'}
+	</div>
+</div>
+{template 'common/footer'}

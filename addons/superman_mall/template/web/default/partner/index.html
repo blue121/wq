@@ -1,0 +1,19 @@
+{template 'header'}
+<ul class="nav nav-tabs">
+	<li {if $act == 'overview'}class="active"{/if}><a href="{php echo $this->createWebUrl('partner', array('act' => 'overview'));}">分销概况</a></li>
+	<li {if $act == 'display' && $op == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('partner', array('act' => 'display', 'op' => 'display'));}">分销商</a></li>
+	<li {if $act == 'group' && $op == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('partner', array('act' => 'group', 'op' => 'display'));}">分销等级</a></li>
+	<li {if $act == 'commission' && $op == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('partner', array('act' => 'commission', 'op' => 'display'));}">佣金管理</a></li>
+	<li {if $act == 'getcash' && $op == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('partner', array('act' => 'getcash', 'op' => 'display'));}">提现管理</a></li>
+	<li {if $act == 'setting'}class="active"{/if}><a href="{php echo $this->createWebUrl('partner', array('act' => 'setting'));}">参数设置</a></li>
+	<li {if ($act == 'ranking' && $op == 'display_partner') || ($act == 'ranking' && $op == 'display_commission')}class="active"{/if}><a href="{php echo $this->createWebUrl('partner', array('act' => 'ranking', 'op' => 'display_partner'));}">佣金排行</a></li>
+	<li {if $act == 'poster'}class="active"{/if}><a href="{php echo $this->createWebUrl('partner', array('act' => 'poster'));}">分销海报</a></li>
+	{if $act == 'group' && $op == 'post'}<li class="active"><a href="{php echo $this->createWebUrl('partner', array('act' => 'group', 'op' => 'post', 'id' => $_GPC['id']));}">{if !$_GPC['id']}添加{else}编辑{/if}</a></li>{/if}
+	{if $act == 'commission' && $op == 'post'}<li class="active"><a href="{php echo $this->createWebUrl('partner', array('act' => 'commission', 'op' => 'post', 'id' => $_GPC['id']));}">编辑</a></li>{/if}
+	{if $act == 'display' && $op == 'post'}<li class="active"><a href="{php echo $this->createWebUrl('partner', array('act' => 'display', 'op' => 'post'));}">编辑</a></li>{/if}
+	{if $act == 'getcash' && $op == 'post'}<li class="active"><a href="{php echo $this->createWebUrl('partner', array('act' => 'getcash', 'op' => 'post', 'id' => $id));}">编辑</a></li>{/if}
+	{if $act == 'ranking' && $op == 'post_partner'}<li class="active"><a href="{php echo $this->createWebUrl('partner', array('act' => 'ranking', 'op' => 'post_partner', 'id' => $_GPC['id']));}">{if !$_GPC['id']}添加{else}编辑{/if}</a></li>{/if}
+	{if $act == 'ranking' && $op == 'post_commission'}<li class="active"><a href="{php echo $this->createWebUrl('partner', array('act' => 'ranking', 'op' => 'post_commission', 'id' => $_GPC['id']));}">{if !$_GPC['id']}添加{else}编辑{/if}</a></li>{/if}
+</ul>
+{template 'partner/'.$act}
+{template 'footer'}

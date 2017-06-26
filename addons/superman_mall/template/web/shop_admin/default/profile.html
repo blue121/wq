@@ -1,0 +1,240 @@
+{template 'common/header'}
+<div class="main">
+	<form class="form-horizontal form modify_password" id="setting_form" action="" method="post">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				修改密码
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">原密码</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<input type="password" class="form-control" name="oldpassword">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">新密码</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<input type="password" class="form-control" name="newpassword">
+						<span class="help-block">6-16位密码（大小写英文字母、数字以及下划线）</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">确认密码</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<input type="password" class="form-control" name="newpassword2">
+					</div>
+				</div>
+				<div class="col-sm-6 col-md-8 col-xs-12 col-md-offset-2" style="padding-left: 0">
+					<input type="hidden" name="token" value="{$_W['token']}" />
+					<input type="submit" class="btn btn-primary" name="submit" value="修改密码">
+				</div>
+			</div>
+		</div>
+	</form>
+	<form class="form-horizontal form" action="" method="post">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				账号信息
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">账号</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<input type="text" class="form-control" value="{php echo $this->shop_user['username']}" disabled>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">身份</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<select class="form-control" disabled>
+							<option>{$user_group['title']}</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">状态</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<select class="form-control" disabled name="">
+							{if $this->shop_user['status'] == 1}
+							<option>正常</option>
+							{else if $this->shop_user['status'] == 2}
+							<option>禁用</option>
+							{else if $this->shop_user['status'] == 0}
+							<option>待审核</option>
+							{/if}
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">有效期</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<span style="height: 34px; line-height: 34px;">
+							{php echo date('Y-m-d H:i:s', $this->shop_user['dateline'])} ~ {if $this->shop_user['expiretime']}{php echo date('Y-m-d H:i:s', $this->shop_user['expiretime'])}{else}永久{/if}
+						</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">当前登录时间</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<span style="height: 34px; line-height: 34px;">
+						{if $this->shop_user['currentvisit']}{php echo date('Y-m-d H:i:s', $this->shop_user['currentvisit'])}{/if}
+						</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">当前登录IP</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<span style="height: 34px; line-height: 34px;">
+							{php echo $this->shop_user['currentip']}
+						</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">上次登录时间</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<span style="height: 34px; line-height: 34px;">
+						{if $this->shop_user['lastvisit']}{php echo date('Y-m-d H:i:s', $this->shop_user['lastvisit'])}{/if}
+						</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">上次登录IP</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<span style="height: 34px; line-height: 34px;">
+							{php echo $this->shop_user['lastip']}
+						</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">注册时间</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<span style="height: 34px; line-height: 34px;">
+							{php echo date('Y-m-d H:i:s', $this->shop_user['dateline'])}
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<form class="form-horizontal form" action="" method="post">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				绑定微信账号
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">微信头像/昵称</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<div class="clear">
+							{if isset($user_info)}
+							<div class="pull-left" style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+								<img src="{$user_info['avatar']}" onerror="this.src='{$_W['siteroot']}/app/resource/images/heading.jpg'" style="width: 100%">
+							</div>
+							<div class="pull-left" style="line-height: 40px; margin-left: 5px; width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{$user_info['nickname']}">
+								{$user_info['nickname']}
+							</div>
+							<div class="pull-left" style="line-height: 40px; margin-left: 5px; width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+								<a href="{php echo $this->createWebUrl('profile', array('act' => 'unbinding'));}" class="btn btn-danger" title="解除绑定">解除绑定</a>
+							</div>
+							{else}
+							<div class="pull-left" style="line-height: 40px; margin-left: 5px; width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+								<a href="#" data-toggle="modal" class="bind_account btn btn-success" data-target=".bind_account_modal" data-url="{php echo $this->createWebUrl('profile', array('act' => 'qrcode'));}" title="绑定账号">绑定账号</a>
+
+							</div>
+							{/if}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal fade bind_account_modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog ">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				<h4 class="modal-title">绑定微信账号</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group text-center" style="min-height: 35px; line-height: 35px;">
+					<img class="img_qrcode"  onerror="this.src='{php echo $this->superman_placeholder}'" style="width: 200px; height: 200px;"/>
+					<div>请用微信扫一扫二维码，有效期为5分钟</div>
+					<div id="check_info" style="display: none"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	require(['jquery', 'bootstrap'],function($){
+		$('.modify_password').submit(function(){
+			var oldpassword = $('input[name=oldpassword]');
+			var newpassword = $('input[name=newpassword]');
+			var newpassword2 = $('input[name=newpassword2]');
+			if (oldpassword.val() == '') {
+				util.message('原密码为空，请重新输入！', '', 'error');
+				return false;
+			}
+			if (newpassword.val() == '') {
+				util.message('新密码为空，请重新输入！', '', 'error');
+				return false;
+			}
+			var re = new RegExp(/^\w{6,16}$/i);
+			if (!re.test(newpassword.val())) {
+				util.message('新密码不合法，请重新输入！', '', 'error');
+				return false;
+			}
+			if (newpassword.val() != newpassword2.val()) {
+				util.message('两次输入的密码不一致，请重新输入！', '', 'error');
+				return false;
+			}
+			return true;
+		});
+		$('.bind_account').click(function () {
+			$('#check_info').html('');
+			var t = this;
+			var url = $(t).attr('data-url');
+			$.ajax({
+				type: 'post',
+				url: url,
+				success: function (resp) {
+					$('.img_qrcode').attr('src', resp);
+					setTimeout(function(){
+						checkBinding();
+					}, 3000);
+					setTimeout(function(){
+						window.location.reload();
+					}, 5*60*1000); //重载页面
+				}
+			});
+		});
+		var checkBinding = function(){
+			$.ajax({
+				type: 'get',
+				url: '{php echo $this->createWebUrl("profile", array("act" => "check_binding"))}',
+				success: function(response) {
+					if (response == 'succeed') {
+						var html = '<span class="fa fa-check-circle" style="color: #09BB07"></span> 绑定成功，10秒后刷新页面！';
+						$('#check_info').html(html).fadeIn();
+						setTimeout(function(){
+							window.location.reload();
+						}, 10000);
+					} else if (response == 'repeated') {
+						var html = '<span class="fa fa-times-circle" style="color: #d9534f"></span> 不允许重复绑定！';
+						$('#check_info').html(html).fadeIn();
+					} else if (response == 'repeated') {
+						var html = '<span class="fa fa-check-circle" style="color: #09BB07"></span> 扫描成功，请在微信中点击确认！';
+						$('#check_info').html(html).fadeIn();
+					} else {
+						setTimeout(function(){
+							checkBinding();
+						}, 2000);
+					}
+				}
+			});
+		};
+	});
+</script>
+{template 'common/footer'}

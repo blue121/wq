@@ -1,0 +1,17 @@
+	<script type="text/javascript">
+		require(['bootstrap']);
+		$('.js-clip').each(function(){
+			util.clip(this, $(this).attr('data-url'));
+		});
+	</script>
+	<div class="container-fluid footer" role="footer">
+		<div class="page-header"></div>
+		<span class="pull-left">
+			<p>{if $_W['setting']['copyright']['footerleft']}{$_W['setting']['copyright']['footerleft']}{/if}</p>
+		</span>
+		<span class="pull-right">
+			<p>{if $_W['setting']['copyright']['footerright']}{$_W['setting']['copyright']['footerright']}{/if}</p>
+		</span>
+	</div>
+</body>
+</html>

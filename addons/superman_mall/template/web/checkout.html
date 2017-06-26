@@ -1,0 +1,377 @@
+{template 'web/header'}
+{template 'web/common/shop-nav'}
+<style>
+	.star {
+		color: red;
+		margin-right: 5px;
+		font-weight: bold;
+	}
+</style>
+<ul class="nav nav-tabs">
+	<li {if $act == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('checkout', array('act' => 'display'));}">核销记录</a></li>
+	<li {if $act == 'qrcode'}class="active"{/if}><a href="{php echo $this->createWebUrl('checkout', array('act' => 'qrcode'));}">扫码核销</a></li>
+	<li {if $act == 'oneself'}class="active"{/if}><a href="{php echo $this->createWebUrl('checkout', array('act' => 'oneself'));}">自助核销</a></li>
+</ul>
+{if $act=='display'}
+<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="" method="post" class="form-horizontal" role="form">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">订单号</label>
+				<div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+					<input class="form-control" name="ordersn" type="text" value="{$_GPC['ordersn']}" placeholder="支持模糊搜索">
+				</div>
+				<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i>搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="panel panel-default">
+	<div class="table-responsive panel-body">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th width="130">订单号</th>
+					<th width="160">头像/昵称</th>
+					<th width="160">核销方式</th>
+					<th width="160">核销员</th>
+					<th>备注</th>
+					<th width="160" class="text-right">核销时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				{if $list}
+				{loop $list $li}
+				<tr>
+					<td>{$li['ordersn']}</td>
+					<td>
+						<div class="clear">
+							<div class="pull-left" style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+								<img src="{$li['member']['avatar']}" onerror="this.src='{$_W['siteroot']}/app/resource/images/heading.jpg'" style="width: 100%">
+							</div>
+							<div class="pull-left" style="line-height: 40px; margin-left: 5px; width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{$li['member']['nickname']}">
+								{$li['member']['nickname']}
+							</div>
+						</div>
+					</td>
+					<td>{$li['type']}</td>
+					<td>
+						<div class="clear">
+							{if isset($li['code'])}
+							<div class="pull-left" style="line-height: 40px; white-space: normal;  width: 132px;height: 40px; overflow: hidden; ">
+								验证码({$li['code']})
+							</div>
+							{else}
+							<div class="pull-left" style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+								<img src="{$li['user']['avatar']}" onerror="this.src='{$_W['siteroot']}/app/resource/images/heading.jpg'" style="width: 100%">
+							</div>
+							<div class="pull-left" style="line-height: 40px; margin-left: 5px; width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{$li['user']['nickname']}">
+								{$li['user']['nickname']}
+							</div>
+							{/if}
+						</div>
+					</td>
+					<td style="white-space: normal;">
+						{$li['remark']}
+					</td>
+					<td class="text-right">{$li['dateline']}</td>
+				</tr>
+				{/loop}
+				{/if}
+			</tbody>
+		</table>
+	</div>
+</div>
+{$pager}
+{else if $act == 'qrcode'}
+{if $_GPC['op'] == 'post'}
+<div class="main">
+	<form class="form-horizontal form" action="" method="post">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				添加核销员
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="star">*</span>粉丝编号</label>
+					<div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+						<input class="form-control" name="openid" type="text" value="">
+						<span class="help-block">粉丝编号为一组随机字符串 </span>
+					</div>
+					<div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+						<a href="{php echo wurl('mc/fans');}" target="_blank" class="btn btn-default"><i class="fa fa-search"></i>查编号</a>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">备注</label>
+					<div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+						<textarea class="form-control" name="remark"></textarea>
+						<span class="help-block"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交">
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+<script>
+	$('form').submit(function(){
+		var title = $('input[name=openid]');
+		if (title.val() == '') {
+			util.message('粉丝编号为空，请重新填写', '', 'error');
+			return false;
+		}
+		return true;
+	});
+</script>
+{else}
+<style>
+	.card_flow_box {
+		border: 1px solid #e7e7eb;
+		overflow: hidden;
+	}
+	.card_flow {
+		position: relative;
+		margin-bottom: 10px;
+		overflow: hidden;
+	}
+	.card_flow .flow_item {
+		position: relative;
+		width: 49%;
+		display: inline-block;
+		vertical-align: top;
+		text-align: center;
+		box-sizing: border-box;
+		padding: 0 45px;
+	}
+	.card_flow .flow_order {
+		position: absolute;
+		left: 10px;
+		top: 0;
+		font-family: Arial,Helvertica,sans-serif;
+		line-height: 76px;
+		font-style: italic;
+		font-size: 120px;
+		font-weight: bold;
+		color: #eee;
+		z-index: 1;
+	}
+	.card_flow .flow_title {
+		position: relative;
+		z-index: 2;
+		margin-top: 54px;
+		margin-bottom: 1em;
+		font-size: 20px;
+		font-weight: bold;
+		text-align: left;
+	}
+	.card_flow .flow_content {
+		min-height: 104px;
+		text-align: left;
+		color: #555;
+	}
+	.methods_exp_qrcode {
+		 padding: .5em .5em .5em 0;
+		 overflow: hidden;
+	 }
+	 .methods_exp_img {
+		height: 90px;
+		margin-right: .5em;
+		float: left;
+	}
+	.methods_exp_qr_txt {
+		margin-top: 3em;
+	}
+	.methods_exp_qr_txt p {
+		margin-bottom: 0;
+	}
+	.card_flow .flow_item:after {
+		position: absolute;
+		width: 1px;
+		border-right: 1px solid #e7e7eb;
+		right: 0;
+		top: 70px;
+		height: 124px;
+		content: " ";
+	}
+	.card_flow .last-child:after {
+		border: 0;
+	}
+</style>
+<div class="card_flow_box">
+	<div class="card_flow">
+		<div class="flow_item">
+			<span class="flow_order">1</span>
+			<h2 class="flow_title">店员关注“{$_W['uniaccount']['name']}”公众号</h2>
+			<div class="flow_content">
+				<p>店员须关注“{$_W['uniaccount']['name']}”公众号，才能配置核销权限。</p>
+				<div class="methods_exp_qrcode">
+					<img class="methods_exp_img" src="{php echo tomedia('qrcode_'.$_W['acid'].'.jpg');}?time={TIMESTAMP}">
+					<div class="methods_exp_qr_txt">
+						<p>扫描二维码</p>
+						<p>关注“{$_W['uniaccount']['name']}”</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="flow_item last-child">
+			<span class="flow_order">2</span>
+			<h2 class="flow_title">添加核销权限</h2>
+			<div class="flow_content">
+				<p>管理员须在本页面为店员添加核销权限，添加了核销权限的核销员可以在“{$_W['uniaccount']['name']}”公众号内进行订单核销。</p>
+				<p>打开手机微信，进入公众号超级商城=》我的=》扫码核销</p>
+			</div>
+		</div>
+	</div>
+</div>
+<a href="{php echo $this->createWebUrl('checkout', array('act' => 'qrcode', 'op' => 'post'));}" type="button" class="btn btn-default" style="margin-top: 1rem">
+	<span class="fa fa-plus"></span>
+	添加核销员
+</a>
+<div class="panel panel-default" style="margin-top: 1rem">
+	<div class="table-responsive panel-body">
+		<table class="table table-hover">
+			<thead>
+			<tr>
+				<th width="160">核销员</th>
+				<th>备注</th>
+				<th width="100" class="text-right">操作</th>
+			</tr>
+			</thead>
+			<tbody>
+				{if $list}
+				{loop $list $li}
+				<tr>
+					<td>
+						<div class="clear">
+							<div class="pull-left" style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+								<img src="{$li['avatar']}" onerror="this.src='{$_W['siteroot']}/app/resource/images/heading.jpg'" style="width: 100%">
+							</div>
+							<div class="pull-left" style="line-height: 40px; margin-left: 5px; width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{$li['nickname']}">
+								{$li['nickname']}
+							</div>
+						</div>
+					</td>
+					<td style="white-space: normal;">
+						{$li['remark']}
+					</td>
+					<td class="text-right">
+						<a onclick="return confirm('此操作不可恢复，确认吗？'); return false;" href="{php echo $this->createWebUrl('checkout' ,array('act' => 'qrcode', 'op' => 'delete', 'id' => $li['id']))}" class="btn btn-default btn-danger btn_cancel">取消权限</a>
+					</td>
+				</tr>
+				{/loop}
+				{/if}
+			</tbody>
+		</table>
+	</div>
+</div>
+{$pager}
+{/if}
+{else if $act == 'oneself'}
+{if $_GPC['op'] == 'post'}
+<div class="main">
+	<form class="form-horizontal form" action="" method="post">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				添加验证码
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="star">*</span>名称</label>
+					<div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+						<input class="form-control" name="title" type="text" value="{$row['title']}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="star">*</span>验证码</label>
+					<div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+						<input class="form-control" name="code" type="text" value="{$row['code']}">
+						<span class="help-block">推荐使用3到6位数字</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-3 col-md-2 control-label">备注</label>
+					<div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+						<textarea class="form-control" name="remark">{$row['remark']}</textarea>
+						<span class="help-block"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交">
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+<script>
+	$('form').submit(function(){
+		var title = $('input[name=title]');
+		if (title.val() == '') {
+			util.message('名称为空，请重新填写', '', 'error');
+			return false;
+		}
+		var title = $('input[name=code]');
+		if (title.val() == '' || title.val() == 0) {
+			util.message('验证码为0或空，请重新填写', '', 'error');
+			return false;
+		}
+		return true;
+	});
+</script>
+{else}
+<div class="alert alert-info">
+	<strong class="text-danger"><i class="fa fa-info-circle"></i> 自助核销是一种低成本的核销方式，顾客到店可以自助核销，适合不具备扫描核销条件的商户使用。</strong><br>
+	1.配置验证码；<br>
+	2.将验证码告知店员；<br>
+	3.店员用验证码核销；<br>
+</div>
+<a href="{php echo $this->createWebUrl('checkout', array('act' => 'oneself', 'op' => 'post'));}" type="button" class="btn btn-default" style="margin-bottom: 1rem">
+	<span class="fa fa-plus"></span>
+	添加验证码
+</a>
+<div class="panel panel-default">
+	<div class="table-responsive panel-body">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th width="180">名称</th>
+					<th width="160">验证码</th>
+					<th>备注</th>
+					<th width="165">创建时间</th>
+					<th width="90" class="text-right">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{if $list}
+				{loop $list $li}
+				<tr>
+					<td>{$li['title']}</td>
+					<td>{$li['code']}</td>
+					<td style="white-space: normal;">
+						{$li['remark']}
+					</td>
+					<td>{$li['dateline']}</td>
+					<td class="text-right">
+						<div class="btn-group">
+							<a title="编辑" href="{php echo $this->createWebUrl('checkout', array('act' => 'oneself', 'op' => 'post', 'id' => $li['id']))}" class="btn btn-default btn-sm"><i class="fa fa-edit"></i> </a>
+							<a onclick="return confirm('此操作不可恢复，确认吗？'); return false;" href="{php echo $this->createWebUrl('checkout', array('act' => 'oneself', 'op' => 'delete', 'id' => $li['id']))}" title="删除" class="btn btn-default btn-sm"><i class="fa fa-times"></i> </a>
+						</div>
+					</td>
+				</tr>
+				{/loop}
+				{/if}
+			</tbody>
+		</table>
+	</div>
+</div>
+{$pager}
+{/if}
+{/if}
+{template 'web/footer'}

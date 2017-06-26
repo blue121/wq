@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{$_W['account']['name']}</title>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" href="{RES}css/style.css?i={TIMESTAMP}">
+<link rel="stylesheet" href="{RES}css/weui.css?i={TIMESTAMP}">
+<script src="../app/resource/js/lib/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="{RES}js/sweetalert.min.js"></script>
+<link rel="stylesheet" href="{RES}css/sweetalert.css?i={TIMESTAMP}">
+</head>
+<body class="pace-done">
+	<div class="hd">
+		<h1 class="page_title">
+			<img style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden;"
+				src="{$fans['avatar']}">
+		</h1>
+	</div>
+	<div class="weui_cells weui_cells_split">
+		<div class="weui_cell">
+			<div class="weui_cell_bd weui_cell_primary">
+				<p>微信昵称</p>
+			</div>
+			<div class="weui_cell_ft">{$fans['nickname']}</div>
+		</div>
+		<div class="weui_cell">
+			<div class="weui_cell_bd weui_cell_primary">
+				<p>当前金额</p>
+			</div>
+			<div class="weui_cell_ft">{$credit} {if $wpay>0}(需手续费 {$wpay}){/if}</div>
+		</div>
+		<div class="weui_cells weui_cells_access" style="margin: 0;">
+			<a href="{php echo $this->createMobileUrl('record',array('pid'=>$pid))}"
+				class="weui_cell">
+				<div class="weui_cell_bd weui_cell_primary">
+					<p>提现记录</p>
+				</div>
+				<div class="weui_cell_ft"></div>
+			</a>
+		</div>
+	</div>
+	<a class="weui_btn weui_btn_primary" onclick="withdraw()" style="margin: 0 10px;margin-top: 20px;margin-bottom: 50px;">立即提现</a>
+	{template 'share'}
+	{template 'footer'}
+<script type="text/javascript">
+var haswith = 0;
+function withdraw(){
+	{if $cfg['min_limit'] > $credit - $wpay}
+		swal("","满{$cfg['min_limit']}元才可提现，加油吧，亲！",'warning');
+		return;
+	{/if}
+	if(haswith > 0) return;
+	haswith++;
+	$.ajax({
+		url:"{php echo $this->createMobileUrl('withdraw')}",
+		type:'post',
+		success:function(data){
+			data = JSON.parse(data);
+			if(data['code'] == '1'){
+				swal({
+					title:'提现成功！',
+					text: data['msg'], 
+					type:'success'
+				},function(){
+					location.reload();
+				}); 
+			}else{
+				swal("提现失败",data['msg'],'error');
+				haswith = 0;
+			}
+		}
+	});
+	
+}
+</script>
+</body>
+</html>

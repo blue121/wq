@@ -1,0 +1,113 @@
+{template "common/header"}
+<style type="text/css">
+	body{
+		padding: 0px 10px 0px 10px;
+		background: #e6e6e6;
+	}
+	.containar{
+		padding:15px;
+		margin:5px;
+
+	}
+	.mui-input-row{
+		border-bottom:1px solid #e6e6e6;
+		margin-bottom:5px;
+	}
+	#nickname{
+		margin:5px 10px;
+	}
+	#avatar{
+		margin-top:30px;
+	}
+	.lat{
+		display: none;
+	}
+</style>
+<div class="containar">
+	<header id="header" style="background: #fff;" class="mui-bar mui-bar-nav">
+	<a href="javascript:window.history.back(-1);" class="mui-action-back mui-btn mui-btn-blue mui-btn-link mui-btn-nav mui-pull-left"><span class="mui-icon mui-icon-left-nav"></span> 返回</a>
+	<h1 class="mui-title">商家入驻申请</h1>
+	<a href="{php echo $_W['siteroot'].$this->createmobileurl('index')}" class="mui-btn mui-btn-blue mui-btn-link mui-btn-nav mui-pull-right"> 首页<span class="mui-icon mui-icon-forward"></span></a>
+	</header>
+
+	<div class="row" id="avatar">
+		<img class="img-circle col-xs-4 col-xs-offset-4" src="{$avatar}" alt="">	
+	</div>
+	<div align="center" class="row" id="nickname">
+		<h3>
+		<span class="label label-info">{$nickname}</span>
+		</h3>
+	</div>
+	<div class="row" style="margin-top:10px;background: #fff;border-radius:10px;padding-bottom:10px">
+	<form class="form form-horizontal" action="" method="post">
+	    <div class="mui-input-row">
+	        <label>店铺名称</label>
+	    <input type="text" class="mui-input-clear" name="shopname" required="true" placeholder="请输入店铺名称">
+	    </div>
+	    <div class="mui-input-row">
+	        <label>联系人</label>
+	        <input type="text" class="mui-input-clear" name="username" required="true" placeholder="请输入联系人姓名">
+	    </div>
+	    <div class="mui-input-row">
+	    	<label for="">联系电话</label>
+	    	<input type="number" class="mui-input-clear" name="tel" required="true"  placeholder="请输入联系电话">
+	    </div>
+
+	    <div class="mui-input-row" style="height:70px;">
+	    	<label for="">营业执照</label>		    
+	    	<div class="mui-table-view-chevron">
+				<div class="mui-image-uploader">
+					<a href="javascript:;" class="mui-upload-btn mui-pull-left js-image-yyzz"></a>
+					<div class="mui-image-preview js-image-preview mui-pull-left"></div>
+					<p class="mui-ellipsis">可上传多张相关图片</p>
+				</div>
+
+			</div>
+	<script>
+		util.image($('.js-image-yyzz'), function(url){
+			$('.js-image-yyzz').parent().find('.js-image-preview').append('<input type="hidden" value="'+url.attachment+'" name="yyzz[]" /><img src="'+url.url+'" data-id="'+url.id+'" data-preview-src="" data-preview-group="__IMG_UPLOAD_yyzz" />');
+		}, {
+			crop : false,
+			multiple : true,
+			preview : '__IMG_UPLOAD_yyzz'
+		});
+	</script>				    	
+	    </div>
+	    <div class="mui-input-row" style="">
+	    	<label for="">所在地址</label>		    
+		    {php echo tpl_app_form_field_district('add');}			    	
+	    </div>
+	    <div class="mui-input-row" style="">
+	    	<label for="">详细地址</label>		    
+		    <input type="text" class="mui-input-clear" name="street" required="true"  placeholder="如：xx镇xx街xx小区">			    	
+	    </div>
+	    <input class="lat" id="lng" name="lng" value="">
+	    <input class="lat" id="lat" name="lat" value="">		
+	    <div class="row" align="center">
+	       	<input type="submit" name="submit" style="width:150px" class="mui-btn mui-btn-primary" value="提&nbsp;&nbsp;交">
+	        <input type="hidden" name="token" value="{$_W['token']}">
+	    </div>
+	    
+	</form>
+	</div>
+
+</div>
+<script type="text/javascript">
+wx.ready(function(){
+	wx.getLocation({
+	    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+	    success: function (res) {
+	        var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+	        var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+	        var speed = res.speed; // 速度，以米/每秒计
+	        var accuracy = res.accuracy; // 位置精度
+	         //swal(latitude+"-"+longitude);
+	        // var url = "http://api.map.baidu.com/geoconv/v1/?coords="+latitude+","+longitude+"&from=1&to=5&ak=SAWFFdzmw4fHr32dA7a1dL48";
+	   		$("#lng").val(longitude);
+	   		$("#lat").val(latitude);
+	    }
+	    
+	});
+});
+</script>
+{template "common/footer"}

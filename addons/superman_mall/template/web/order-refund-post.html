@@ -1,0 +1,121 @@
+<form class="form-horizontal form" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="srvid" value="{$srvid}">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			售后进度
+		</div>
+		<div class="panel-body">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th width="25"></th>
+						<th width="160">状态名称</th>
+						<th>备注</th>
+						<th width="180">更新时间</th>
+						<th width="80" class="text-right">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+                    {if $progress}
+                    {loop $progress $li}
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            {if $li['title'] == '申请退货'}
+                            <span class="label label-default">申请退货</span>
+                            {else if $li['title'] == '已完成'}
+                            <span class="label label-success">已完成</span>
+                            {else if $li['title'] == '已取消'}
+                            <span class="label label-danger">已取消</span>
+                            {else}
+                            <span class="label label-info">{$li['title']}</span>
+                            {/if}
+                        </td>
+                        <td>
+                            {$li['remark']}
+                        </td>
+                        <td>
+                            {php echo date('Y-m-d H:i:s', $li['dateline'])}
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    {/loop}
+                    {/if}
+				</tbody>
+				<tbody id="list_wrap">
+					{if $service['status'] == 0}
+					<tr>
+						<td>
+							<a href="javascript:;" class="fa fa-move" title="按住鼠标左键，拖动调整顺序">
+								<i class="fa fa-arrows"></i>
+							</a>
+						</td>
+						<td>
+							<input class="form-control" name="title[]" type="text" value="">
+						</td>
+						<td>
+							<input class="form-control" name="remark[]" type="text" value="">
+						</td>
+						<td>
+							{php echo tpl_form_field_date('dateline[]', '', true);}
+						</td>
+						<td class="text-right">
+							<a href="javascript:;" class="del_param_link" onclick="delItem(this)" title="删除" data-id="{$param['id']}">
+								<i class='fa fa-remove'></i>
+							</a>
+						</td>
+					</tr>
+					{/if}
+				</tbody>
+			</table>
+            {if $service['status'] == 0}
+			<button type="button" class="btn btn-warning add_params" title="添加售后进度">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加售后进度
+			</button>
+            {/if}
+			{if isset($order['extend']['refund'])}
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">退款结果：</label>
+				<div class="col-sm-8 col-xs-12">
+					<textarea style="height:150px;" class="form-control" disabled>
+						{loop $order['extend']['refund'] $re}
+						{$re['refund_result']}<br>
+						{/loop}
+					</textarea>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			{/if}
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+			<input name="submit" type="submit" value="更新进度" class="btn btn-primary col-lg-1">
+			<input type="hidden" name="token" value="{$_W['token']}">
+		</div>
+	</div>
+</form>
+<script>
+require(['jquery', 'jquery.ui'], function($){
+	$('#list_wrap').sortable({handle: '.fa-move'});
+	//添加售后进度
+	$('.add_params').click(function(){
+		$.ajax({
+			url: "{php echo $this->createWebUrl('order', array('act' => 'refund-new'))}",
+			success:function(response) {
+				$('#list_wrap').append(response);
+			}
+		});
+	});
+	//删除售后进度
+	window.delItem = function(obj) {
+		var id = $(obj).attr('data-id');
+		if (!id) {	//new
+			$(obj).parent().parent().remove();
+			return;
+		}
+	};
+});
+</script>

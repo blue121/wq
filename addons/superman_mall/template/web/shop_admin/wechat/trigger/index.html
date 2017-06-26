@@ -1,0 +1,8 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+    <li {if $act == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('trigger', array('act' => 'display'));}">规则列表</a></li>
+    <li {if $act == 'post' && $id <= 0}class="active"{/if}><a href="{php echo $this->createWebUrl('trigger', array('act' => 'post'));}">添加规则</a></li>
+    {if $id > 0}<li {if $act == 'post'}class="active"{/if}><a href="{php echo $this->createWebUrl('trigger', array('act' => 'post', 'id' => $id));}">编辑规则</a></li>{/if}
+</ul>
+{template $this->do.'/'.$this->act}
+{template 'common/footer'}

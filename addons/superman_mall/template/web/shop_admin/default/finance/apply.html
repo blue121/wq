@@ -1,0 +1,288 @@
+<div class="main">
+    <form class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                账户资金
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">商户名称</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12 control-label" style="text-align: left">
+                        {php echo $this->shop['title']}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">可提金额</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12 control-label" style="text-align: left">
+                        <span style="color: #00cc00" class="balance" data-balance="{php echo isset($shop_money['balance'])?$shop_money['balance']:'0.00'}">{php echo isset($shop_money['balance'])?$shop_money['balance']:'0.00'}</span> 元
+                        &nbsp;&nbsp;
+                        <a href="{php echo $this->createWebUrl('finance', array('act' => 'money_log'))}" target="_blank">资金流水明细</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                提现账户
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">选择账户</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <select name="account_type" class="form-control">
+                            {if $getcash_user['openid']}
+                            <option selected="selected" value="wechat">微信</option>
+                            {/if}
+                            <option value="alipay">支付宝</option>
+                            <option value="bank">银行</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">账户信息</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <div class="panel panel-default reply-container" style="padding-top:2em;">
+                            <div class="wechat_wrap account_wrap" style="{if $getcash_user['openid']==''}display: none{/if}">
+                                <div class="form-group row">
+                                    <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">微信昵称</label>
+                                    <div class="col-sm-9 col-xs-12">
+                                        <input type="text" class="form-control" disabled="disabled" name="" value="{$getcash_user['shop_admin']['nickname']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right" style="line-height: 30px;">微信头像</label>
+                                    <div class="col-sm-9 col-xs-12">
+                                        <div style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+                                            <img src="{$getcash_user['shop_admin']['avatar']}" onerror="this.src='{$_W['siteroot']}app/resource/images/heading.jpg'" style="width: 100%">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alipay_wrap account_wrap" style="{if $getcash_user['openid']!=''}display: none{/if}">
+                                <!--判断是否已设置支付宝账户-->
+                                {if !isset($getcash_user) || !$getcash_user['alipay_account'] || !$getcash_user['alipay_username']}
+                                <div style="padding-bottom: 2rem" class="text-center">
+                                    <a href="{php echo $this->createWebUrl('finance', array('act' => 'user'))}"><i class="fa fa-plus"></i> 添加账号</a>
+                                </div>
+                                {else}
+                                <div class="form-group row">
+                                    <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">账户名称</label>
+                                    <div class="col-sm-9 col-xs-12">
+                                        <input type="text" class="form-control" disabled="disabled" name="alipay_account" value="{$getcash_user['alipay_account']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">姓名</label>
+                                    <div class="col-sm-9 col-xs-12">
+                                        <input type="text" class="form-control" disabled="disabled" value="{$getcash_user['alipay_username']}">
+                                    </div>
+                                </div>
+                                {/if}
+                            </div>
+                            <div class="bank_wrap account_wrap" style="display: none">
+                                <!--判断是否已设置银行账户-->
+                                {if !isset($getcash_user) || !$getcash_user['bank_name'] || !$getcash_user['bank_account'] || !$getcash_user['bank_cardno'] || !$getcash_user['bank_username']}
+                                <div style="padding-bottom: 2rem" class="text-center">
+                                    <a href="{php echo $this->createWebUrl('finance', array('act' => 'user'))}"><i class="fa fa-plus"></i> 添加账号</a>
+                                </div>
+                                {else}
+                                <div class="form-group row">
+                                    <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">银行名称</label>
+                                    <div class="col-sm-9 col-xs-12">
+                                        <input type="text" class="form-control" disabled="disabled" name="bank_name" value="{$getcash_user['bank_name']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">开户行</label>
+                                    <div class="col-sm-9 col-xs-12">
+                                        <input type="text" class="form-control" disabled="disabled" value="{$getcash_user['bank_account']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">银行卡号</label>
+                                    <div class="col-sm-9 col-xs-12">
+                                        <input type="text" class="form-control" disabled="disabled" value="{$getcash_user['bank_cardno']}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">开卡人姓名</label>
+                                    <div class="col-sm-9 col-xs-12">
+                                        <input type="text" class="form-control" disabled="disabled" value="{$getcash_user['bank_username']}">
+                                    </div>
+                                </div>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                提现信息
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="star">*</span>提现金额</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <div class="input-group">
+                            <input type="number" step="0.01" data-limit="{php echo $shop_setting['limit']?$shop_setting['limit']:0}" data-fee-rate="{php echo $this->shop['fee_rate']?($this->shop['fee_rate']/100):0}" data-fee-min="{php echo $this->shop['fee_min']?$this->shop['fee_min']:0}" data-fee-max="{php echo $this->shop['fee_min']?$this->shop['fee_max']:0}" class="form-control" name="money">
+                            <span class="input-group-addon">元</span>
+                        </div>
+                        <span class="help-block" style="color: #f63800">请输入提现的金额，最低提现金额为{php echo $shop_setting['limit']?$shop_setting['limit']:0}元</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">备注</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <textarea name="apply_remark" rows="4" class="form-control"></textarea>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="star">*</span>登录密码</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <input type="password" class="form-control" name="password" value="">
+                        <span class="help-block">商户后台登录密码</span>
+                    </div>
+                </div>
+                {if $sms_available}
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">手机号</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <input type="text" class="form-control" readonly name="mobile" value="{php echo $this->shop_user['mobile']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="star">*</span>短信验证码</label>
+                    <div class="col-sm-5 col-md-1 col-xs-11">
+                        <input type="text" class="form-control" name="checkcode">
+                    </div>
+                    <a href="javascript:;" data-countryid="{php echo $this->shop_user['countryid']}" class="btn_verify btn font5 btn-default">获取验证码</a>
+                </div>
+                {/if}
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">服务费</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12 control-label" style="text-align: left">
+                        <span class="fee">0</span>元（每笔交易{php echo $this->shop['fee_rate']?$this->shop['fee_rate']:0}%，最低{php echo $this->shop['fee_min']?$this->shop['fee_min']:0}元，最高{php echo $this->shop['fee_max']?$this->shop['fee_max']:0}元）
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-sm-12">
+            <input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交">
+            <input type="hidden" name="token" value="{$_W['token']}" />
+        </div>
+    </form>
+</div>
+<script>
+    require(['jquery'], function($){
+        //计算服务费用
+        $('input[name=money]').keyup(function() {
+            var money = parseFloat($(this).val());
+            var limit = parseFloat($(this).attr('data-limit'));			//最低提现金额
+            var fee_rate = parseFloat($(this).attr('data-fee-rate'));	//费用率
+            var fee_min = parseFloat($(this).attr('data-fee-min'));		//最小费用
+            var fee_max = parseFloat($(this).attr('data-fee-max'));		//最大费用
+            if (!money) {
+                return;
+            }
+            if (money < limit) {
+                $(this).parent().removeClass('has-success').addClass('has-error');
+                $('.fee').text('0');
+            } else {
+                $(this).parent().removeClass('has-error').addClass('has-success');
+                var fee = (money * fee_rate);
+                fee = fee < fee_min?fee_min:(fee > fee_max?fee_max:fee);
+                if (money > fee) {
+                    $('.fee').html(fee);
+                }
+            }
+        });
+        //选择提现账户类型
+        $('.wechat_wrap').show();
+        $('select[name=account_type]').change(function(){
+            $('.account_wrap').hide();
+            var account_type = $(this).val();
+            $('.'+account_type+'_wrap').show();
+        });
+        //判断必填项
+        $('form').submit(function(){
+            var account_type = $('select[name=account_type]');
+            var money = $('input[name=money]');
+            var limit = parseFloat(money.attr('data-limit'));
+            var balance = parseFloat($('.balance').attr('data-balance'));
+            if (account_type.val() == 'alipay') {
+                if($('input[name=alipay_account]').length ==0) {
+                    util.message('支付宝账户信息为空，请添加支付宝账户信息', '', 'error');
+                    return false;
+                }
+            }
+            if (account_type.val() == 'bank') {
+                if($('input[name=bank_name]').length ==0) {
+                    util.message('银行账户信息为空，请添加银行账户信息', '', 'error');
+                    return false;
+                }
+            }
+            if (money.val() == '') {
+                util.message('提现金额为空，请重新填写', '', 'error');
+                return false;
+            }
+            if (money.val() < limit) {
+                util.message('提现金额低于最低提现金额，请重新填写', '', 'error');
+                return false;
+            }
+            if (money.val() > balance) {
+                util.message('提现金额高于可提金额，请重新填写', '', 'error');
+                return false;
+            }
+            var password = $('input[name=password]');
+            if (password.val() == '') {
+                util.message('登录密码为空，请重新填写', '', 'error');
+                return false;
+            }
+            <!--{if $sms_available}-->
+            var checkcode = $('input[name=checkcode]');
+            if (checkcode.val() == '') {
+                util.message('短信验证码为空，请重新填写', '', 'error');
+                return false;
+            }
+            <!--{/if}-->
+            return true;
+        });
+        //点击获取验证码
+        $('.btn_verify').click(function() {
+            var t = this;
+            if ($(t).hasClass('disabled')) {
+                return false;
+            }
+            var mobile = $('input[name=mobile]').val();
+            var countryid = $(t).attr('data-countryid');
+            $.ajax({
+                type: 'post',
+                url: '{php echo $this->createWebUrl("sms", array("act" => "verifycode", "setting" => "shop_getcash"))}',
+                data: 'mobile='+mobile+'&country_id='+countryid,
+                dataType: 'json',
+                success: function (resp) {
+                    if (resp.errno == 0) {
+                        var timer, seconds = 60;
+                        if ($(t).hasClass('btn-default')) {
+                            $(t).addClass('disabled').html('获取验证码(' + seconds + ')');
+                            timer = setInterval(function () {
+                                seconds -= 1;
+                                if (seconds < 0) {
+                                    $(t).removeClass('disabled').html('获取验证码');
+                                    clearInterval(timer);
+                                    return;
+                                }
+                                $(t).html('获取验证码(' + seconds + ')');
+                            }, 1000);
+                        }
+                    } else {
+                        util.message(resp.errmsg, '', 'error');
+                    }
+                }
+            });
+        });
+    });
+</script>

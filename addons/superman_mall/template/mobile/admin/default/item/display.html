@@ -1,0 +1,72 @@
+<div class="page-group">
+    <div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+        {template 'common/nav'}
+        {template 'common/title'}
+        <div class="content infinite-scroll item_list" data-flag="0" data-list-url="{php echo $this->createMobileUrl('admin', array('route' => 'item.display', 'load' => 'infinite'))}" data-item-url="{php echo $this->createMobileUrl('detail')}" data-itempost-url="{php echo $this->createMobileUrl('admin', array('route' => 'item.post', 'status' => $status));}" data-setattr-url="{php echo $this->createMobileUrl('admin', array('route' => 'item.setattr'));}" data-kw="{$keyword}" data-status="{$status}"  data-distance="50" data-page="{$pindex}">
+            <div class="buttons-tab">
+                <a href="{php echo $this->createMobileUrl('admin', array('route' => 'item.display', 'status' => 'upshelf'));}" class="{if $status == 'upshelf'}active{/if} button" data-no-cache="true">出售中</a>
+                <a href="{php echo $this->createMobileUrl('admin', array('route' => 'item.display', 'status' => 'stockout'));}" class="{if $status == 'stockout'}active{/if} button" data-no-cache="true">已售罄</a>
+                <a href="{php echo $this->createMobileUrl('admin', array('route' => 'item.display', 'status' => 'offshelf'));}" class="{if $status == 'offshelf'}active{/if} button" data-no-cache="true">仓库中</a>
+            </div>
+            <div class="content-block item_wrap">
+                <div class="tabs">
+                    <div class="tab active">
+                        {if $list}
+                        <div class="list-block media-list item_list_wrap">
+                            <ul class="item_list_ul">
+                                {loop $list $li}
+                                <li class="item-content">
+                                    <div class="item-media">
+                                        <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $li['id']))}" data-no-cache="true" external>
+                                            <img class="item_img" src="{php echo tomedia($li['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'">
+                                        </a>
+                                    </div>
+                                    <div class="item-inner">
+                                        <a href="javascript:;" data-no-cache="true" external>
+                                            <div class="item-text">
+                                                {$li['title']}
+                                            </div>
+                                            <div class="item-subtitle text-strong color-danger font8">&yen;{$li['price']}</div>
+                                        </a>
+                                        <div class="item-title-row row">
+                                            <div class="col-33">
+                                                <a class="font6 color-gray" href="javascript:;" data-no-cache="true" external>
+                                                    库存:{$li['total']}
+                                                </a>
+                                            </div>
+                                            <div class="col-33">
+                                                <a class="font6 color-gray" href="javascript:;" data-no-cache="true" external>
+                                                    销量:{$li['sales']}
+                                                </a>
+                                            </div>
+                                            <div class="col-33">
+                                                <a class="button button-light button-small {$status}-actions item_actions" data-item-id="{$li['id']}" data-itempost-url="{php echo $this->createMobileUrl('admin', array('route' => 'item.post', 'id' => $li['id'], 'status' => $status));}" data-setattr-url="{php echo $this->createMobileUrl('admin', array('route' => 'item.setattr'));}">
+                                                    <span class="font6">操作</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                {/loop}
+                            </ul>
+                        </div>
+                        <div class="nodata font6 text-center color-gray" style="display: none;">没有了</div>
+                        {if count($list)==$pagesize}
+                        <div class="infinite-scroll-preloader">
+                            <div class="preloader"></div>
+                        </div>
+                        {/if}
+						{else}
+						<div class="row">
+                            <div class="col-100 font6 text-center">
+                                暂无数据
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {template 'common/share'}
+    </div>
+</div>

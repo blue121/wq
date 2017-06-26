@@ -1,0 +1,173 @@
+<div class="page-group">
+    <div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+        {template 'common/title'}
+        <div class="content order_send_wrap">
+            <form class="form-horizontal order_send_form" method="post">
+                <input type="hidden" name="delivery_type" value="1">
+                {if $order['address']}
+                <div class="list-block media-list address_info">
+                    <ul>
+                        <li class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title font7 color_default pull-left">订单状态：{$order['status_title']}</div>
+                                {if $order['pay_type'] > 0}
+                                <div class="item-after pull-right font7">{php echo SupermanUtil::get_pay_type_title($order['pay_type'])}</div>
+                                {/if}
+                            </div>
+                        </li>
+                        <li class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title-row">
+                                    <div class="item-title font7 color_default">收货人：{$order['username']}</div>
+                                    <div class="item-after">
+                                        <a href="tel:{$item['mobile']}" class="font7 color_default">{$order['mobile']}</a>
+                                    </div>
+                                </div>
+                                <div class="font7 color_default">收货地址：{$order['address']}</div>
+                                {if $order['remark']}
+                                <div class="font7 color_default">留言：{$order['remark']}</div>
+                                {/if}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                {/if}
+                <div class="buttons-tab">
+                    <a href="#tab1" class="tab-link active button font7 color_default has_delivery">物流发货</a>
+                    <a href="#tab2" class="tab-link button font7 color_default no_delivery">无需物流</a>
+                </div>
+                <div class="content-block express_wrap">
+                    <div class="tabs">
+                        <div id="tab1" class="tab active">
+                            <div class="list-block">
+                                <ul>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                <div class="item-title label font7 color_default">物流公司</div>
+                                                <div class="item-input">
+                                                    <select class="font7" name="express_company">
+                                                        {if $shop_express}
+                                                        {loop $shop_express $k $express}
+                                                        <option value="{$k}">{$express['title']}</option>
+                                                        {/loop}
+                                                        {/if}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                <div class="item-title label font7 color_default">快递单号</div>
+                                                <div class="item-input">
+                                                    <input type="text" class="font7" name="express_no" placeholder="请输入快递单号">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="tab2" class="tab">
+                            <div class="list-block">
+                                <ul>
+                                    <li>
+                                        <div class="item-content color-gray font7 no_express">
+                                            无需物流不用填写物流信息
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-block media-list order_send_info">
+                    <ul>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner font7 color_default">
+                                    {$order['ordersn']}
+                                </div>
+                            </div>
+                        </li>
+                        {if $items}
+                        {loop $items $item}
+                        <li>
+                            <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['itemid']))}" class="item-content external">
+                                <div class="item-media">
+                                    <img src="{php echo tomedia($item['cover'])}" class="order_item_img" onerror="this.src='{php echo $this->superman_placeholder}'">
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-subtitle row no-gutter">
+                                        <div class="col-80 text-overflow font7 color_default">{$item['title']}</div>
+                                        <div class="col-20 text-right font7 color_default">&yen;{$item['price']}</div>
+                                    </div>
+                                    <div class="item-title-row">
+                                        {if $item['sku']}
+                                        <div class="font6 color-gray">商品规格：{$item['sku']}</div>
+                                        {/if}
+                                        <div class="item-after font7 color-gray">×{$item['total']}</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        {/loop}
+                        {/if}
+
+                        <li>
+                            <a href="javascript:;" class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-subtitle color_default font7">共{$order['total']}件，合计{$total_price}元</div>
+                                </div>
+                            </a>
+                        </li>
+                        {if $order['express_fee'] > 0}
+                        <li class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title-row">
+                                    <div class="item-title font7 color_default">运费</div>
+                                    <div class="item-after font7 color_default">
+                                        &yen;{$order['express_fee']}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        {/if}
+                        <li class="item-content">
+                            <div class="item-inner">
+                                <div class=" text-right">
+                                    <div class="item-title font7">
+                                        <span class="color_default">实付款：</span>
+                                        <span class="color-danger">&yen;{$order['price']}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+                    <div class="row order_log">
+                        <div class="col-100 font6 color-gray">
+                            {if $order['payment_no']}
+                            <div class="item-title font6 color-gray">微信支付单号：{$order['payment_no']}</div>
+                            {/if}
+                            <div class="item-title font6 color-gray">下单时间：{php echo date('Y-m-d H:i:s', $order['createtime'])}</div>
+                            {if $order['pay_time']}
+                            <div class="item-title font6 color-gray">付款时间：{php echo date('Y-m-d H:i:s', $order['pay_time'])}</div>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="token" value="{$_W['token']}">
+                <input type="hidden" name="submit1" value="yes">
+            </form>
+        </div>
+        <div class="row stock_btn_wrap">
+            <div class="col-100">
+                <button type="button" class="button button-fill btn_submit">发货</button>
+            </div>
+        </div>
+        {template 'common/share'}
+    </div>
+</div>

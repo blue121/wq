@@ -1,0 +1,42 @@
+.superpage_dashboard .statistics_wrap {
+    height: 8rem;
+    color: #ffffff;
+    background: #018ddd;
+    background: -moz-linear-gradient(top, #48b9fe 0%, #018ddd 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#48b9fe), color-stop(100%,#018ddd));
+    background: -webkit-linear-gradient(top, #48b9fe 0%,#018ddd 100%);
+    background: -o-linear-gradient(top, #48b9fe 0%,#018ddd 100%);
+    background: -ms-linear-gradient(top, #48b9fe 0%,#018ddd 100%);
+    background: linear-gradient(to bottom, #48b9fe 0%,#018ddd 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#48b9fe', endColorstr='#018ddd',GradientType=0 );
+}
+.superpage_dashboard .total_income_title {
+    line-height: 2rem;
+}
+.superpage_dashboard .total_income h2 {
+    margin: 0 0 .5rem;
+    font-size: 1.6rem;
+}
+.superpage_dashboard .today_read_title {
+    border-left: 1px #ffffff solid;
+    border-right: 1px #ffffff solid;
+}
+/*订单&商品入口九宫格边距*/
+.superpage_dashboard .order_enter_wrap, .superpage_dashboard .item_enter_wrap {
+    margin: .5rem 0;
+}
+.superpage_dashboard .weui_grid_icon {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+.superpage_dashboard .weui_grid_icon .iconfont {
+    font-size: 1.4rem !important;
+}
+.superpage_dashboard .item-title-row {
+    line-height: 1.2rem;
+}
+/*解决订单入口和商品入口1px底部线条问题*/
+.superpage_dashboard .order_enter_wrap .item-inner:after, .superpage_dashboard .item_enter_wrap .item-inner:after {
+    height: 0;
+}

@@ -1,0 +1,19 @@
+{template 'common/header'}
+<div class="page-group">
+    <div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+        {template 'common/nav'}
+        {template 'common/title'}
+        <div class="content">
+            <div class="card">
+                <div class="content-padded">
+                    {if isset($shop_service['content']) && !empty($shop_service['content'])}
+                    {php echo htmlspecialchars_decode($shop_service['content'])}
+                    {else}
+                    {php echo htmlspecialchars_decode($this->module['config']['service']['content'])}
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{template 'common/footer'}

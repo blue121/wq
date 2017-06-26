@@ -1,0 +1,27 @@
+<nav class="navbar navbar-light bg-faded top_nav_wrap p-a-0">
+	<div class="container p-x-0">
+		<a class="shop_logo p-a-0 m-a-0" href="{$nav[0]['url']}">
+			<img src="{php echo tomedia($this->shop['logo'])}" alt="{php echo $this->shop['title']}">
+		</a>
+        <div class="nav_list">
+            <ul>
+                {loop $navs $nav}
+                <li class="{$nav['active']}">
+                    <a href="{$nav['url']}">
+                        {$nav['title']}
+                    </a>
+                </li>
+                {/loop}
+            </ul>
+        </div>
+        <div class="dropdown pull-xs-right account_wrap">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                shisan
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <a class="dropdown-item" href="#">我的账号</a>
+                <a class="dropdown-item" href="#">退出</a>
+            </div>
+        </div>
+	</div>
+</nav>

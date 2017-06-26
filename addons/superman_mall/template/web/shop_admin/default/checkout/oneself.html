@@ -1,0 +1,99 @@
+{if $_GPC['op'] == 'post'}
+<div class="main">
+    <form class="form-horizontal form" action="" method="post">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                添加验证码
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="star">*</span>名称</label>
+                    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+                        <input class="form-control" name="title" type="text" value="{$row['title']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="star">*</span>验证码</label>
+                    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+                        <input class="form-control" name="code" type="text" value="{$row['code']}">
+                        <span class="help-block">推荐使用3到6位数字</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-3 col-md-2 control-label">备注</label>
+                    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-6">
+                        <textarea class="form-control" name="remark">{$row['remark']}</textarea>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-sm-12">
+            <input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交">
+            <input type="hidden" name="token" value="{$_W['token']}" />
+        </div>
+    </form>
+</div>
+<script>
+    $('form').submit(function(){
+        var title = $('input[name=title]');
+        if (title.val() == '') {
+            util.message('名称为空，请重新填写', '', 'error');
+            return false;
+        }
+        var title = $('input[name=code]');
+        if (title.val() == '' || title.val() == 0) {
+            util.message('验证码为0或空，请重新填写', '', 'error');
+            return false;
+        }
+        return true;
+    });
+</script>
+{else}
+<div class="alert alert-info">
+    <strong class="text-danger"><i class="fa fa-info-circle"></i> 自助核销是一种低成本的核销方式，顾客到店可以自助核销，适合不具备扫描核销条件的商户使用。</strong><br>
+    1.配置验证码；<br>
+    2.将验证码告知店员；<br>
+    3.店员用验证码核销；<br>
+</div>
+<a href="{php echo $this->createWebUrl('checkout', array('act' => 'oneself', 'op' => 'post'));}" type="button" class="btn btn-default" style="margin-bottom: 1rem">
+    <span class="fa fa-plus"></span>
+    添加验证码
+</a>
+<div class="panel panel-default">
+    <div class="table-responsive panel-body">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th width="180">名称</th>
+                <th width="160">验证码</th>
+                <th>备注</th>
+                <th width="165">创建时间</th>
+                <th width="90" class="text-right">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {if $list}
+            {loop $list $li}
+            <tr>
+                <td>{$li['title']}</td>
+                <td>{$li['code']}</td>
+                <td style="white-space: normal;">
+                    {$li['remark']}
+                </td>
+                <td>{$li['dateline']}</td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <a title="编辑" href="{php echo $this->createWebUrl('checkout', array('act' => 'oneself', 'op' => 'post', 'id' => $li['id']))}" class="btn btn-default btn-sm"><i class="fa fa-edit"></i> </a>
+                        <a onclick="return confirm('此操作不可恢复，确认吗？'); return false;" href="{php echo $this->createWebUrl('checkout', array('act' => 'oneself', 'op' => 'delete', 'id' => $li['id']))}" title="删除" class="btn btn-default btn-sm"><i class="fa fa-times"></i> </a>
+                    </div>
+                </td>
+            </tr>
+            {/loop}
+            {/if}
+            </tbody>
+        </table>
+    </div>
+</div>
+{$pager}
+{/if}

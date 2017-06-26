@@ -1,0 +1,147 @@
+{php $num = 3; if($cfg['iswith']) $num++; if($cfg['moreBtn']) $num++;}
+<style>
+.app-botblank{height:100px;}
+.app-botbar{position:fixed;bottom:0px;width:100%;z-good:999999;}
+.app-botbar .buttons{background:#FFFFFF;padding:10px 10px 0 10px;overflow:hidden;}
+.app-botbar .app-button{text-align:center;height:50px;line-height:50px;}
+.app-botbar .app-button.cancel{border:1px solid #DDDDDD;background:none;color: #666666;}
+.app-botbar .app-button.cancel:active{background: #DDDDDD;color: #FFFFFF;}
+.app-botbar .app-button2{text-align:center;height:50px;line-height:50px;}
+.app-botbar .app-button2.cancel{border:1px solid #DDDDDD;background:none;color: #666666;}
+.app-botbar .app-button2.cancel:active{background: #DDDDDD;color: #FFFFFF;}
+.hmenu{width:100%;overflow:hidden;padding:0px;background:#FFFFFF;zoom:1; -webkit-box-shadow:0 -1px 1px -1px rgba(0, 0, 0, 0.5);list-style: none;}
+.hmenu:after{content:"";display:block;height:0;line-height:0;clear:both;visibility:hidden;}
+.hmenu li{float:left;width:{php echo 100/$num}%;}
+.hmenu.col li .app-button{color:#7a7e83;text-align:center;line-height:18px;font-size:12px;}
+.hmenu.col li .app-button .icon_m{display:block;height:32px;line-height:32px;}
+.hmenu.col li.middle .app-button{background-color:#04BE02;color:#FFFFFF;}
+.hmenu.col li .app-button2{color:#7a7e83;text-align:center;line-height:18px;font-size:12px;}
+.hmenu.col li .app-button2 .icon_m{display:block;height:32px;line-height:32px;}
+.hmenu.col li.active .app-button2{background-color:#04BE02;color:#FFFFFF;}
+.icon_m.good{background:url("{RES}img/good.png") no-repeat center bottom;background-size:28px 28px;}
+.icon_m.new{background:url("{RES}img/new.png") no-repeat center bottom;background-size:28px 28px;}
+.icon_m.dollar{background:url("{RES}img/dollar.png") no-repeat center bottom;background-size:28px 28px;}
+.icon_m.user{background:url("{RES}img/user.png") no-repeat center bottom;background-size:28px 28px;}
+.icon_m.more{background:url("{RES}img/more.png") no-repeat center bottom;background-size:28px 28px;}
+.hmenu.col li.active .app-button2{color:#fff;}
+.active .icon_m.good{background-image:url("{RES}img/good_on.png");}
+.active .icon_m.new{background-image:url("{RES}img/new_on.png");}
+.active .icon_m.dollar{background:url("{RES}img/dollar_on.png") no-repeat center bottom;background-size:28px 28px;}
+.active .icon_m.user{background:url("{RES}img/user_on.png") no-repeat center bottom;background-size:28px 28px;}
+.active .icon_m.more{background:url("{RES}img/more_on.png") no-repeat center bottom;background-size:28px 28px;}
+{if $cfg['moreBtn']}
+ul.morebtn{
+	position: fixed;
+    bottom: 50px;
+    right: 2px;
+    list-style: none;
+	background: white;
+    border: 1px solid gainsboro;
+    font-size: 12px;
+	text-align: center;
+	width: {php echo 100/$num}%;
+	border-radius: 5px;
+	display:none;
+}
+ul.morebtn li{
+	padding: 10px 0;
+}
+ul.morebtn li:not(:last-child){
+	border-bottom: 1px solid gainsboro;
+}
+ul.morebtn li a{
+	color: #7a7e83;
+}
+{/if}
+</style>
+{if $cfg['moreBtn']}
+<ul class="morebtn">
+	{loop $cfg['moreBtn'] $btn}
+	<li><a href="{$btn['link']}">{$btn['title']}</a></li>
+	{/loop}
+</ul>
+{/if}
+			<div class="app-botbar" >
+				
+				<div class="app-bot">
+
+					<ul class="hmenu col">
+
+						<li {if !$_GPC['status'] && $_GPC['do'] == 'list'}class="active"{/if}>
+
+							<a href="{php echo $this->createMobileUrl('list')}">
+
+								<div class="app-button2">
+
+									<span class="icon_m good"></span>{if $cfg['w_best']}{$cfg['w_best']}{else}最值{/if}
+
+								</div>
+
+							</a>
+
+						</li>
+
+						<li {if $_GPC['status']==1 && $_GPC['do'] == 'list'}class="active"{/if}>
+
+							<a href="{php echo $this->createMobileUrl('list',array('status'=>1))}">
+
+								<div class="app-button2">
+
+									<span class="icon_m new"></span>{if $cfg['w_newest']}{$cfg['w_newest']}{else}最新{/if}
+
+								</div>
+
+							</a>
+
+						</li>
+
+						<li {if $_GPC['status']==2 && $_GPC['do'] == 'list'}class="active"{/if}>
+
+							<a href="{php echo $this->createMobileUrl('list',array('status'=>2))}">
+
+								<div class="app-button2">
+
+									<span class="icon_m user"></span>{if $cfg['w_my']}{$cfg['w_my']}{else}我的{/if}
+
+								</div>
+
+							</a>
+
+						</li>
+
+						{if $cfg['iswith']}
+						<li {if $_GPC['do'] == 'with' || $_GPC['do'] == 'record'}class="active"{/if}>
+
+							<a href="{php echo $this->createMobileUrl('with')}">
+
+								<div class="app-button2">
+
+									<span class="icon_m dollar"></span>{if $cfg['w_with']}{$cfg['w_with']}{else}提现{/if}
+
+								</div>
+
+							</a>
+
+						</li>
+						{/if}
+						{if $cfg['moreBtn']}
+						<li onclick="$('.morebtn').slideToggle();">
+
+							<a>
+
+								<div class="app-button2">
+
+									<span class="icon_m more"></span>更多活动
+
+								</div>
+
+							</a>
+
+						</li>
+						{/if}
+
+					</ul>
+
+				</div>
+
+			</div>

@@ -1,0 +1,178 @@
+{template 'common/header'}
+<style>
+	.star {
+		color: red;
+		margin-right: 5px;
+		font-weight: bold;
+	}
+</style>
+<ul class="nav nav-tabs">
+	<li {if $act == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('spec');}">商品规格</a></li>
+	<li {if $act == 'post' && !$_GPC['id']}class="active"{/if}><a href="{php echo $this->createWebUrl('spec', array('act' => 'post'));}">添加规格</a></li>
+	{if $_GPC['id']}<li {if $act == 'post'}class="active"{/if}><a href="{php echo $this->createWebUrl('spec', array('act' => 'post', 'id' => $id));}">编辑规格</a></li>{/if}
+</ul>
+{if $act=='display'}
+<form method="post">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th width="80">排序</th>
+					<th width="180">规格名</th>
+					<th>规格值</th>
+					<th width="90" class="text-right">操作</th>
+				</tr>
+				</thead>
+				<tbody>
+					{if $list}
+					{loop $list $li}
+					<tr>
+						<td>
+							<input type="text" class="form-control text-center" name="displayorder[{$li['id']}]" value="{$li['displayorder']}">
+						</td>
+						<td>{$li['title']}</td>
+						<td style="table-layout:fixed; word-break: break-all; white-space: normal">{$li['value']}</td>
+						<td class="text-right">
+							<div class="btn-group">
+								<a href="{php echo $this->createWebUrl('spec', array('act' => 'post','id' => $li['id']));}" title="编辑" class="btn btn-default btn-sm"><i class="fa fa-edit"></i></a>
+								<a onclick="return confirm('此操作不可恢复，确认吗？'); return false;" href="{php echo $this->createWebUrl('spec', array('act' => 'delete','attrid' => $li['id']));}" title="删除" class="btn btn-default btn-sm"><i class="fa fa-times"></i></a>
+							</div>
+						</td>
+					</tr>
+					{/loop}
+					{/if}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	{$pager}
+	<input name="submit" type="submit" value="更新排序" class="btn btn-primary col-lg-1"  style="margin-top: 1rem"/>
+	<input type="hidden" name="token" value="{$_W['token']}" />
+</form>
+{else if $act == 'post'}
+<form class="form-horizontal form" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="id" value="{$item['id']}">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			{if empty($item['id'])}
+			添加规格
+			{else}
+			编辑规格
+			{/if}
+		</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">排序</label>
+				<div class="col-sm-6 col-md-10 col-xs-12">
+					<input class="form-control" name="displayorder" type="text" value="{$item['displayorder']}"/>
+					<span class="help-block">由大到小，排序值越大越靠前</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"><span class="star">*</span>规格名称</label>
+				<div class="col-sm-6 col-md-10 col-xs-12">
+					<input class="form-control" name="title" type="text" value="{$item['title']}"/>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">规格项</label>
+				<div class="col-sm-6 col-md-10 col-xs-12">
+					<table class="table table-hover">
+						<thead>
+						<tr>
+							<th width="25"></th>
+							<th>规格值</th>
+							<th width="80" class="text-right">操作</th>
+						</tr>
+						</thead>
+						<tbody id="list_wrap" class="ui-sortable">
+						{if $item['values']}
+						{loop $item['values'] $value}
+						<tr>
+							<td>
+								<a href="javascript:;" class="fa fa-move" title="按住鼠标左键，拖动调整顺序">
+									<i class="fa fa-arrows"></i>
+								</a>
+							</td>
+							<td>
+								<div class="form-group" style="margin-bottom: 0">
+									<div class="col-xs-12">
+										<input name="value_id[]" value="{$value['id']}" type="hidden" class="form-control"/>
+										<input name="value[]" value="{$value['value']}" type="text" class="form-control" placeholder=""/>
+									</div>
+								</div>
+							</td>
+							<td class="text-right">
+								<a href="javascript:;" data-toggle="tooltip" onclick="deleteSpec(this)" title="删除" data-id="{$value['id']}">
+									<i class='fa fa-remove'></i>
+								</a>
+							</td>
+						</tr>
+						{/loop}
+						{/if}
+						</tbody>
+					</table>
+					<button type="button" class="btn btn-warning add_spec" title="添加规格值">
+						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加规格值
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+			<input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</div>
+</form>
+<script>
+	require(['jquery.ui'], function($){
+		$('.btn').hover(function(){
+			$(this).tooltip('show');
+		},function(){
+			$(this).tooltip('hide');
+		});
+		$('#list_wrap').sortable({handle: '.fa-move'});
+		//添加规格值
+		$('.add_spec').click(function(){
+			$.ajax({
+				url: "{php echo $this->createWebUrl('spec', array('act' => 'value'))}",
+				success:function(response) {
+					$('#list_wrap').append(response);
+				}
+			});
+		});
+		//删除规格值
+		window.deleteSpec = function(obj) {
+			var id = $(obj).attr('data-id');
+			if (id == 0) {	//new
+				$(obj).parent().parent().remove();
+				return;
+			}
+			$.ajax({
+				'url': "{php echo $this->createWebUrl('spec', array('act' => 'delete'))}"+'&valueid='+id,
+				success:function(response) {
+					if (response == 'success') {
+						$(obj).parent().parent().remove();
+					} else {
+						util.message(response, '', 'error');
+					}
+				}
+			});
+		};
+		//提交表单
+		$('form').submit(function(){
+			var title = $('input[name=title]');
+			if (title.val() == '') {
+				util.message('请输入规格名称！', '', 'error');
+				return false;
+			}
+			return true;
+		});
+	});
+</script>
+{/if}
+{template 'common/footer'}

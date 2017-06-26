@@ -1,0 +1,95 @@
+{template 'common/header'}
+{if $act == 'checkout_user'}
+<div class="page-group">
+	<form method="post" action="">
+		<input type="hidden" name="token" value="{$_W['token']}">
+		<input type="hidden" name="shopid" value="{$shopid}">
+		<input type="hidden" name="i" value="{$_W['uniacid']}">
+		<input type="hidden" name="c" value="entry">
+		<input type="hidden" name="do" value="openid">
+		<input type="hidden" name="m" value="superman_mall">
+		<input type="hidden" name="submit" value="yes">
+		<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+			<div class="content">
+				<div class="weui_msg">
+					<div class="weui_icon_area">
+						<img src="{php echo tomedia($shop['logo'])}" onerror="this.src='resource/images/heading.jpg'"/>
+						<span class="font9">{$shop['title']}</span>
+					</div>
+					<div class="weui_text_area">
+						<h2 class="weui_msg_title font9">是否确认绑定该商户核销员</h2>
+						<p class="weui_msg_desc font6">绑定成功后，可在微信中获得商户扫码核销权限</p>
+					</div>
+					<div class="weui_opr_area">
+						<p class="weui_btn_area">
+							<button type="submit" onclick="$.showIndicator();" class="weui_btn weui_btn_primary">确认</button>
+							<a href="{php echo $this->createMobileUrl('home')}" class="weui_btn weui_btn_default">返回</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+{else if $act == 'shop_user'}
+<div class="page-group">
+	<form method="post" action="">
+		<input type="hidden" name="token" value="{$_W['token']}">
+		<input type="hidden" name="shopid" value="{$shopid}">
+		<input type="hidden" name="i" value="{$_W['uniacid']}">
+		<input type="hidden" name="c" value="entry">
+		<input type="hidden" name="do" value="openid">
+		<input type="hidden" name="m" value="superman_mall">
+		<input type="hidden" name="submit" value="yes">
+		<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+			<div class="content">
+				<div class="weui_msg">
+					<div class="weui_icon_area">
+						<img src="{php echo tomedia($shop['logo'])}" onerror="this.src='resource/images/heading.jpg'"/>
+						<span class="font9">{$shop['title']}</span>
+					</div>
+					<div class="weui_text_area">
+						<h2 class="weui_msg_title font9">是否确认绑定该商户账号（{$user['username']}）</h2>
+						<p class="weui_msg_desc font6">绑定成功后，该微信账号可与商户账号关联</p>
+					</div>
+					<div class="weui_opr_area">
+						<p class="weui_btn_area">
+							<button type="submit" onclick="$.showIndicator();" class="weui_btn weui_btn_primary">确认</button>
+							<a href="{php echo $this->createMobileUrl('home')}" class="weui_btn weui_btn_default">返回</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+{else if $act == 'login_qrcode'}
+<div class="page-group">
+	<form method="post" action="">
+		<input type="hidden" name="token" value="{$_W['token']}">
+		<!--<input type="hidden" name="shopid" value="{$shopid}">-->
+		<input type="hidden" name="i" value="{$_W['uniacid']}">
+		<input type="hidden" name="c" value="entry">
+		<input type="hidden" name="do" value="openid">
+		<input type="hidden" name="m" value="superman_mall">
+		<input type="hidden" name="submit" value="yes">
+		<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+			<div class="content">
+				<div class="weui_msg login_qrcode_msg">
+					<div class="weui_text_area">
+						<h2 class="weui_msg_title font9">是否确认登录商户后台</h2>
+						<p class="weui_msg_desc font6">扫码成功后，可登录该微信绑定的商户后台</p>
+					</div>
+					<div class="weui_opr_area">
+						<p class="weui_btn_area">
+							<button type="submit" onclick="$.showIndicator();" class="weui_btn weui_btn_primary">确认</button>
+							<a href="{php echo $this->createMobileUrl('home')}" class="weui_btn weui_btn_default">返回</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+{/if}
+{template 'common/footer'}

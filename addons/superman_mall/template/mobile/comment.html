@@ -1,0 +1,184 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+		{template 'common/nav'}
+		{if $act == 'display'}
+		{template 'common/title'}
+		<div class="content {$do}_{$act}">
+			<div class="list-block comment_wrap">
+				<ul>
+					<li class="item-content">
+						<div class="item-inner">
+							<div class="item-title">评分</div>
+							<div class="item-after">
+								<span class="icon iconfont font7 color-danger">{$item['star']}</span>
+							</div>
+						</div>
+					</li>
+					<li class="item-content">
+						<div class="item-inner">
+							<div class="item-input">
+								<textarea disabled="disabled" placeholder="{$item['message']}"></textarea>
+							</div>
+						</div>
+					</li>
+				</ul>
+				{if $item['img']}
+				<div class="card img_wrap">
+					<div class="card-content">
+						<div class="row text-center img_list">
+							{loop $item['img'] $img}
+							<div class="col-33">
+								<img class="card-cover" src="{php echo tomedia($img)}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'">
+							</div>
+							{/loop}
+						</div>
+					</div>
+				</div>
+				{/if}
+				<div class="row anonymous">
+					<div class="col-100 font6 color-gray text-right">
+						评价时间：{$item['dateline']}
+					</div>
+				</div>
+			</div>
+		</div>
+		{else if $act == 'post'}
+		{template 'common/title'}
+		<div class="content {$do}_{$act}">
+			<form method="post">
+				<input type="hidden" name="serverId" id="serverId"/>
+				<div class="list-block comment_wrap">
+					<ul>
+						<li class="item-content">
+							<div class="item-inner">
+								<div class="item-title">评分</div>
+								<input type="hidden" value="0" name="score" id="score" />
+								<div class="item-after">
+									<a data-star="1" id="star1" class="icon iconfont font8 color-danger stars">&#xe631;</a>
+									<a data-star="2" id="star2" class="icon iconfont font8 color-danger stars">&#xe631;</a>
+									<a data-star="3" id="star3" class="icon iconfont font8 color-danger stars">&#xe631;</a>
+									<a data-star="4" id="star4" class="icon iconfont font8 color-danger stars">&#xe631;</a>
+									<a data-star="5" id="star5" class="icon iconfont font8 color-danger stars">&#xe631;</a>
+								</div>
+							</div>
+						</li>
+						<li class="item-content">
+							<div class="item-inner">
+								<div class="item-input">
+									<textarea name="message" class="font7" id="message" placeholder="请认真填写评论，最多不超过70个字"></textarea>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<div class="card img_wrap">
+						<div class="card-content">
+							<div class="row text-center img_list"></div>
+							<div class="card-content-inner text-center">
+								<a href="#" class="button button-fill add_img">
+									<span class="icon iconfont font6">&#xe632;</span>
+									添加晒单图片
+								</a>
+							</div>
+							<div class="font6 text-center color-gray">
+								最多上传5张，每张不超过5M，支持JPG、PNG等图片
+							</div>
+						</div>
+					</div>
+					<div class="row anonymous">
+						<div class="col-100">
+							<label>
+								<input type="checkbox" name="anonymous" id="anonymous"> 匿名评价
+							</label>
+						</div>
+						<div class="col-100 text-center">
+							<input name="submit" type="button" value="提交" class="button button-fill">
+							<input type="hidden" name="token" value="{$_W['token']}" />
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		{else if $act == 'list'}
+		{template 'common/title'}
+		<div class="content commentcore_wrap infinite-scroll {$do}_{$act}" data-distance="50" data-page="{$pindex}" data-display-url="{php echo $display_url}">
+			<div class="buttons-tab">
+				<a href="{php echo $this->createMobileUrl('comment', array('act' => 'list', 'type' => 0, 'itemid' => $itemid))}" class="external {if $_GPC['type'] == 0 && $_GPC['act'] == 'list'}active{/if} button">全部</a>
+				<a href="{php echo $this->createMobileUrl('comment', array('act' => 'list', 'type' => 1, 'itemid' => $itemid))}" class="external {if $_GPC['type'] == 1}active{/if} button">好评</a>
+				<a href="{php echo $this->createMobileUrl('comment', array('act' => 'list', 'type' => 2, 'itemid' => $itemid))}" class="external {if $_GPC['type'] == 2}active{/if} button">中评</a>
+				<a href="{php echo $this->createMobileUrl('comment', array('act' => 'list', 'type' => 3, 'itemid' => $itemid))}" class="external {if $_GPC['type'] == 3}active{/if} button">差评</a>
+				<a href="{php echo $this->createMobileUrl('comment', array('act' => 'album', 'itemid' => $itemid))}" class="external {if $_GPC['act'] == 'album'}active{/if} button">晒图</a>
+			</div>
+			<div class="content-block">
+				{if $_GPC['type'] < 4}
+				<div class="active item_list">
+					{loop $list $item}
+					<div class="card">
+						<div class="card-header">
+							<span>
+								<div class="avatar_wrap">
+									<img src="{$item['member']['avatar']}" onerror="this.src='resource/images/heading.jpg'">
+									<span class="font7">{$item['member']['nickname']}</span>
+								</div>
+							</span>
+							<span class="font7 color-gray">{$item['dateline']}</span>
+						</div>
+						<div class="card-content">
+							<div class="star color-danger">{$item['score_html']}</div>
+							<div class="card-content-inner">{$item['message']}</div>
+							{if $item['imglist']}
+							<div class="row no-gutter text-center">
+							{loop $item['imglist'] $img}
+								<div class="col-33">
+									<img class='card-cover' src="{php echo tomedia($img['thumb'])}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'">
+								</div>
+							{/loop}
+							</div>
+							{/if}
+						</div>
+					</div>
+					{/loop}
+				</div>
+				<div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+				{if count($list)==$pagesize}
+				<div class="infinite-scroll-preloader">
+					<div class="preloader"></div>
+				</div>
+				{/if}
+				{/if}
+			</div>
+		</div>
+		{else if $act == 'album'}
+		{template 'common/title'}
+		<div class="content commentcore_wrap infinite-scroll {$do}_{$act}" data-distance="50" data-page="{$pindex}" data-pagesize="{$pagesize}" data-display-url="{php echo $display_url}">
+			<div class="buttons-tab">
+				<a href="{php echo $this->createMobileUrl('comment', array('act' => 'list', 'type' => 0, 'itemid' => $itemid))}" class="external {if $_GPC['type'] == 0 && $_GPC['act'] == 'list'}active{/if} button">全部</a>
+				<a href="{php echo $this->createMobileUrl('comment', array('act' => 'list', 'type' => 1, 'itemid' => $itemid))}" class="external {if $_GPC['type'] == 1}active{/if} button">好评</a>
+				<a href="{php echo $this->createMobileUrl('comment', array('act' => 'list', 'type' => 2, 'itemid' => $itemid))}" class="external {if $_GPC['type'] == 2}active{/if} button">中评</a>
+				<a href="{php echo $this->createMobileUrl('comment', array('act' => 'list', 'type' => 3, 'itemid' => $itemid))}" class="external {if $_GPC['type'] == 3}active{/if} button">差评</a>
+				<a href="{php echo $this->createMobileUrl('comment', array('act' => 'album', 'itemid' => $itemid))}" class="external {if $_GPC['act'] == 'album'}active{/if} button">晒图</a>
+			</div>
+			<div class="content-block">
+				<div class="showpic_wrap">
+					<div class="row no-gutter item_list">
+						{php $index=0;}
+						{loop $imgs $img}
+						<div class="col-33 text-center">
+							<img src="{php echo tomedia($img['thumb'])}" data-big-img="{php echo tomedia($img['img'])}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'" class="comment_img" title="{$img['message']}" data-index="{$index}"/>
+						</div>
+						{php $index+=1;}
+						{/loop}
+					</div>
+				</div>
+			</div>
+			<div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+			{if count($list)==$pagesize}
+			<div class="infinite-scroll-preloader">
+				<div class="preloader"></div>
+			</div>
+			{/if}
+		</div>
+		{/if}
+	</div>
+</div>
+{template 'common/footer'}

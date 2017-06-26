@@ -1,0 +1,100 @@
+{template 'common/title'}
+<div class="content partner_team">
+	<div class="list-block media-list">
+		<ul>
+			<li>
+				<a href="{php echo $this->createMobileUrl('partner', array('act' => 'order', 'partnerid' => $_GPC['partnerid']))}" class="item-link item-content">
+					<div class="item-inner myteam_info_wrap">
+						<div class="item-title-row text-center">
+							<div class="myteam_info_list">
+								<div class="item-subtitle">
+									<div class="invite_members_num font9 color-warning">{php echo $partner['downline1']+$partner['downline2']+$partner['downline3']}</div>
+									<div class="color-gray font6">{php echo $this->setting['text']['invite_total']}</div>
+								</div>
+							</div>
+							<div class="myteam_info_list">
+								<div class="item-subtitle">
+									<div class="myavatar">
+										<img src="{php echo tomedia($member['avatar'])}" onerror="this.src='resource/images/heading.jpg'">
+									</div>
+									<div>{$member['nickname']}</div>
+								</div>
+							</div>
+							<div class="myteam_info_list">
+								<div class="item-subtitle">
+									<div class="orders_num font9 color-success">{php echo $partner['order_total']}</div>
+									<div class="color-gray font6">{php echo $this->setting['text']['order_total']}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</a>
+			</li>
+			{if $partner['id'] == $this->partner['id']}
+			<li>
+				<div class="item-content">
+					<div class="item-inner">
+						<div class="item-title-row text-center">
+							<div>
+								<div>{php echo $this->partner['downline1']}</div>
+								<div class="font6">{php echo $this->setting['text']['downline1']}</div>
+							</div>
+							<div>
+								<div>{php echo $this->partner['downline2']}</div>
+								<div class="font6">{php echo $this->setting['text']['downline2']}</div>
+							</div>
+							<div>
+								<div>{php echo $this->partner['downline3']}</div>
+								<div class="font6">{php echo $this->setting['text']['downline3']}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+			{/if}
+		</ul>
+	</div>
+	<div class="list-block media-list">
+		<ul>
+			{if $downline_list}
+			{loop $downline_list $li}
+			<li>
+				<a class="item-content color-default {if isset($this->setting['base']['level']) && $this->setting['base']['level'] > 1 && ($distance+1) < $this->setting['base']['level']}item-link{/if}" {if isset($this->setting['base']['level']) && $this->setting['base']['level'] > 1 && ($distance+1) < $this->setting['base']['level']}href="{php echo $this->createMobileUrl('partner', array('act' => 'team', 'partnerid' => $li['id']))}"{/if}>
+					<div class="item-media user_avatar">
+						<img src="{php echo tomedia($li['member']['avatar'])}" onerror="this.src='resource/images/heading.jpg'">
+					</div>
+					<div class="item-inner user_info">
+						<div class="item-title-row">
+							<div class="item-title font7">{$li['member']['nickname']}</div>
+							<div class="font6 color-gray">订单金额：{$li['order_price']}元</div>
+						</div>
+						<div class="item-title-row">
+							<div class="invite_member_info font6">{php echo $this->setting['text']['invite_friend']} {php echo $li['downline1']+$li['downline2']+$li['downline3']} 人</div>
+							<div class="font6 color-gray">订单数量：{$li['order_total']}笔</div>
+						</div>
+					</div>
+				</a>
+			</li>
+			{/loop}
+			{/if}
+			<!--<li>
+				<a href="#" class="item-link item-content">
+					<div class="item-media user_avatar">
+						<img src="resource/images/heading.jpg" onerror="this.src='resource/images/heading.jpg'">
+					</div>
+					<div class="item-inner user_info">
+						<div class="item-title-row">
+							<div class="item-title font7">小张</div>
+							<div class="font6 color-gray">订单金额：1000.00元</div>
+						</div>
+						<div class="item-title-row">
+							<div class="invite_member_info font6">邀请好友 30 人</div>
+							<div class="font6 color-gray">订单数量：50笔</div>
+						</div>
+					</div>
+				</a>
+			</li>-->
+		</ul>
+	</div>
+</div>
+{template 'common/nav'}

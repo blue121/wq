@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.tule5.com" versionCode="0.6,0.7,0.8">
+	<application setting="false">
+		<name><![CDATA[拼团多商家后台]]></name>
+		<identifie><![CDATA[feng_merchants]]></identifie>
+		<version><![CDATA[4.5.1]]></version>
+		<type><![CDATA[business]]></type>
+		<ability><![CDATA[拼团多商家后台]]></ability>
+		<description><![CDATA[拼团多商家后台]]></description>
+		<author><![CDATA[图乐源码社区]]></author>
+		<url><![CDATA[http://www.tule5.com]]></url>
+	</application>
+	<platform>
+		<subscribes>
+		</subscribes>
+		<handles>
+		</handles>
+		<rule embed="false" />
+		<card embed="false" />
+	</platform>
+	<bindings>
+		<menu>
+			<entry title="后台入口" do="store" state="" direct="false" />
+		</menu>
+	</bindings>
+	<permissions>
+	</permissions>
+	<install><![CDATA[]]></install>
+	<uninstall><![CDATA[]]></uninstall>
+	<upgrade><![CDATA[update.php]]></upgrade>
+</manifest>

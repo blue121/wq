@@ -1,0 +1,141 @@
+<div class="main">
+    <form class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                提现信息
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">商户名称</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <input type="text" class="form-control" name="" disabled="disabled" value="{php echo $this->shop['title']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">提现金额</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <div class="input-group">
+                            <input type="text" class="form-control" disabled="disabled" value="{$row['money']}" name="money">
+                            <span class="input-group-addon">元</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">服务费</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <div class="input-group">
+                            <input type="text" class="form-control" disabled="disabled" value="{php echo SupermanUtil::float_format($row['service_fee']);}" name="service_fee">
+                            <span class="input-group-addon">元</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">到账金额</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <div class="input-group">
+                            <input type="text" class="form-control" disabled="disabled" value="{php echo SupermanUtil::float_format($row['money'] - $row['service_fee']);}" name="arrival_fee">
+                            <span class="input-group-addon">元</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">提现账号</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12 control-label" style="text-align: left">
+                        <span>{php echo SupermanUtil::get_getcash_account_type_title($row['account_type'])}</span>
+                        <div class="panel panel-default reply-container" style="padding-top:2em; margin-top: 1rem">
+                            <!--判断提现方式为微信-->
+                            {if $row['account_type'] == 'wechat'}
+                            <div class="form-group row">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">微信昵称</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <input type="text" class="form-control" disabled="disabled" value="{$row['account']['nickname']}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right" style="line-height: 30px;">微信头像</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <div style="width: 40px;height: 40px; overflow: hidden; border-radius: 50%;">
+                                        <img src="{$row['account']['avatar']}" onerror="this.src='{$_W['siteroot']}app/resource/images/heading.jpg'" style="width: 100%">
+                                    </div>
+                                </div>
+                            </div>
+                            <!--判断提现方式为支付宝-->
+                            {else if $row['account_type'] == 'alipay'}
+                            <div class="form-group row">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">账户名称</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <input type="text" class="form-control" disabled="disabled" value="{$row['account']['alipay_account']}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">姓名</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <input type="text" class="form-control" disabled="disabled" value="{$row['account']['alipay_username']}">
+                                </div>
+                            </div>
+                            <!--判断提现方式为银行-->
+                            {else if $row['account_type'] == 'bank'}
+                            <div class="form-group row">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">银行名称</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <input type="text" class="form-control" disabled="disabled" value="{$row['account']['bank_name']}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">开户行</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <input type="text" class="form-control" disabled="disabled" value="{$row['account']['bank_account']}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">银行卡号</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <input type="text" class="form-control" disabled="disabled" value="{$row['account']['bank_cardno']}">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-xs-12 col-sm-3 col-md-2 control-label text-right">开卡人姓名</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <input type="text" class="form-control" disabled="disabled" value="{$row['account']['bank_username']}">
+                                </div>
+                            </div>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">状态</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <div class="input-group">
+                            <label class="radio-inline">
+                                <input type="radio" value="0" {if $row['status'] == 0}checked{/if} disabled> 待支付
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" value="1" {if $row['status'] == 1}checked{/if} disabled> 已支付
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">申请备注</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <textarea rows="4" class="form-control" disabled>{$row['apply_remark']}</textarea>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">提交时间</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <input type="text" class="form-control" disabled="disabled" value="{$row['createtime']}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 control-label">支付时间</label>
+                    <div class="col-sm-6 col-md-8 col-xs-12">
+                        <input type="text" class="form-control" disabled="disabled" value="{$row['paytime']}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

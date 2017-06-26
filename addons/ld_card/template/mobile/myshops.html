@@ -1,0 +1,90 @@
+{template "common/header"}
+<style type="text/css">
+	body{
+		/*padding: 0px 10px 0px 10px;*/
+		background: #e6e6e6;
+	}
+	.containar{
+		/*padding:10px;*/
+	/*	margin:5px;*/
+
+	}
+	.mui-input-row{
+		border-bottom:1px solid #e6e6e6;
+		margin-bottom:5px;
+	}
+	#nickname{
+		margin:5px 10px;
+	}
+	#avatar{
+		margin-top:50px;
+	}
+	.lat{
+		display: none;
+	}
+	.mui-media{
+		border: 2px dashed #e6e6e6;
+	}
+	.mui-media-body{
+		height:30px;
+	}
+</style>
+<div class="containar container-fluid">
+	<header id="header" style="background: #fff;" class="mui-bar mui-bar-nav">
+	<a href="javascript:window.history.back(-1);" class="mui-action-back mui-btn mui-btn-blue mui-btn-link mui-btn-nav mui-pull-left"><span class="mui-icon mui-icon-left-nav"></span> 返回</a>
+	<h1 class="mui-title">商户中心</h1>
+	<a href="{php echo $_W['siteroot'].$this->createmobileurl('index')}" class="mui-btn mui-btn-blue mui-btn-link mui-btn-nav mui-pull-right"> 首页<span class="mui-icon mui-icon-forward"></span></a>
+	</header>
+
+	<div class="row" id="avatar">
+		<img class="img-circle col-xs-4 col-xs-offset-4" src="{$avatar}" alt="">	
+	</div>
+	<div align="center" class="row" id="nickname">
+		<h3>
+		<span class="label label-info">{$nickname}</span>
+		</h3>
+	</div>
+	<!-- 9宫格 -->
+	<di v id="Gallery" class="mui-slider" style="margin-top:15px;">
+	<div class="mui-slider-group">
+		<div class="mui-slider-item" >
+			
+			<ul class="mui-table-view mui-grid-view mui-grid-9" style="background: #fff;">
+				{loop $shops $v}
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4"  >
+					<a href="{php echo $this->createmobileurl('my',array('userid'=>$v['id']))}">
+						<img class="mui-icon mui-icon-home" style="width:70px;height:70px;" onerror="this.src='../addons/ld_card/image/index.png'" src="{php echo tomedia($v['logo'])}"><span style="position:absolute;top:10px;right:0px;" class="mui-badge mui-badge-danger">{$v['cardnum']}</span></img>
+						<div class="mui-media-body" style="height:20px;">{$v['shopname']}</div>
+					</a>
+				</li>
+				{/loop}
+			</ul>
+		</div>
+						
+
+	</div>
+	
+</div>
+
+
+
+</div>
+<script type="text/javascript">
+wx.ready(function(){
+	wx.getLocation({
+	    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+	    success: function (res) {
+	        var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+	        var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+	        var speed = res.speed; // 速度，以米/每秒计
+	        var accuracy = res.accuracy; // 位置精度
+	         //swal(latitude+"-"+longitude);
+	        // var url = "http://api.map.baidu.com/geoconv/v1/?coords="+latitude+","+longitude+"&from=1&to=5&ak=SAWFFdzmw4fHr32dA7a1dL48";
+	   		$("#lng").val(longitude);
+	   		$("#lat").val(latitude);
+	    }
+	    
+	});
+});
+</script>
+{template "common/footer"}

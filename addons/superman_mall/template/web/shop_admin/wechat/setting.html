@@ -1,0 +1,80 @@
+{template 'common/header'}
+{if $act == 'service'}
+<div class="main_width main_left_border no_border-radius main_wrap p-x-0">
+    <div class="category_title clearfix">
+        出售中
+    </div>
+    <ul class="lavel4_category_wrap p-l-0 m-b-0">
+        <li class="active">
+            <a href="">我的模板</a>
+        </li>
+        <li>
+            <a href="">模板库</a>
+        </li>
+    </ul>
+    <div class="p-a-2">
+        <form action="">
+            <div class="form-group row">
+                <label class="col-xs-2 col-form-label text-xs-right">第三方客服</label>
+                <div class="col-xs-9">
+                    <input class="form-control" type="text" value="" placeholder="http://">
+                    <small class="form-text text-muted">第三方客服链接网址，填写网址后，将替换商品详情页的联系客服链接</small>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-xs-2 col-form-label text-xs-right">联系客服</label>
+                <div class="col-xs-9">
+                    {if defined('IN_SUPERMAN_MALL_ADMIN')}
+                    {php echo superman_tpl_ueditor('setting[content]', $setting['content'])}
+                    {/if}
+
+                    <small class="form-text text-muted">填写第三方客服网址后，本内容将不再显示到手机端</small>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-xs-2 col-form-label">
+
+                </label>
+                <div class="col-xs-9 text-xs-left">
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{else if $act == 'slide'}
+<div class="main_width main_left_border no_border-radius main_wrap p-x-0">
+    <div class="category_title clearfix">
+        出售中
+    </div>
+    <ul class="lavel4_category_wrap p-l-0 m-b-0">
+        <li class="active">
+            <a href="">我的模板</a>
+        </li>
+        <li>
+            <a href="">模板库</a>
+        </li>
+    </ul>
+    <div class="p-a-2">
+        <!--TODO涉及较多js交互，暂时先写这么多-->
+        <table class="table m-t-1 table-hover">
+            <thead>
+                <tr class="list_title_style">
+                    <th width="30%">标题</th>
+                    <th width="30%">图片</th>
+                    <th width="30%">链接</th>
+                    <th class="text-xs-right" width="30%">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="4">
+                        <button type="button" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> 添加</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{/if}
+{template 'common/footer'}

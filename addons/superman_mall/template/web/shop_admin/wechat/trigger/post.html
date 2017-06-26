@@ -1,0 +1,252 @@
+<form class="form-horizontal form" method="post">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {if $id}编辑规则{else}添加规则{/if}
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">状态</label>
+                <div class="col-sm-6 col-md-8 col-xs-12">
+                    <div class="input-group">
+                        <label class="radio-inline">
+                            <input type="radio" name="status" value="1" {if $item['status'] == 1}checked{/if}> 开启
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="status" value="0" {if $item['status'] == 0}checked{/if}> 关闭
+                        </label>
+                    </div>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">标题</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <input class="form-control" name="title" type="text" value="{$item['title']}">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">动作</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <select class="form-control" name="action">
+                        <option value="">请选择</option>
+                        {if SupermanTrigger::$shop_actions}
+                        {loop SupermanTrigger::$shop_actions $k $v}
+                        <option value="{$k}" {if $k == $item['action']}selected{/if}>{$v['title']}</option>
+                        {/loop}
+                        {/if}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-2 control-label">通知</label>
+                <div class="col-sm-9 col-md-9 col-xs-12" id="list_wrap">
+                    {if isset($item['notices']) && $item['notices']}
+                    {loop $item['notices'] $notice}
+                    <div class="row notice" style="margin-bottom: 1rem;">
+                        <input type="hidden" name="nid[]" value="{$notice['id']}">
+                        <div class="col-sm-11 col-md-11 col-xs-12" style="padding-left: 0; padding-right: 3rem; margin-bottom: 1rem">
+                            <select class="form-control" name="type[]">
+                                <option value="">请选择</option>
+                                <option value="1" {if $notice['type'] == 1}selected{/if}>微信</option>
+                                <option value="2" {if $notice['type'] == 2}selected{/if}>短信</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-1 col-md-1 col-xs-1" style="padding: 0">
+                            <a href="javascript:;" data-toggle="tooltip" class="btn btn-danger" onclick="deleteNotice(this)" title="删除" data-id="{$notice['id']}">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 删除
+                            </a>
+                        </div>
+                        <div class="wrap_1 notice_wrap" {if $notice['type'] == 2}style="display: none"{/if}>
+                        <div class="col-sm-11 col-md-11 col-xs-12" style="padding-left: 0; padding-right: 3rem; margin-bottom: 1rem">
+                            <select class="form-control" name="openid[]">
+                                <option value="">请选择账号</option>
+                                {if $user_list}
+                                {loop $user_list $user}
+                                <option {if $user['openid'] == $notice['receiver']}selected{/if} {if $user['openid']}value="{$user['openid']}"{else}disabled{/if}>
+                                {$user['username']}{if $user['openid'] == ''}--未绑定微信{/if}
+                                </option>
+                                {/loop}
+                                {/if}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="wrap_2 notice_wrap" {if $notice['type'] == 1}style="display: none"{/if}>
+                    <div class="col-sm-11 col-md-11 col-xs-12" style="padding-left: 0; padding-right: 3rem; margin-bottom: 1rem">
+                        <input class="form-control" name="mobile[]" type="text" {if $notice['type'] == 2}value="{$notice['receiver']}"{/if} placeholder="手机号">
+                        {if isset($sms['setting']['shop_trigger']['switch']) && $sms['setting']['shop_trigger']['switch'] == 1 && $sms['setting']['shop_trigger']['provider'] == 'heysky'}
+                        <span class="help-block">本平台触发器短信配置为国际短信，手机号前需加国际区号，如中国区号为86，则中国手机号为86138643XXXXX</span>
+                        {/if}
+                    </div>
+                </div>
+                <div class="message_wrap">
+                    <div class="col-sm-11 col-md-11 col-xs-12" style="padding-left: 0; padding-right: 3rem; margin-bottom: 1rem">
+                        <textarea class="form-control" rows="3" name="message[]" placeholder="消息内容">{$notice['message']}</textarea>
+                    </div>
+                </div>
+            </div>
+            {/loop}
+            {else}
+            <div class="row notice" style="margin-bottom: 1rem;">
+                <input type="hidden" name="nid[]">
+                <div class="col-sm-11 col-md-11 col-xs-12" style="padding-left: 0; padding-right: 3rem; margin-bottom: 1rem">
+                    <select class="form-control" name="type[]">
+                        <option selected value="">请选择</option>
+                        <option value="1">微信</option>
+                        <option value="2">短信</option>
+                    </select>
+                </div>
+                <div class="col-sm-1 col-md-1 col-xs-1" style="padding: 0">
+                    <a href="javascript:;" data-toggle="tooltip" class="btn btn-danger" onclick="deleteNotice(this)" title="删除" data-id="0">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 删除
+                    </a>
+                </div>
+                <div class="wrap_1 notice_wrap" style="display: none">
+                    <div class="col-sm-11 col-md-11 col-xs-12" style="padding-left: 0; padding-right: 3rem; margin-bottom: 1rem">
+                        <select class="form-control" name="openid[]">
+                            <option selected value="">请选择账号</option>
+                            {if $user_list}
+                            {loop $user_list $user}
+                            <option {if $user['openid']}value="{$user['openid']}"{else}disabled{/if}>
+                            {$user['username']}{if $user['openid'] == ''}--未绑定微信{/if}
+                            </option>
+                            {/loop}
+                            {/if}
+                        </select>
+                    </div>
+                </div>
+                <div class="wrap_2 notice_wrap" style="display: none">
+                    <div class="col-sm-11 col-md-11 col-xs-12" style="padding-left: 0; padding-right: 3rem; margin-bottom: 1rem">
+                        <input class="form-control" name="mobile[]" type="text" value="" placeholder="手机号">
+                        {if isset($sms['setting']['shop_trigger']['switch']) && $sms['setting']['shop_trigger']['switch'] == 1 && $sms['setting']['shop_trigger']['provider'] == 'heysky'}
+                        <span class="help-block">本平台触发器短信配置为国际短信，手机号前需加国际区号，如中国区号为86，则中国手机号为86138643XXXXX</span>
+                        {/if}
+                    </div>
+                </div>
+                <div class="message_wrap" style="display: none">
+                    <div class="col-sm-11 col-md-11 col-xs-12" style="padding-left: 0; padding-right: 3rem; margin-bottom: 1rem">
+                        <textarea class="form-control" rows="3" name="message[]" placeholder="消息内容">您好，数据已更新，请登录后台查看。</textarea>
+                    </div>
+                </div>
+            </div>
+            {/if}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"></label>
+        <div class="col-sm-8 col-md-8 col-xs-12">
+            <button type="button" class="btn btn-warning add_notice">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加
+            </button>
+        </div>
+    </div>
+    </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+            <input type="hidden" name="token" value="{$_W['token']}">
+        </div>
+    </div>
+</form>
+<script>
+    require(['jquery.ui'], function($){
+        //初始化通知
+        $('select[name="type[]"]').change(function(){
+            $('.message_wrap', $(this).parent().parent()).show();
+            $('.notice_wrap', $(this).parent().parent()).hide();
+            var notice_type = $(this).val();
+            $('.wrap_'+notice_type, $(this).parent().parent()).show();
+            if (notice_type == '') {
+                $('.message_wrap', $(this).parent().parent()).hide();
+            }
+        });
+        //添加通知
+        $('.add_notice').click(function(){
+            $.ajax({
+                url: "{php echo $this->createWebUrl('trigger', array('act' => 'new'))}",
+                success:function(response) {
+                    $('#list_wrap').append(response);
+                    $('select[name="type[]"]').change(function(){
+                        $('.message_wrap', $(this).parent().parent()).show();
+                        $('.notice_wrap', $(this).parent().parent()).hide();
+                        var notice_type = $(this).val();
+                        $('.wrap_'+notice_type, $(this).parent().parent()).show();
+                        if (notice_type == '') {
+                            $('.message_wrap', $(this).parent().parent()).hide();
+                        }
+                    });
+                }
+            });
+        });
+        //删除通知
+        window.deleteNotice = function(obj) {
+            var id = $(obj).attr('data-id');
+            if (id == 0) {	//new
+                $(obj).parent().parent().remove();
+                return;
+            }
+            $.ajax({
+                'url': "{php echo $this->createWebUrl('trigger', array('act' => 'delete'))}"+'&nid='+id,
+                success:function(response) {
+                    if (response == 'success') {
+                        $(obj).parent().parent().remove();
+                    } else {
+                        util.message(response, '', 'error');
+                    }
+                }
+            });
+        };
+        //提交表单
+        $('form').submit(function(){
+            var title = $('input[name=title]');
+            if (title.val() == '') {
+                util.message('请输标题！', '', 'error');
+                return false;
+            }
+            var action = $('select[name=action]');
+            if (action.val() == '') {
+                util.message('请选择动作！', '', 'error');
+                return false;
+            }
+            var notice = $('.notice');
+            var notice_flag = true;
+            var notice_message;
+            notice.each(function() {
+                var type = $('select[name="type[]"]', this);
+                if (type.val() == '') {
+                    notice_message = '请选择通知类型！';
+                    notice_flag = false;
+                    return false;
+                }
+                var openid = $('select[name="openid[]"]', this);
+                var mobile = $('input[name="mobile[]"]', this);
+                if (type.val() == "1") {
+                    if (openid.val() == '') {
+                        notice_message = '请选择微信号！';
+                        notice_flag = false;
+                        return false;
+                    }
+                }
+                if (type.val() == "2") {
+                    if (mobile.val() == '') {
+                        notice_message = '请填写手机号！';
+                        notice_flag = false;
+                        return false;
+                    }
+                }
+                var message = $('textarea[name="message[]"]', this);
+                if (message.val() == '') {
+                    notice_message = '请填消息内容！';
+                    notice_flag = false;
+                    return false;
+                }
+            });
+            if (!notice_flag) {
+                util.message(notice_message, '', 'error');
+                return false;
+            }
+            return true;
+        });
+    });
+</script>

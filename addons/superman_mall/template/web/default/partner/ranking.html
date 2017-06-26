@@ -1,0 +1,218 @@
+<style>
+	.star {
+		color: red;
+		margin-right: 5px;
+		font-weight: bold;
+	}
+</style>
+{if $op == 'display_partner'}
+<div style="margin: 10px 0;" class="clearfix">
+	<div class="btn-group pull-left">
+		<a class="btn btn-default {if $type == 'week'}active{/if}" href="{php echo $this->createWebUrl('partner', array('act' => 'ranking', 'op' => 'display_partner', 'type' => 'week'));}">
+			周排行榜
+		</a>
+		<a class="btn btn-default {if $type == 'month'}active{/if}" href="{php echo $this->createWebUrl('partner', array('act' => 'ranking', 'op' => 'display_partner', 'type' => 'month'));}">
+			月排行榜
+		</a>
+
+	</div>
+	<span style="line-height: 34px; margin-left: 10px; color: red">{if $type == 'week'}{php echo date('Y-m-d', strtotime('-1 week'))} ~ {php echo date('Y-m-d')}{else}{php echo date('Y-m-d', strtotime('-1 month'))} ~ {php echo date('Y-m-d')}{/if}</span>
+	<div class="btn-group pull-right">
+		<a class="btn btn-default " href="{php echo $this->createWebUrl('partner', array('act' => 'ranking', 'op' => 'post_partner'));}">
+			添加虚拟分销商
+		</a>
+	</div>
+</div>
+<form action="" method="post">
+	<div class="panel panel-default">
+		<div class="table-responsive panel-body">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th width="50">排名</th>
+						<th width="200">分销商</th>
+						<th>佣金</th>
+						<th width="150" class="text-right">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{if $list}
+				{loop $list $li}
+					<tr>
+						<td>
+							{$li['ranking']}
+						</td>
+						<td>
+							<div style="height: 50px; line-height: 50px;">
+								<img src="{php echo tomedia($li['avatar'])}" onerror="this.src='{$_W['siteroot']}app/resource/images/heading.jpg'" style="width: 40px; height: 40px; border-radius: 50%; margin-left: .5rem; overflow: hidden" alt="">
+								<span style="padding-left: .3rem">{$li['nickname']}</span>
+							</div>
+						</td>
+						<td>&yen;{$li['commission']}</td>
+						<td style="white-space:nowrap;overflow: visible" class="text-right">
+							<div class="btn-group">
+								{if $li['type'] == 1}
+								<a href="{php echo $this->createWebUrl('partner', array('act' => 'commission', 'op' => 'display', 'id' => $li['partnerid']));}">查看佣金记录</a>
+								{else}
+								<a href="{php echo $this->createWebUrl('partner', array('act' => 'ranking', 'op' => 'display_commission', 'type' => 0, 'partnerid' => $li['partnerid']));}" class="btn btn-default btn-sm" title="佣金列表"><i class="fa fa-dollar"></i></a>
+								<a href="{php echo $this->createWebUrl('partner', array('act' => 'ranking', 'op' => 'post_partner', 'type' => 0, 'id' => $li['partnerid']));}" title="编辑虚拟分销商" class="btn btn-default btn-sm"><i class="fa fa-edit"></i></a>
+								<a href="{php echo $this->createWebUrl('partner', array('act' => 'ranking', 'op' => 'delete_partner', 'type' => 0, 'id' => $li['partnerid']));}" onclick="return confirm('此操作不可恢复，确认吗？'); return false;" title="删除" class="btn btn-default btn-sm"><i class="fa fa-times"></i></a>
+								{/if}
+							</div>
+						</td>
+					</tr>
+				{/loop}
+				{/if}
+				</tbody>
+			</table>
+		</div>
+		<div class="panel-footer">
+			总共 <strong>{$total}</strong> 条
+		</div>
+	</div>
+	{$pager}
+</form>
+{else if $op == 'post_partner'}
+<div class="alert alert-danger">
+	<i class="fa fa-exclamation-circle"></i> 生成虚拟分销商数据，虚拟分销商数据完全模拟真实佣金数据，虚拟数据支持删除，可控制佣金排行榜，请尊重游戏规则，勿滥用！
+</div>
+<form class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+	<div class="panel panel-default">
+		<div class="panel-heading">{if !$_GPC['id']}添加{else}编辑{/if}</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">头像</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					{php echo tpl_form_field_image('avatar', $item['avatar'])}
+					<span class="help-block">分销商头像，不设置头像时，默认调用系统头像，推荐尺寸：100x100像素</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="star">*</span>昵称</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<input type="text" class="form-control" name="nickname" value="{$item['nickname']}">
+					<span class="help-block">分销商昵称，建议2-4个汉字</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+			<button type="submit" name="submit" value="yes" class="btn btn-primary">提交</button>
+			<input type="hidden" name="token" value="{$_W['token']}">
+		</div>
+	</div>
+</form>
+<script>
+	require(['jquery'], function($){
+		$('form').submit(function(){
+			var nickname = $('input[name=nickname]');
+			if (nickname.val() == '') {
+				util.message('昵称为空，请重新输入！', '', 'error');
+				return false;
+			}
+		});
+	});
+</script>
+{else if $op == 'display_commission'}
+<div class="alert alert-info">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12" style="color: #777">本周佣金：&nbsp;&yen;{$week_commission['commission']}</div>
+		<div class="col-xs-12 col-sm-12 col-md-12" style="color: #777">本月佣金：&nbsp;&yen;{$month_commission['commission']}</div>
+	</div>
+</div>
+<div style="margin: 10px 0;" >
+	<div class="btn-group">
+		<a class="btn btn-default" href="{php echo $this->createWebUrl('partner', array('act' => 'ranking', 'op' => 'post_commission', 'partnerid' => $_GPC['partnerid']));}">
+			添加佣金
+		</a>
+	</div>
+</div>
+<form action="" method="post">
+	<div class="panel panel-default">
+		<div class="table-responsive panel-body">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th width="90">日期</th>
+						<th width="200">分销商</th>
+						<th>佣金</th>
+						<th width="150" class="text-right">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{if $list}
+					{loop $list $li}
+					<tr>
+						<td>
+							{$li['daytime']}
+						</td>
+						<td>
+							<div style="height: 50px; line-height: 50px;">
+								<img src="{php echo tomedia($li['avatar'])}" onerror="this.src='{$_W['siteroot']}app/resource/images/heading.jpg'" style="width: 40px; height: 40px; border-radius: 50%; margin-left: .5rem; overflow: hidden" alt="">
+								<span style="padding-left: .3rem">{$li['nickname']}</span>
+							</div>
+						</td>
+						<td>&yen;{$li['commission_total']}</td>
+						<td style="white-space:nowrap;overflow: visible" class="text-right">
+							<div class="btn-group">
+								<a href="{php echo $this->createWebUrl('partner', array('act' => 'ranking', 'op' => 'post_commission', 'id' => $li['id'], 'partnerid' => $_GPC['partnerid']));}" title="编辑虚拟分销商" class="btn btn-default btn-sm"><i class="fa fa-edit"></i></a>
+								<a href="{php echo $this->createWebUrl('partner', array('act' => 'ranking', 'op' => 'delete_commission', 'id' => $li['id']));}" onclick="return confirm('此操作不可恢复，确认吗？'); return false;" title="删除" class="btn btn-default btn-sm"><i class="fa fa-times"></i></a>
+							</div>
+						</td>
+					</tr>
+					{/loop}
+					{/if}
+				</tbody>
+			</table>
+		</div>
+		<div class="panel-footer">
+			总共 <strong>{$total}</strong> 条
+		</div>
+	</div>
+	{$pager}
+</form>
+{else if $op == 'post_commission'}
+<form class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+	<div class="panel panel-default">
+		<div class="panel-heading">{if !$_GPC['id']}添加{else}编辑{/if}</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="star">*</span>日期</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					{php echo tpl_form_field_date('daytime', $item['daytime'], false);}
+					<span class="help-block">请选择佣金生成日期</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label"><span class="star">*</span>佣金</label>
+				<div class="col-sm-6 col-md-8 col-xs-12">
+					<div class="input-group">
+						<input type="number" step="0.01" class="form-control" value="{$item['commission_total']}" name="commission_total">
+						<span class="input-group-addon">元</span>
+					</div>
+					<span class="help-block">请填写佣金数字，支持两位小数</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+			<button type="submit" name="submit" value="yes" class="btn btn-primary">提交</button>
+			<input type="hidden" name="token" value="{$_W['token']}">
+		</div>
+	</div>
+</form>
+<script>
+	require(['jquery'], function($){
+		$('form').submit(function(){
+			var nickname = $('input[name=commission_total]');
+			var daytime = $('input[name=daytime]');
+			if (nickname.val() == '') {
+				util.message('佣金为空，请重新输入！', '', 'error');
+				return false;
+			}
+		});
+	});
+</script>
+{/if}

@@ -1,0 +1,130 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+		{template 'common/nav'}
+		{if $act == 'display'}
+		{template 'common/title'}
+		<div class="content infinite-scroll" data-flag="0" data-display-url="{php echo $this->createMobileUrl('cart', array('act' => 'display', 'load' => 'infinite'))}" data-post-url="{php echo $this->createMobileUrl('cart', array('act' => 'post'))}" data-detail-url="{php echo $this->createMobileUrl('detail', array('act' => 'display'))}" data-distance="50" data-page="{$pindex}">
+			<div class="cart_wrap list-block media-list">
+				{if $list}
+				{loop $list $item}
+				<ul class="shopname_wrap">
+					<li>
+						<a href="{php echo $this->createMobileUrl('shop', array('shopid' => $item['shop']['id']))}" class="item-content item-link">
+							<div class="item-inner">
+								<div class="item-title font8">{$item['shop']['title']}</div>
+							</div>
+						</a>
+					</li>
+				</ul>
+				<ul class="item_list_wrap">
+					{loop $item['list'] $li}
+					<li class="clearfix">
+						<label class="label-checkbox item-content pull-left">
+							<input type="checkbox" {if $li['checked']}checked{/if} name="cart_id" value="{$li['id']}" data-shopid="{$li['item']['shopid']}" data-cartid="{$li['id']}" data-url="{php echo $this->createMobileUrl('cart', array('act' => 'post'))}" data-price="{if isset($li['item']['sku']['price'])&&$li['item']['sku']['price']}{$li['item']['sku']['price']}{else}{$li['item']['price']}{/if}">
+							<div class="item-media item_checkbox" data-checked="{if $li['checked']}1{else}0{/if}" data-cartid="{$li['id']}" data-url="{php echo $this->createMobileUrl('cart', array('act' => 'post'))}" data-price="{if isset($li['item']['sku']['price'])&&$li['item']['sku']['price']}{$li['item']['sku']['price']}{else}{$li['item']['price']}{/if}">
+								<i class="icon icon-form-checkbox"></i>
+							</div>
+						</label>
+						<label class="label-checkbox item-content">
+							<a href="{php echo $this->createMobileUrl('detail', array('act' => 'display', 'itemid' => $li['itemid']))}" class="external">
+								<div class="item-media item_img">
+									<img src="{php echo tomedia($li['item']['cover'])}" onerror="this.src='{$_W[siteroot]}addons/superman_mall/template/mobile/images/placeholder.gif'">
+								</div>
+								<div class="item-inner">
+									<div class="item-title-row">
+										<div class="item-title color-default font7 text-overflow-line2">
+											 {$li['item']['title']}
+										</div>
+									</div>
+									<div class="item-subtitle font6 color-gray">
+										{if $li['skuid']}
+											{if isset($li['item']['sku']['attr'])&&$li['item']['sku']['attr']}
+											{loop $li['item']['sku']['attr'] $a}
+												{$a['title']}:{$a['value']}&nbsp;
+											{/loop}
+											{/if}
+										{else}
+											{$li['sku']}
+										{/if}
+									</div>
+									<div class="item-title-row">
+										<div class="item-title font8 price pull-left">
+											&#165;{if isset($li['item']['sku']['price'])&&$li['item']['sku']['price']}{$li['item']['sku']['price']}{else}{$li['item']['price']}{/if}
+											{if $li['item']['special']==2}<span class="mgroupon_title">拼团价</span>{/if}
+											{if $li['item']['special']==1}<span class="mgroupon_title">秒杀价</span>{/if}
+										</div>
+										<div class="item-after font6">
+											<div class="pull-right">
+												{if $li['item']['status'] == 1}
+													{if $li['_no_stock']}
+													<a class="color-gray" href="#">无库存</a>
+													{else}
+													<div class="buttons-row">
+														<a class="button btn_minus" data-cartid="{$li['id']}" data-url="{php echo $this->createMobileUrl('cart', array('act' => 'post'))}" data-title="购买数不能小于1" data-min-total="1" href="#">-</a>
+														<input class="number" type="text" value="{$li['total']}" data-cartid="{$li['id']}" data-url="{php echo $this->createMobileUrl('cart', array('act' => 'post'))}"/>
+														<a class="button btn_plus" data-cartid="{$li['id']}" data-url="{php echo $this->createMobileUrl('cart', array('act' => 'post'))}" data-title="库存不足" href="#" data-max-total="{if $li['skuid']}{$li['item']['sku']['total']}{else}{$li['item']['total']}{/if}">+</a>
+													</div>
+													{/if}
+												{else}
+													<a class="color-gray" href="#">已下架</a>
+												{/if}
+											</div>
+										</div>
+									</div>
+								</div>
+							</a>
+						</label>
+					</li>
+					{/loop}
+				</ul>
+				{/loop}
+				{else}
+				<div class="text-center color-gray font7 msg_tips">
+					{if $_W['member']['uid']}
+						<span>购车是空的</span>
+						<div class="content-padded">
+							<div class="row">
+								<div class="col-50">
+									<a href="{php echo $this->createMobileUrl('home')}" class="button button-dark">去首页逛逛</a>
+								</div>
+								<div class="col-50">
+									<a href="{php echo $this->createMobileUrl('follow')}" class="button button-dark">看看关注</a>
+								</div>
+							</div>
+						</div>
+					{else}
+						<span>登录后可查看购物车商品</span>
+						<a href="{php echo url('auth/login', array('forward' => base64_encode($_SERVER['QUERY_STRING'])))}" class="external">登录</a>
+					{/if}
+				</div>
+				{/if}
+				<div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+			</div>
+			{if count($list)==$pagesize}
+			<div class="infinite-scroll-preloader">
+				<div class="preloader"></div>
+			</div>
+			{/if}
+		</div>
+		<nav class="bar bar-tab btn_buy">
+			<div class="row no-gutter clearfix">
+				<div class="col-25">
+					<label class="text-center">
+						<input type="checkbox" class="checkall" data-url="{php echo $this->createMobileUrl('cart', array('act' => 'post'))}">全选
+					</label>
+				</div>
+				<div class="col-40">
+					合计: <span class="total_price">{$cart['total_price']}</span>
+				</div>
+				<div class="settlement pull-right">
+					<a href="#" data-url="{php echo $this->createMobileUrl('confirm', array('act' => 'check'))}" class="submit_cart">
+						结算 <span class="font6">(<span class="total_item">{$cart['total_item']}</span>)</span>
+					</a>
+				</div>
+			</div>
+		</nav>
+		{/if}
+	</div>
+</div>
+{template 'common/footer'}

@@ -1,0 +1,16 @@
+<div class="form-group">
+	<label class="col-xs-12 col-sm-2 col-md-2 control-label">商户</label>
+	<div class="col-sm-8 col-md-8 col-xs-12 col-lg-6">
+		<select class="form-control" name="shopid">
+			<option value="0">全部</option>
+			{php $shoplist = $this->get_shop_list();}
+			{if $shoplist}
+			{loop $shoplist $shop}
+			<option value="{$shop['id']}" {if $_GPC['shopid']==$shop['id']}selected{/if}>
+				{$shop['title']}{if $shop['status']!=1}({php echo SupermanUtil::get_shop_status_title($shop['status'])}){/if}
+			</option>
+			{/loop}
+			{/if}
+		</select>
+	</div>
+</div>

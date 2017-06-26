@@ -1,0 +1,360 @@
+<div class="main_width main_left_border no_border-radius main_wrap p-x-0">
+    <div class="category_title clearfix">
+        出售中
+        <span class="pull-xs-right">
+            <a class="btn btn-warning" href="{php echo $this->createWebUrl('item', array('act' => 'post'));}" role="button"><i class="fa fa-plus" aria-hidden="true"></i> 添加</a>
+        </span>
+    </div>
+    <div class="p-x-2 p-b-2">
+        <form action="">
+            <!--基本属性-->
+            <div class="card">
+                <div class="card-header">
+                    基本属性
+                </div>
+                <div class="card-block">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-xs-right">访问地址</label>
+                        <div class="col-sm-10">
+                            <p class="form-control-static">
+                                <a target="_blank" href="http://wx.yunxiaonet.com/app/./index.php?i=6&c=entry&itemid=35&do=detail&m=superman_mall">http://wx.yunxiaonet.com/app/./index.php?i=6&c=entry&itemid=35&do=detail&m=superman_mall</a>
+                            </p>
+                            <small class="form-text text-muted">本网址为当前商品的唯一链接，可以拷贝到其他地方使用，二维码往右看</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label text-xs-right">商品ID</label>
+                        <div class="col-sm-10">
+                            <p class="form-control-static">35</p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right"><span class="star">*</span>商品标题</label>
+                        <div class="col-xs-9">
+                            <input class="form-control" type="text" value="" placeholder="请输入商品名">
+                            <small class="form-text text-muted">最多30个字符</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right"><span class="star">*</span>商品分类</label>
+                        <div class="col-xs-3">
+                            <select class="form-control">
+                                <option>请选择一级分类</option>
+                                <option>手机数码</option>
+                                <option>家具厨具</option>
+                                <option>男装女装</option>
+                                <option>家用电器</option>
+                                <option>食品类	</option>
+                                <option>实验停售</option>
+                                <option>游戏物品</option>
+                                <option>电子产品</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-3">
+                            <select class="form-control">
+                                <option>请选择二级分类</option>
+                                <option>健身球</option>
+                                <option>羽毛球</option>
+                                <option>乒乓球</option>
+                                <option>篮球类</option>
+                                <option>足球类</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-3">
+                            <select class="form-control">
+                                <option>请选择三级分类</option>
+                                <option>1元</option>
+                                <option>2元</option>
+                                <option>5元</option>
+                                <option>10元</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">商品类型</label>
+                        <div class="col-xs-9">
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1" checked> 实物商品
+                            </label>
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1"> 虚拟商品
+                            </label>
+                            <small class="form-text text-muted">实物商品需要物流，虚拟商品无需物流。</small>
+                        </div>
+                    </div>
+                    <!--此处的名字可以先F12看一下，重写before和after-->
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right"><span class="star">*</span>封面</label>
+                        <div class="col-xs-9">
+                            <label class="custom-file">
+                                <input type="file" class="custom-file-input">
+                                <span class="custom-file-control"></span>
+                            </label>
+                            <small class="form-text text-muted">推荐尺寸：100*100</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right"><span class="star">*</span>相册</label>
+                        <div class="col-xs-9">
+                            <label class="custom-file">
+                                <input type="file" class="custom-file-input">
+                                <span class="custom-file-control"></span>
+                            </label>
+                            <small class="form-text text-muted">推荐尺寸：400*300</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">配送方式</label>
+                        <div class="col-xs-9 check_inline_style">
+                            <label class="form-check-inline">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1" checked> 全部(快递+自提)
+                            </label>
+                            <label class="form-check-inline">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1"> 快递
+                            </label>
+                            <label class="form-check-inline">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1"> 自提
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">邮费设置</label>
+                        <div class="col-xs-9">
+                            <div class="form-check check_inline_style">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="TODO" value="option1" checked>
+                                    统一邮费
+                                </label>
+                                <!--TODO-->
+                                <!--<input type="text" class="form-control" placeholder="">-->
+                            </div>
+                            <div class="form-check check_inline_style">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="radio" name="TODO" value="option1">
+                                    邮费模板
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">状态</label>
+                        <div class="col-xs-9 check_inline_style">
+                            <label class="form-check-inline">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1" checked> 上架
+                            </label>
+                            <label class="form-check-inline">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1"> 上架
+                            </label>
+                            <label class="form-check-inline">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1"> 隐藏
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">商品规格</label>
+                        <div class="col-xs-9 check_inline_style">
+                            <label class="form-check-label">
+                                <input class="form-check-input open_spec" type="checkbox" value="">
+                                开启<span class="text-danger">（商品规格开启后，商品的库存和销售价格以商品规格设置为准）</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">总库存</label>
+                        <div class="col-xs-9">
+                            <input class="form-control" type="number" min="0" value="" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">销售价</label>
+                        <div class="col-xs-9">
+                            <input class="form-control" type="number" min="0" step="0.01" value="">
+                            <small class="form-text text-muted">开启商品规格后，由于每个规格销售价不同，所以此销售价仅作页面展示，订单价格以具体商品规格为准</small>
+                            <small class="form-text text-muted">推荐使用最低销售价展示，修改规格销售价时，程序自动选择最低价格</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">重量(kg)</label>
+                        <div class="col-xs-9">
+                            <input class="form-control" type="text" value="">
+                            <small class="form-text text-muted">开启商品规格后，按重量计算的邮费模板将按各个规格中设置的重量计算</small>
+                            <small class="form-text text-muted">未开启商品规格时，按重量计算的邮费模板将按此处设置的重量计算</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--分销属性-->
+            <div class="card">
+                <div class="card-header">
+                    分销属性
+                </div>
+                <div class="card-block">
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">是否开启分销</label>
+                        <div class="col-xs-9">
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1" > 是
+                            </label>
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1"checked> 否
+                            </label>
+                            <small class="form-text text-muted">开启商品分销后，分销商推广该商品后，可以从成交订单中获取佣金</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--营销属性-->
+            <div class="card">
+                <div class="card-header">
+                    营销属性
+                </div>
+                <div class="card-block">
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">最多抵现</label>
+                        <div class="col-xs-9">
+                            <div class="input-group">
+                                <input type="number" min="0" step="0.01" class="form-control" name="TODO">
+                                <span class="input-group-addon">积分 = （0.00元）</span>
+                            </div>
+                            <small class="form-text text-muted">设置商品最多可以使用的抵现积分</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--其它属性-->
+            <div class="card">
+                <div class="card-header">
+                    其它属性
+                </div>
+                <div class="card-block">
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">副标题</label>
+                        <div class="col-xs-9">
+                            <input class="form-control" name="TODO" type="text" value="">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">货号</label>
+                        <div class="col-xs-9">
+                            <input class="form-control" name="TODO" type="text" value="">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">减库存方式</label>
+                        <div class="col-xs-9">
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1" checked> 付款减
+                            </label>
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1"> 拍下减
+                            </label>
+                            <small class="form-text text-muted">选择付款减库存时，提交订单页面将提示如下信息：订单创建后，请尽快支付，否则可能出现库存不足</small>
+                            <small class="form-text text-muted">选择拍下减库存时，由于提交订单未支付问题，请注意补充库存</small>
+                            <small class="form-text text-danger">当设置为付款减时，由于支付时间差问题，存在超出库存的销售订单，如对库存有严格要求，可使用拍下减</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">是否有发票</label>
+                        <div class="col-xs-9">
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1" checked> 是
+                            </label>
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1"> 否
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">是否保修</label>
+                        <div class="col-xs-9">
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1" checked> 是
+                            </label>
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1"> 否
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">是否可核销</label>
+                        <div class="col-xs-9">
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1" checked> 是
+                            </label>
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1"> 否
+                            </label>
+                            <small class="form-text text-muted">设置可核销后，提交的订单默认具有可核销属性</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">是否需要清关</label>
+                        <div class="col-xs-9">
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1" checked> 是
+                            </label>
+                            <label class="form-check-inline check_inline_style">
+                                <input class="form-check-input" type="radio" name="TODO" value="option1"> 否
+                            </label>
+                            <small class="form-text text-muted">通过海外购买商品时，海关清关需收货人身份证信息，如选择需要清关时，包含商品的订单提交时，将需要顾客填写身份证信息</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">简介</label>
+                        <div class="col-xs-9">
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">详细描述</label>
+                        <div class="col-xs-9">
+                            {if defined('IN_SUPERMAN_MALL_ADMIN')}
+                            {php echo superman_tpl_ueditor('setting[content]', $setting['content'])}
+                            {/if}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">市场价</label>
+                        <div class="col-xs-9">
+                            <input class="form-control" name="TODO" type="number" min="0" step="0.01" value="">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">成本价</label>
+                        <div class="col-xs-9">
+                            <input class="form-control" name="TODO" type="number" min="0" step="0.01" value="">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2 col-form-label text-xs-right">产品参数</label>
+                        <div class="col-xs-9">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th width="180">属性名</th>
+                                    <th >属性值</th>
+                                    <th class="text-xs-right" width="80">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <button type="submit" class="btn btn-warning"><i class="fa fa-plus" aria-hidden="true"></i> 添加属性</button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-xs-12 text-xs-center">
+                            <button type="submit" class="btn btn-primary preser_btn">保存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

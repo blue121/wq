@@ -1,0 +1,21 @@
+<tr>
+	<td>
+		<a href="javascript:;" class="fa fa-move" title="按住鼠标左键，拖动调整顺序">
+			<i class="fa fa-arrows"></i>
+		</a>
+	</td>
+	<td>
+		<input class="form-control" name="title[]" type="text" value="">
+	</td>
+	<td>
+		<input class="form-control" name="remark[]" type="text" value="">
+	</td>
+	<td>
+		{php echo tpl_form_field_date('dateline[]', '', true);}
+	</td>
+	<td>
+		<a href="javascript:;" class="del_param_link" onclick="delItem(this)" title="删除" data-id="{$param['id']}">
+			<i class='fa fa-remove'></i>
+		</a>
+	</td>
+</tr>

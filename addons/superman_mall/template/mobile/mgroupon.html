@@ -1,0 +1,354 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+		{template 'common/nav'}
+		{if $act == 'display'}
+		{template 'common/title'}
+		<div class="content mgroupon_display">
+			{if $_W['member']['uid']}
+			<div class="mgroupon_list_wrap">
+				{if $list}
+				{loop $list $li}
+				<div class="card">
+					{if $li['status_title'] == '已完成'}
+					<div class="mgroupon_success">
+						<img src="{$_W[siteroot]}/addons/superman_mall/template/mobile/images/mgroupon_success.png" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'"/>
+					</div>
+					{/if}
+					<div class="card-header">
+						<div class="list-block">
+							<ul>
+								<li class="item-content item-link">
+									<a href="{php echo $this->createMobileUrl('mgroupon', array('act' => 'invite', 'id' => $li['id']))}" class="color-default external">
+										<div class="item-content">
+											<div class="item-media">
+												<div class="avatar_wrap">
+													<img src="{php echo tomedia($li['member']['avatar'])}" onerror="this.src='resource/images/heading.jpg'"/>
+												</div>
+											</div>
+											<div class="item-inner">
+												<div class="item-title">
+													<span class="font7">{$li['member']['nickname']}</span>
+													<span class="font6 color-gray">发起的{$li['limit']}人团</span>
+												</div>
+												<div class="font7 color-gray">{$li['status_title']}</div>
+											</div>
+										</div>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="card-content">
+						<a href="{php echo $this->createMobileUrl('mgroupon', array('act' => 'invite', 'id' => $li['id']))}">
+							<div class="card-content-inner row no-gutter">
+								{loop $li['children'] $c}
+								<div class="text-center avatar">
+									<div class="avatar_wrap">
+										<img src="{php echo tomedia($c['member']['avatar'])}" onerror="this.src='resource/images/heading.jpg'"/>
+									</div>
+									<span class="text-overflow font6 color-default text-center">{$c['member']['nickname']}</span>
+								</div>
+								{/loop}
+							</div>
+						</a>
+					</div>
+					<div class="card-footer">
+						<a href="{php echo $this->createMobileUrl('mgroupon', array('act' => 'invite', 'id' => $li['id']))}">
+							<span class="font6 color-gray">创建时间：{php echo date('Y-m-d H:i:s', $li['createtime'])}</span>
+						</a>
+					</div>
+				</div>
+				{/loop}
+				{else}
+				<div class="text-center color-gray font7 msg_tips">
+					<span>暂无拼团</span>
+					<div class="content-padded">
+						<div class="row">
+							<div class="col-50">
+								<a href="{php echo $this->createMobileUrl('mgroupon', array('act' => 'list'))}" class="button button-dark">去发起拼团</a>
+							</div>
+							<div class="col-50">
+								<a href="{php echo $this->createMobileUrl('follow')}" class="button button-dark">看看关注</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				{/if}
+			</div>
+			{else}
+				<div class="text-center color-gray font7 msg_tips">
+					<span>登录后可查看我的拼团</span>
+					<a href="{php echo url('auth/login', array('forward' => base64_encode($_SERVER['QUERY_STRING'])))}" class="external">登录</a>
+				</div>
+			{/if}
+		</div>
+		{else if $act == 'list'}
+		{template 'common/title'}
+        <div class="content mgroupon_list infinite-scroll" data-flag="0" data-display-url="{php echo $this->createMobileUrl('mgroupon', array('sort' => $sort, 'load' => 'infinite'))}" data-detail-url="{php echo $this->createMobileUrl('detail', array('act' => 'display'))}" data-distance="50" data-page="{$pindex}">
+			<div class="card item_list_nav">
+				<div class="card-content">
+					<div class="list-block media-list">
+						<ul>
+							<li>
+								<div class="item-inner row no-gutter text-center">
+									<div class="col-25">
+										<a href="{php echo $this->createMobileUrl('mgroupon', array('act' => 'list', 'sort' => 'multiple'))}" class="external color-default font7 {if $sort=='multiple'}active{/if}">综合</a>
+									</div>
+									<div class="col-25">
+										<a href="{php echo $this->createMobileUrl('mgroupon', array('act' => 'list', 'sort' => 'sale'))}" class="external color-default font7 {if $sort=='sale'}active{/if}">销量</a>
+									</div>
+									<div class="col-25">
+										<a href="{php echo $this->createMobileUrl('mgroupon', array('act' => 'list', 'sort' => 'comment'))}" class="external color-default font7 {if $sort=='comment'}active{/if}">评价</a>
+									</div>
+									<div class="col-25">
+										<a href="{php echo $this->createMobileUrl('mgroupon', array('act' => 'list', 'sort' => $sort_price))}" class="external color-default font7 {if $sort=='priceup'||$sort=='pricedown'}active{/if}">价格
+											{if $sort=='priceup'}
+											<span class="icon iconfont price_icon down_icon">&#xe63e;</span>
+											{else}
+											<span class="icon iconfont price_icon up_icon">&#xe63e;</span>
+											{/if}
+										</a>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			{if $list}
+			<div class="card item_list_wrap">
+				<div class="card-content">
+					<div class="list-block media-list">
+						<div class="item_list row no-gutter two_list_bg">
+							{loop $list $item}
+								<div class="col-50 two_list_style">
+									<a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="external">
+										<div class="card two_list_wrap">
+											<div valign="bottom" class="card-header color-white no-border no-padding">
+												<img class='card-cover img_square1' src="{php echo tomedia($item['cover'])}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'"/>
+												{if $item['sales']}
+												<div class="sales_wrap">
+													<span class="font6">已售{$item['sales']}</span>
+												</div>
+												{/if}
+											</div>
+											<div class="card-content">
+												<div class="card-content-inner">
+													<div class="text-overflow color-default">{$item['title']}</div>
+													<div class="clearfix font7 two_list_item">
+														<span class="pull-left color-danger">&#165;{$item['price']}</span>
+														{if $item['market_price'] > 0}
+														<span class="market_price_wrap color-gray font6 text-delete-line">&#165;{$item['market_price']}</span>
+														{/if}
+													</div>
+													<div>
+														<span class="button button-warning font6 mgroupon_btn">
+														<span class="iconfont font8">&#xe644;</span>
+														{if isset($item['extend']['multi_member_limit'])}{$item['extend']['multi_member_limit']}{else}0{/if}人团
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</a>
+								</div>
+							{/loop}
+						</div>
+					</div>
+				</div>
+			</div>
+			{else}
+			<div class="text-center color-gray font7 msg_tips">
+				<span>暂无拼团商品</span>
+				<div class="content-padded">
+					<div class="row">
+						<div class="col-50">
+							<a href="{php echo $this->createMobileUrl('home')}" class="button button-dark">去首页逛逛</a>
+						</div>
+						<div class="col-50">
+							<a href="{php echo $this->createMobileUrl('follow')}" class="button button-dark">看看关注</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			{/if}
+            <div class="nodata font6 text-center color-gray" style="display: none">没有了</div>
+            {if count($list)==$pagesize}
+            <div class="infinite-scroll-preloader">
+                <div class="preloader"></div>
+            </div>
+            {/if}
+		</div>
+		{else if $act == 'invite'}
+		{template 'common/title'}
+		<div class="content mgroupon_invite">
+			<div class="card invite_wrap" data-show-mgroupon-rule="{$show_mgroupon_rule}">
+				<div class="members_wrap">
+					<div class="inviter_avatar text-center">
+						<img src="{php echo tomedia($inviter['member']['avatar'])}" onerror="this.src='resource/images/heading.jpg'"/>
+					</div>
+					<div class="row no-gutter inviter_list_wrap">
+						<!--第一个为团长的头像-->
+						<div class="col-20 text-center">
+							<div class="avatar_wrap">
+								<img src="{php echo tomedia($inviter['member']['avatar'])}" onerror="this.src='resource/images/heading.jpg'"/>
+							</div>
+							{if $inviter['remain_total'] <= 0}
+							<div class="mgroupon_success">
+								<img src="{$_W[siteroot]}/addons/superman_mall/template/mobile/images/mgroupon_success.png" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'"/>
+							</div>
+							{/if}
+							<span class="text-overflow font6">{$inviter['member']['nickname']}</span>
+						</div>
+						{loop $invitee $iv}
+						<div class="col-20 text-center">
+							<div class="avatar_wrap">
+								<img src="{php echo tomedia($iv['member']['avatar'])}" onerror="this.src='resource/images/heading.jpg'"/>
+							</div>
+							<span class="text-overflow font6">{$iv['member']['nickname']}</span>
+						</div>
+						{/loop}
+					</div>
+				</div>
+				{if !$inviter['remain_time']}
+				<div class="text-center font6">该团已结束，请重新发起拼团！</div>
+				<div class="row">
+					<div class="col-100 inviter_btn">
+						<a href="{php echo $this->createMobileUrl('mgroupon', array('act' => 'list'))}" class="button button-fill">发起拼团</a>
+					</div>
+				</div>
+				{else}
+				{if $inviter['remain_total']}
+				<div class="text-center font6 color-danger">还差{$inviter['remain_total']}人成团，邀请好友参团！</div>
+				<div class="text-center font6">距离该团结束还剩 <span class="mgroupon_remain_time countdown" data-time="{$inviter['expiretime']}">-时-分-秒</span></div>
+				<div class="row">
+					<div class="{if $my_mgroupon}col-100{else}col-50{/if} inviter_btn">
+						<a href="#" onclick="document.getElementById('share_tips').style.display='block';" class="button button-fill">邀请好友拼团</a>
+					</div>
+                    {if !$my_mgroupon}
+                    <div class="col-50 inviter_btn">
+                        <a href="{php echo $this->createMobileUrl('detail', array('itemid' => $list[0]['id']))}" class="button button-warning button-fill external">立即参团</a>
+                    </div>
+                    {/if}
+				</div>
+				<div class="text-center">
+					<a class="font6 open-popup">
+						查看拼团规则
+					</a>
+				</div>
+				{else}
+				<div class="text-center font6">恭喜您，拼团成功！</div>
+				<div class="col-100 inviter_btn">
+					<a href="{php echo $this->createMobileUrl('mgroupon', array('act' => 'list'))}" class="button button-fill">发起拼团</a>
+				</div>
+				<div class="text-center">
+					<a class="font6 open-popup">
+						查看拼团规则
+					</a>
+				</div>
+				{/if}
+				{/if}
+			</div>
+			{if $my_mgroupon}
+			<div class="card item_list_wrap">
+				<div class="card-content">
+					<div class="list-block media-list">
+						<ul>
+							<li class="item-content item-link">
+								<a class="color-default order_num" href="{php echo $this->createMobileUrl('order', array('act' => 'detail', 'orderid' => $my_mgroupon['orderid']))}">
+									<div class="item-inner">
+										<div class="item-title">
+											订单号：{$my_mgroupon['ordersn']}
+										</div>
+									</div>
+								</a>
+							</li>
+							{loop $my_mgroupon['order_item'] $ori}
+							<li>
+								<a href="{php echo $this->createMobileUrl('order', array('act' => 'detail', 'orderid' => $ori['orderid']))}" class="item-content">
+									<div class="item-media">
+										<img class="img_square1" src="{php echo tomedia($ori['cover'])}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'">
+									</div>
+									<div class="item-inner">
+										<div class="item-title-row">
+											<div class="item-title font7 color-default text-overflow-line2">{$ori['title']}</div>
+										</div>
+										<div class="item-subtitle color-gray font6">
+											<span>x{$ori['total']}</span>
+										</div>
+										<div class="item-subtitle color-danger font9">&#165;{$ori['price']}</div>
+									</div>
+								</a>
+							</li>
+							{/loop}
+						</ul>
+					</div>
+				</div>
+			</div>
+			{else}
+			<div class="card item_list_wrap">
+				<div class="card-content">
+					<div class="list-block media-list">
+						<ul>
+							{loop $list $item}
+							<li>
+								<a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['id']))}" class="item-content external">
+									<div class="item-media">
+										<img src="{php echo tomedia($item['cover'])}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'"/>
+									</div>
+									<div class="item-inner">
+										<div class="item-title-row">
+											<div class="item-title font7 color-default">{$item['title']}</div>
+										</div>
+										<div class="item-subtitle color-danger font9">
+											&#165;{$item['price']}
+											<span class="mgroupon_title">拼团价</span>
+										</div>
+										<div class="item-subtitle color-gray font6">
+											{if $item['market_price'] > 0}
+											<span class="text-delete-line">&#165;{$item['market_price']}</span>
+											{/if}
+											{if $item['sales']}<span>已售{$item['sales']}</span>{/if}
+										</div>
+										<!--<div style="position: absolute;right: .5rem;bottom: .5rem;">
+											<button class="button button-danger">立即拼团</button>
+										</div>-->
+									</div>
+								</a>
+							</li>
+							{/loop}
+						</ul>
+					</div>
+				</div>
+			</div>
+			{/if}
+		</div>
+		{/if}
+		<div id="share_tips" onclick="document.getElementById('share_tips').style.display='';" style="display:none;">
+			<img src="{$_W[siteroot]}/addons/superman_mall/template/mobile/images/sharer.png" />
+		</div>
+		{template 'common/share'}
+	</div>
+	{if $act == 'invite'}
+	<div class="popup superpage_{$do}_rule_conetnt">
+		<header class="bar bar-nav">
+			<a class="button button-link button-nav pull-right close-popup">
+				关闭
+			</a>
+			<h1 class="title">拼团规则</h1>
+		</header>
+		<div class="content native-scroll">
+			<div class="content-padded">
+				<div class="content-inner">
+					<div class="content-block font7 mgroupon_rule">
+						{php echo htmlspecialchars_decode($mgroupon_setting['rule'])}
+					</div>
+				</div>
+			</div>
+		</div>
+		{template 'common/share'}
+	</div>
+	{/if}
+</div>
+{template 'common/footer'}

@@ -1,0 +1,330 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+		{template 'common/nav'}
+		{if $act == 'display'}
+		{template 'common/title'}
+		<div class="content">
+            {if $arr}
+            {loop $arr $key $value}
+            <div class="card">
+                <div class="card-content">
+                    <div class="list-block media-list">
+                        <ul>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <span class="font7">订单号: {$value['ordersn']}</span>
+                                    </div>
+                                </div>
+                            </li>
+                            {loop $value['item'] $item}
+                            <a href="{php echo $this->createMobileUrl('detail', array('itemid'=>$item['itemid']))}" class="{SUPERMAN_EXTERNAL}" data-no-cache="true">
+                                <li class="item-content">
+                                    <div class="item-media">
+                                        <img class="img_square1" src="{php echo tomedia($item['cover'])}">
+                                    </div>
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title color-default">{$item['title']}</div>
+                                        </div>
+                                        <div class="item-subtitle color-gray">{$item['sku']}</div>
+                                        <div class="item-subtitle color-gray buy_num">x{$item['total']}</div>
+										<span>
+                                            {if $item['service_type'] == 0}
+                                            <a href="{php echo $this->createMobileUrl('refund', array('act'=>'post', 'oiid' => $item['id']))}" class="button button-small button-fill button-warning font6 pull-right {SUPERMAN_EXTERNAL}" data-no-cache="true">申请售后</a>
+                                            {else}
+                                            <a href="{php echo $this->createMobileUrl('refund', array('act'=>'progress', 'oiid' => $item['id']))}" class="button button-small button-fill font6 pull-right {SUPERMAN_EXTERNAL}" data-no-cache="true">查看进度</a>
+                                            {/if}
+										</span>
+                                    </div>
+                                </li>
+                            </a>
+                            {/loop}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {/loop}
+            {/if}
+		</div>
+		{else if $act == 'post'}
+		{template 'common/title'}
+		<div class="content">
+			<div class="list-block media-list item_wrap">
+                <input type="hidden" name="servierId">
+                <input type="hidden" name="oiid" value="{$oiid}">
+				<ul>
+					<li>
+						<a href="{php echo $this->createMobileUrl('detail', array('itemid' => $order_item['itemid']))}" class="item-content {SUPERMAN_EXTERNAL}" data-no-cache="true">
+							<div class="item-media">
+								<img src="{php echo tomedia($order_item['cover'])}">
+							</div>
+							<div class="item-inner">
+								<div class="item-subtitle color-default">{$order_item['title']}</div>
+								<div class="item-text">
+									<span class="color-gray">&#165;{$order_item['price']}</span>
+									<span class="color-gray">数量：{$order_item['total']}</span>
+								</div>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="card service_type">
+				<div class="row">
+					<div class="col-100">服务类型</div>
+					<div class="col-100">
+						<!--订单未发货时，默认选中退款，不显示其它售后类型-->
+						<!--<span>
+							<botton class="button button-fill button-danger" name="type" value="4">退款</botton>
+						</span>-->
+						<span>
+							<botton class="button button-small button-fill button-danger" name="type" value="1">退货</botton>
+						</span>
+						<!--<span>-->
+							<!--<botton class="button button-fill button-danger" value="2">换货</botton>-->
+						<!--</span>-->
+                        <!--<span>
+                            <botton class="button button-fill button-dark" value="3">维修</botton>
+                        </span>-->
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="row">
+					<div class="col-100">申请数量</div>
+					<div class="col-100 font6 color-gray">
+						<div class="buttons-row pull-left">
+							<a class="button btn_minus" data-title="商品数不能小于1" data-min-total="1" href="#">-</a>
+							<input class="number" type="text" name="total" value="1"/>
+							<a class="button btn_plus" data-over-title="超过可申请退货数量" data-max-total="{$order_item['total']}" href="#">+</a>
+						</div>
+					</div>
+					<div class="col-100 font6 color-gray">您最多可提交数量为{$order_item['total']}个</div>
+				</div>
+			</div>
+			<div class="card problem">
+				<div class="row">
+					<div class="col-100">
+						问题描述
+					</div>
+					<div class="col-100">
+						<div class="list-block">
+							<ul>
+								<li class="align-top">
+									<div class="item-content">
+										<div class="item-inner">
+											<div class="item-input">
+												<textarea name="remark" placeholder="请在此详细描述问题细节"></textarea>
+											</div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card img_upload">
+				<div class="row">
+					<div class="col-100">
+						上传图片
+					</div>
+					<div class="col-100 add_img">
+						<a href="#">
+							<input type="hidden" name="serverId" id="serverId"/>
+							<div class="text-center">
+								<span class="icon iconfont color-gray">&#xe633;</span>
+								<span class="font6 color-gray">添加图片</span>
+							</div>
+						</a>
+					</div>
+					<div class="img_list"></div>
+					<div class="col-100 color-gray font6">
+						最多上传3张，每张不超过5M，支持JPG、PNG、BMP格式图片
+					</div>
+				</div>
+			</div>
+			<div class="btn text-center">
+                <input name="submit" type="button" value="提交" class="button button-fill">
+                <input type="hidden" name="token" value="{$_W['token']}" />
+			</div>
+		</div>
+		{else if $act == 'progress'}
+		{template 'common/title'}
+		<div class="content progress_wrap">
+			<div class="list-block">
+				<ul>
+					<li>
+						<a href="{php echo $this->createMobileUrl('refund', array('act'=>'progress_detail', 'srvid' => $service['id']))}" class="font7 item-content item-link">
+							<div class="item-inner">
+								<div class="item-title title_color">
+									售后进度
+								</div>
+							</div>
+						</a>
+					</li>
+                    {if $progress_list}
+                    {loop $progress_list $key $li}
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title font6 {if $key == 0}color-danger{else}color-gray{/if}">{$li['title']}</div>
+                            <div class="font6 {if $key == 0}color-danger{else}color-gray{/if}">{php echo date('Y-m-d H:i:s', $li['dateline'])}</div>
+                        </div>
+                    </li>
+                    {/loop}
+                    {/if}
+				</ul>
+			</div>
+			{if $service['status'] == 0}
+			<div class="content-block">
+				<input type="button" value="确认完成" class="button button-fill btn_submit" data-url="{php echo $this->createMobileUrl('refund', array('act' => 'progress', 'state' => 'confirm', 'oiid' => $oiid))}">
+			</div>
+			<div class="content-block">
+				<input type="button" value="取消" class="button button-fill button-danger btn_cancel" data-url="{php echo $this->createMobileUrl('refund', array('act' => 'progress', 'state' => 'cancel', 'oiid' => $oiid))}">
+			</div>
+			{/if}
+			<div class="list-block media-list item_wrap">
+				<ul>
+					<li>
+						<a href="{php echo $this->createMobileUrl('detail', array('itemid' => $order_item['itemid']))}" class="item-content {SUPERMAN_EXTERNAL}" data-no-cache="true">
+							<div class="item-media">
+								<img class="img_square1" src="{php echo tomedia($order_item['cover'])}">
+							</div>
+							<div class="item-inner">
+								<div class="item-subtitle color-default">{$order_item['title']}</div>
+								<div class="item-text">
+									<span class="color-gray">&#165;{$order_item['price']}</span>
+									<span class="color-gray">数量：{$order_item['total']}</span>
+								</div>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="card service_type">
+				<div class="row">
+					<div class="col-100">服务类型</div>
+					<div class="col-100">
+						<span>
+							<button class="button button-small button-fill button-danger" value="1">退货</button>
+						</span>
+                        <!--1.0版本支持退货，换货和维修暂不支持，模板上可暂时隐藏-->
+						<!--<span>-->
+							<!--<button class="button button-fill button-danger" value="2">换货</button>-->
+						<!--</span>-->
+						<!--<span>
+							<button class="button button-fill button-dark" value="3">维修</button>
+						</span>-->
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="row">
+					<div class="col-100">申请数量</div>
+					<div class="col-100 font6 color-gray">
+						<div class="buttons-row pull-left">
+							<a class="button disabled" href="#">-</a>
+							<input class="number" type="text" disabled value="{$service['total']}"/>
+							<a class="button disabled" href="#">+</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card problem">
+				<div class="row">
+					<div class="col-100">
+						问题描述
+					</div>
+					<div class="col-100">
+						<div class="list-block">
+							<ul>
+								<li class="align-top">
+									<div class="item-content">
+										<div class="item-inner">
+											<div class="item-input">
+												<textarea class="font7" disabled>{$service['remark']}</textarea>
+											</div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			{if $service['img']}
+			<div class="card">
+				<div class="row">
+                    <div class="col-100">上传图片</div>
+					{loop $service['img'] $img}
+					<div class="col-100 img_item">
+						<img src="{php echo tomedia($img)}"/>
+					</div>
+					{/loop}
+				</div>
+			</div>
+			{/if}
+		</div>
+		{else if $act == 'progress_detail'}
+		{template 'common/title'}
+		<div class="content progress_detail_warp">
+            {if $_W['member']['uid']}
+            {if $progress_list}
+            {loop $progress_list $li}
+            <div class="list-block">
+                <ul>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label font7">状态</div>
+                                <div class="item-input color-gray text-right font7">
+                                    {$li['title']}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {if $li['remark']}
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label font7">备注</div>
+                                <div class="item-input color-gray text-right font7 remark">
+                                    {$li['remark']}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {/if}
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label font7">操作时间</div>
+                                <div class="item-input color-gray text-right font7">
+                                    {php echo date('Y-m-d H:i:s', $li['dateline'])}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            {/loop}
+            {else}
+            <div class="text-center color-gray font7 msg_tips">
+                <div class="content-padded">
+                    <span>暂时没有售后进度详情</span>
+                </div>
+            </div>
+            {/if}
+            {else}
+            <div class="text-center color-gray font7 msg_tips">
+                <span>登录后可查看售后进度详情</span>
+                <a href="{php echo url('auth/login', array('forward' => base64_encode($_SERVER['QUERY_STRING'])))}" class="external">登录</a>
+            </div>
+            {/if}
+		</div>
+		{/if}
+	</div>
+</div>
+{template 'common/footer'}

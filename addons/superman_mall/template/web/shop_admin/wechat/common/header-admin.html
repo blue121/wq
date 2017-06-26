@@ -1,0 +1,67 @@
+<nav class="navbar navbar-light bg-faded top_nav_wrap" role="navigation">
+    <div class="container">
+        <h1 class="shop_logo">
+            <a href="{php echo $this->createWebUrl('dashboard')}" title="{php echo $this->shop['title']}" style="background: url({php echo tomedia($this->shop['logo'])}) center no-repeat;background-size: contain;"></a>
+        </h1>
+        <div class="nav_list">
+            <ul>
+                {loop $this->shop_navs $nav}
+                <li class="{$nav['active']}">
+                    <a href="{$nav['url']}">
+                        {$nav['title']}
+                    </a>
+                </li>
+                {/loop}
+            </ul>
+        </div>
+        <div class="dropdown pull-right account_info_wrap">
+            {if $this->shop_user}
+            <button class="btn dropdown-toggle btn_user" type="button" data-toggle="dropdown">
+                {php echo $this->shop_user['username']}
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li role="presentation"><a class="dropdown-item" href="{php echo url('site/entry/shop', array('act' => 'post', 'm' => 'superman_mall', '_n' => 6))}">我的店铺</a></li>
+                <li class="divider"></li>
+                <li role="presentation"><a class="dropdown-item" href="{php echo url('site/entry/profile', array('m' => 'superman_mall', '_n' => -1))}">我的账号</a></li>
+                <li role="presentation"><a class="dropdown-item" href="{php echo url('user/logout', array('shopid' => $this->shop['id']))}">退出</a></li>
+            </ul>
+            {/if}
+        </div>
+    </div>
+</nav>
+<!--<div class="container-fluid">-->
+<div class="container container_wrap">
+    {if defined('IN_MESSAGE')}
+    <div class="jumbotron clearfix alert alert-{$label}">
+        <div class="row">
+            <div class="col-xs-12 col-sm-3 col-lg-2">
+                <i class="fa fa-5x fa-{if $label=='success'}check-circle{/if}{if $label=='danger'}times-circle{/if}{if $label=='info'}info-circle{/if}{if $label=='warning'}exclamation-triangle{/if}"></i>
+            </div>
+            <div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+                {if is_array($msg)}
+                    <h2>MYSQL 错误：</h2>
+                    <p>{php echo cutstr($msg['sql'], 300, 1);}</p>
+                    <p><b>{$msg['error'][0]} {$msg['error'][1]}：</b>{$msg['error'][2]}</p>
+                {else}
+                <h2>{$caption}</h2>
+                <p>{$msg}</p>
+                {/if}
+                {if $redirect}
+                <p><a href="{$redirect}">如果你的浏览器没有自动跳转，请点击此链接</a></p>
+                <script type="text/javascript">
+                    setTimeout(function () {
+                        location.href = "{$redirect}";
+                    }, 3000);
+                </script>
+                {else}
+                    <p>[<a href="javascript:history.go(-1);">点击这里返回上一页</a>] &nbsp; [<a href="./?refresh">首页</a>]</p>
+                {/if}
+            </div>
+    {else}
+    <div class="row">
+        {if !defined('SUPERMAN_WEB_FULL_SCREEN')}
+        {template 'common/menu'}
+        {/if}
+        {template 'common/main'}
+    {/if}

@@ -1,0 +1,119 @@
+<form class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="id" value="">
+	<style>
+		.table td {
+			vertical-align: top !important;
+		}
+	</style>
+	<table class="table table-hover">
+		<tbody class="list_wrap ui-sortable">
+			{loop $settings $key $value}
+			<tr>
+				<td style="border: 0; padding: 0">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<a href="javascript:;" class="fa fa-move" title="按住鼠标左键，拖动调整顺序">
+								<i class="fa fa-arrows"></i>
+							</a>
+						</div>
+						<div class="panel-body">
+							<div class="form-group">
+								<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label text-right">通栏广告图</label>
+								<div class="col-sm-5 col-xs-12">
+									{php echo tpl_form_field_image("setting[$key][banner][img]", $value['banner']['img']);}
+									<span class="help-block">推荐尺寸：414*104</span>
+								</div>
+								<div class="col-sm-3 col-xs-12">
+									<input name="setting[{$key}][banner][url]" type="text" class="form-control" placeholder="http://" value="{$value['banner']['url']}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label text-right">分类广告图</label>
+								<div class="col-sm-8 col-xs-12">
+									<table class="table table-hover">
+										<thead>
+										<tr>
+											<th width="5%"></th>
+											<th width="60%">图片</th>
+											<th width="35%">链接</th>
+											<th width="10%">操作</th>
+										</tr>
+										</thead>
+										<tbody class="list_wrap ui-sortable">
+											{if $value['classified']}
+											{loop $value['classified'] $v}
+											<tr>
+												<td>
+													<a href="javascript:;" class="fa fa-move" title="按住鼠标左键，拖动调整顺序">
+														<i class="fa fa-arrows"></i>
+													</a>
+												</td>
+												<td>
+													<div class="form-group">
+														<div class="col-sm-12 col-xs-12">
+															{php echo tpl_form_field_image('setting['.$key.'][classified][img][]', $v['img']);}
+															<span class="help-block">推荐尺寸：414*220</span>
+														</div>
+													</div>
+												</td>
+												<td>
+													<div class="form-group">
+														<div class="col-sm-12 col-xs-12">
+															<input name="setting[{$key}][classified][url][]" type="text" class="form-control" placeholder="http://" value="{$v['url']}">
+														</div>
+													</div>
+												</td>
+												<td>
+													<a href="javascript:;" onclick="delItem(this)" title="删除">
+														<i class="fa fa-remove" style="color: #f00"></i>
+													</a>
+												</td>
+											</tr>
+											{/loop}
+											{/if}
+										</tbody>
+										<tbody>
+										<tr>
+											<td colspan="5">
+												<button type="button" class="btn btn-warning add_img" title="添加" data-index="{$key}">
+													<span class="glyphicon glyphicon-plus"></span> 添加图片
+												</button>
+											</td>
+										</tr>
+										</tbody>
+									</table>
+									<span class="help-block">分类广告图可以为空，最多上传9张图片，推荐上传6张</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+			{/loop}
+		</tbody>
+	</table>
+	<div class="form-group col-sm-12">
+		<button type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交">提交</button>
+		<input type="hidden" name="token" value="{$_W['token']}">
+	</div>
+</form>
+
+<script>
+	require(['jquery.ui'], function($){
+		$('.list_wrap').sortable({handle: '.fa-move'});
+		$('.add_img').click(function(){
+			var t = this;
+			var index = $(t).attr('data-index');
+			$.ajax({
+				url: "{php echo $this->createWebUrl('platform', array('act' => 'homead', 'add' => 'yes'))}",
+				data: 'index='+index,
+				success: function (response) {
+					$(t).parent().parent().parent().prev().append(response);
+				}
+			});
+		});
+		window.delItem = function(obj) {
+			$(obj).parent().parent().remove();
+		};
+	});
+</script>

@@ -1,0 +1,11 @@
+{template 'common/title'}
+<div class="content partner_invite">
+	<div class="inviter_avatar text-center">
+		<img src="{php echo tomedia($member['avatar'])}" onerror="this.src='resource/images/heading.jpg'">
+	</div>
+	<div class="card">
+		<img class="qrcode" src="{php echo tomedia($qrcode_path)}"  onerror="this.src='{php echo $this->superman_placeholder}'">
+	</div>
+	<div class="text-center font7">微信扫一扫或点击右上角发送给朋友</div>
+</div>
+{template 'common/nav'}

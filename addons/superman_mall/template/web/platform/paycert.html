@@ -1,0 +1,72 @@
+<ul class="nav nav-tabs">
+	<li {if $act == 'payments'}class="active"{/if}><a href="{php echo $this->createWebUrl('platform', array('act' => 'payments'));}">支付方式</a></li>
+	<li {if $act == 'paycert'}class="active"{/if}><a href="{php echo $this->createWebUrl('platform', array('act' => 'paycert'));}">支付证书</a></li>
+</ul>
+<div class="main">
+	<form class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+		<div class="alert alert-info">
+			<i class="fa fa-exclamation-circle"></i> 开启微信支付后，可配置微信支付证书
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				微信支付证书
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">证书</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<input type="file" name="setting[apiclient_cert]" {if isset($setting['apiclient_cert'])}value="{php echo $setting['apiclient_cert']}"{/if}>
+						<span class="help-block">证书下载解压后，默认文件名为：apiclient_cert.pem，请选择对应文件</span>
+						<span class="help-block">
+							{if isset($setting['apiclient_cert']) && $setting['apiclient_cert']!=''}
+							<a href="{php echo tomedia($setting['apiclient_cert'])}" target="_blank">点击下载</a><br/>
+							<label class="checkbox-inline">
+								<input type="checkbox" name="setting[del_apiclient_cert]"> <span style="color: #f00">删除</span>
+							</label>
+							{/if}
+						</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">证书密钥</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<input type="file" name="setting[apiclient_key]" {if isset($setting['apiclient_key'])}value="{php echo $setting['apiclient_key']}"{/if}>
+						<span class="help-block">证书下载解压后，默认文件名为：apiclient_key.pem，请选择对应文件</span>
+						<span class="help-block">
+							{if isset($setting['apiclient_key']) && $setting['apiclient_key']!=''}
+							<a href="{php echo tomedia($setting['apiclient_key'])}" target="_blank">点击下载</a><br/>
+							<label class="checkbox-inline">
+								<input type="checkbox" name="setting[del_apiclient_key]"> <span style="color: #f00">删除</span>
+							</label>
+							{/if}
+						</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 control-label">CA证书</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<input type="file" name="setting[rootca]" {if isset($setting['rootca'])}value="{php echo $setting['rootca']}"{/if}>
+						<span class="help-block">证书下载解压后，默认文件名为：rootca.pem，请选择对应文件</span>
+						<span class="help-block">
+							{if isset($setting['rootca']) && $setting['rootca']!=''}
+							<a href="{php echo tomedia($setting['rootca'])}" target="_blank">点击下载</a><br/>
+							<label class="checkbox-inline">
+								<input type="checkbox" name="setting[del_rootca]"> <span style="color: #f00">删除</span>
+							</label>
+							{/if}
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交">
+			<input type="hidden" name="token" value="{$_W['token']}">
+		</div>
+	</form>
+</div>
+<script type="text/javascript">
+	require(['jquery', 'util', 'filestyle'], function($){
+		$(".form-group").find(':file').filestyle({buttonText: '上传文件'});
+	});
+</script>

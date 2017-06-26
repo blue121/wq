@@ -1,0 +1,52 @@
+<style>
+	.plugin_item {
+		min-width: 150px;
+	}
+</style>
+<form class="form-inline" action="" method="post">
+	<div class="alert alert-info">
+		<i class="fa fa-exclamation-circle"></i> 选择是否开启功能模块，未开启时功能模块不可用
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">功能模块</div>
+		<div class="panel-body table-responsive" style="overflow:visible">
+			<div class="checkbox plugin_item">
+				<label>
+					<input type="checkbox" value="1" name="setting[seckill]" {if isset($setting['seckill']) && $setting['seckill'] == 1}checked{/if}> 秒杀
+				</label>
+			</div>
+			<div class="checkbox plugin_item">
+				<label>
+					<input type="checkbox" value="1" name="setting[mgroupon]" {if isset($setting['mgroupon']) && $setting['mgroupon'] == 1}checked{/if}> 拼团
+				</label>
+			</div>
+			<div class="checkbox plugin_item">
+				<label>
+					<input type="checkbox" value="1" name="setting[partner]" {if isset($setting['partner']) && $setting['partner'] == 1}checked{/if}> 分销
+				</label>
+			</div>
+			<div class="checkbox plugin_item">
+				<label>
+					<input type="checkbox" value="1" name="setting[discount]" {if isset($setting['discount']) && $setting['discount'] == 1}checked{/if}> 营销
+				</label>
+			</div>
+			<div class="checkbox plugin_item">
+				<label>
+					<input type="checkbox" value="1" name="setting[printer]" {if isset($setting['printer']) && $setting['printer'] == 1}checked{/if}> 打印机
+				</label>
+			</div>
+			<div class="checkbox plugin_item">
+				<label>
+					<input type="checkbox" value="1" name="setting[tbast]" {if isset($setting['tbast']) && $setting['tbast'] == 1}checked{/if}> 淘宝助手
+				</label>
+			</div>
+			<div class="checkbox plugin_item">
+				<label>
+					<input type="checkbox" value="1" name="setting[bm_payu]" {if isset($setting['bm_payu']) && $setting['bm_payu'] == 1}checked{/if}> 微信服务商支付
+				</label>
+			</div>
+		</div>
+	</div>
+	<button type="submit" class="btn btn-primary" name="submit" value="yes">提交</button>
+	<input type="hidden" name="token" value="{$_W['token']}">
+</form>

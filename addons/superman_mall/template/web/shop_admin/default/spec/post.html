@@ -1,0 +1,123 @@
+<form class="form-horizontal form" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="{$item['id']}">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {if empty($item['id'])}
+            添加规格
+            {else}
+            编辑规格
+            {/if}
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">排序</label>
+                <div class="col-sm-6 col-md-10 col-xs-12">
+                    <input class="form-control" name="displayorder" type="text" value="{$item['displayorder']}"/>
+                    <span class="help-block">由大到小，排序值越大越靠前</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"><span class="star">*</span>规格名称</label>
+                <div class="col-sm-6 col-md-10 col-xs-12">
+                    <input class="form-control" name="title" type="text" value="{$item['title']}"/>
+                    <span class="help-block"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">规格项</label>
+                <div class="col-sm-6 col-md-10 col-xs-12">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th width="25"></th>
+                            <th>规格值</th>
+                            <th width="80" class="text-right">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="list_wrap" class="ui-sortable">
+                        {if $item['values']}
+                        {loop $item['values'] $value}
+                        <tr>
+                            <td>
+                                <a href="javascript:;" class="fa fa-move" title="按住鼠标左键，拖动调整顺序">
+                                    <i class="fa fa-arrows"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <div class="form-group" style="margin-bottom: 0">
+                                    <div class="col-xs-12">
+                                        <input name="value_id[]" value="{$value['id']}" type="hidden" class="form-control"/>
+                                        <input name="value[]" value="{$value['value']}" type="text" class="form-control" placeholder=""/>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-right">
+                                <a href="javascript:;" data-toggle="tooltip" onclick="deleteSpec(this)" title="删除" data-id="{$value['id']}">
+                                    <i class='fa fa-remove'></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {/loop}
+                        {/if}
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-warning add_spec" title="添加规格值">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加规格值
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+            <input type="hidden" name="token" value="{$_W['token']}" />
+        </div>
+    </div>
+</form>
+<script>
+    require(['jquery.ui'], function($){
+        $('.btn').hover(function(){
+            $(this).tooltip('show');
+        },function(){
+            $(this).tooltip('hide');
+        });
+        $('#list_wrap').sortable({handle: '.fa-move'});
+        //添加规格值
+        $('.add_spec').click(function(){
+            $.ajax({
+                url: "{php echo $this->createWebUrl('spec', array('act' => 'value'))}",
+                success:function(response) {
+                    $('#list_wrap').append(response);
+                }
+            });
+        });
+        //删除规格值
+        window.deleteSpec = function(obj) {
+            var id = $(obj).attr('data-id');
+            if (id == 0) {	//new
+                $(obj).parent().parent().remove();
+                return;
+            }
+            $.ajax({
+                'url': "{php echo $this->createWebUrl('spec', array('act' => 'delete'))}"+'&valueid='+id,
+                success:function(response) {
+                    if (response == 'success') {
+                        $(obj).parent().parent().remove();
+                    } else {
+                        util.message(response, '', 'error');
+                    }
+                }
+            });
+        };
+        //提交表单
+        $('form').submit(function(){
+            var title = $('input[name=title]');
+            if (title.val() == '') {
+                util.message('请输入规格名称！', '', 'error');
+                return false;
+            }
+            return true;
+        });
+    });
+</script>

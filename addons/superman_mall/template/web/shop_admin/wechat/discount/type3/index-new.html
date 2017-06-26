@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-sm-11 col-md-11 col-xs-11">
+        <div class="input-group">
+            <span class="input-group-addon">订单满</span>
+            <input type="number" class="form-control" name="full_value[]" min="0" step="0.01" value="">
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle units_btn" data-toggle="dropdown">
+                    <span class="full_discount_unit">元</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <input type="hidden" name="full_unit[]" value="yuan">
+                    <li><a href="javascript:;" class="full_unit_yuan">元</a></li>
+                    <li><a href="javascript:;" class="unit_piece">件</a></li>
+                </ul>
+                <button type="button" class="btn btn-default reduce_btn">减</button>
+            </div>
+            <input type="number" class="form-control" name="minus_value[]" min="0" step="0.01" value="">
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="minus_discount_unit">元</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <input type="hidden" name="minus_unit[]" value="yuan">
+                    <li><a href="javascript:;" class="minus_unit_yuan">元</a></li>
+                    <li><a href="javascript:;" class="unit_zhe">折</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-1 col-md-1 col-xs-1" style="padding: 0">
+        <a href="javascript:;" class="btn btn-danger" onclick="delItem(this)" title="删除">
+            <span class="glyphicon glyphicon-remove"></span> 删除
+        </a>
+    </div>
+</div>

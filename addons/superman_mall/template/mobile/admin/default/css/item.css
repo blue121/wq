@@ -1,0 +1,50 @@
+.superpage_item .item_wrap {
+    margin: .5rem 0;
+    padding: 0;
+}
+.superpage_item .item_wrap .list-block {
+    margin: 0;
+}
+.superpage_item .item_wrap .item_img {
+    width: 4rem;
+    height: 4rem;
+}
+.superpage_item .item_wrap .item_actions {
+    border: 0;
+}
+.superpage_item .list_item_wrap {
+    padding-bottom: 2.5rem;
+}
+.superpage_item .list_item_wrap .list-block {
+    margin: .5rem 0;
+}
+/*sku标题样式*/
+.superpage_item .sku_val_style {
+    width:100%;
+    padding-left: .25rem;
+}
+.superpage_item .sku_val_style span {
+    border: 1px #aaa solid;
+    border-radius: .2rem;
+    padding: .1rem;
+    color: #aaa;
+    display: inline-block;
+}
+.superpage_item .item_actions {
+    color: #0894ec;
+}
+.stock_btn_wrap {
+    position: fixed;
+    right: 0;
+    left: 0;
+    z-index: 100;
+    bottom: 0;
+    width: 100%;
+    height: 2.5rem;
+    padding: 0;
+    table-layout: fixed;
+    margin-left: 0;
+}
+.stock_btn_wrap button {
+    width:100%;
+}

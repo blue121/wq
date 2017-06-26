@@ -1,0 +1,27 @@
+<form class="form-horizontal form" method="post" enctype="multipart/form-data">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            参数设置
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">是否开启</label>
+                <div class="col-sm-8 col-md-8 col-xs-12">
+                    <label class="radio-inline">
+                        <input type="radio" name="setting[open]" value="1" {if $setting['open']}checked{/if}/>是
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="setting[open]" value="0" {if !isset($setting['open'])||!$setting['open']}checked{/if}/>否
+                    </label>
+                    <span class="help-block">开启自提门店后，确认订单时，配送方式将可以选择自提</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+            <input type="hidden" name="token" value="{$_W['token']}">
+        </div>
+    </div>
+</form>

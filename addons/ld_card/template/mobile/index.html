@@ -1,0 +1,317 @@
+{template 'header'}
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="flase">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">帮助</h4>
+      </div>
+      <div class="modal-body">
+      	<div class="containar">
+      		<div class="row"  style="padding:0px 10px 0px 10px;">      			
+      			{php echo htmlspecialchars_decode($this->module['config']['content']);}
+      		</div>
+	      	
+       	</div>
+       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="">
+	
+		<div class="row" style="padding:5px;">
+				<div class="col-xs-3" style="display:{if !empty($lists)}block{else}none{/if};">
+					<a href="{php echo $this->createmobileurl('index')}">
+						<div class="col-xs-12" style="text-align: center;padding:0px;">
+						<img style="border-radius:5px;height:100%;width:100%" src="{MODULE_URL}js/index.jpg" alt="" />	
+						</div>
+						<div class="col-xs-12" style="text-align: center;padding:0px;">全部</div>						 
+					</a>
+				</div>
+
+			{loop $lists $category}
+				<div class="col-xs-3" >
+					<a href="{php echo $this->createmobileurl('index',array('cateid'=>$category['id']))}">
+						<div class="col-xs-12" style="text-align: center;padding:0px;">
+						<img style="height:100%;width:100%;border-radius:5px;" src="{php echo tomedia($category['thumb']);}" alt="{$category['title']}" />	
+						</div>						
+						<div class="col-xs-12" style="text-align: center;padding:0px;">{$category['title']}</div>
+					</a>
+				</div>
+			{/loop}
+		</div>
+	
+</div>
+<!-- 商家列表开始 -->
+<div class="containar">
+	{if !empty($shops)}
+		<div class = "col-xs-12" style="background:;padding:5px;" >	
+			{loop $shops $key $item}
+				
+				<div class="card" style="height:100px;background:#00cc66;margin:0px 0px 10px 0px;border-radius:5px;padding:5px;">
+					<a id="shopindex{$key}" href="{php echo $_W['siteroot'].$this->createmobileurl('shop',array('userid'=>$item['id']))}" >
+					 <div class="col-xs-3" style="height:90px;padding-left:0px;" > 
+						
+							<img class="img-circle"  src="{php echo tomedia($item['logo'])}"></img>
+						
+					 </div> 
+					<div class="col-xs-5" style="height:100%;margin:0 auto;padding:0px;background:;">
+						<div style="height:33%;overflow:hidden;">
+							<p class="title" style="text-align:center;white-space:nowrap;"><span id="name{$key}" style="margin-left:auto;margin-right:auto;" >{$item['shopname']}</span></p>
+							
+						</div>
+						<div style="height:33%">
+							<p style="text-align:center;color: #fff;">查看商家卡券</p>
+						</div>
+						<div style="height:33%;overflow:hidden;">
+							<p style="color:#000;text-align:center;"><span style="margin-left:auto;margin-right:auto;" >{php echo cutstr($item['add'],9,true)}</span>
+								<span id="add{$key}" style="display: none" >{$item['add']}</span></p>
+						</div>
+					</div>
+					</a>
+					<div class="col-xs-4" style="height:100px;padding-right:0px;">
+						<div style="height:55%">
+							<p class= "distance" id="distance{$key}" style="color:#fff;text-align:center;height: 40%;">定位中..</p>
+						</div>
+						<div style="height:33%">
+							<p style="width:99%;margin-left:auto;margin-right:auto;text-align:center;"><button class="btn btn-default look" id="{$key}"  onclick="javascript:bd(110,39,111,38);"bd>去看看</button></p>
+						</div>
+					</div>
+					<span id="lat{$key}" type="hidden" class="lat" style="display: none;">{$item['lat']}</span>
+					<span id="lng{$key}" type="hidden" class="lng"  style="display: none;">{$item['lng']}</span>
+					
+				</div>
+				
+			{/loop}
+		</div>
+		{else}
+		<div class="row" align="center">
+			<p style="text-align: ceter">抱歉!没有找到您搜索的商家</p>
+		</div>
+		{/if}
+		
+</div>
+<!-- 商家列表结束 -->
+<div class="container">
+	{if !empty($cards)}
+	<div class="row" style="background:#fff;min-height:480px;">
+
+		<div class = "col-xs-12" style="background:;padding:5px;" >	
+			{loop $cards $row}
+
+				<div class="card" style="height:100px;background:{$row['color']};margin-top:10px;border-radius:5px;padding:5px;">
+					 <div class="col-xs-3" style="height:90px;padding-left:0px;" > 
+						
+							<img class="img-circle"  src="{$row['logo_url']}"></img>
+						
+					 </div> 
+					<div class="col-xs-5" style="height:100%;margin:0 auto;padding:0px;background:;">
+						<div style="height:33%">
+							<p class="title" style="text-align:center;">{$row['title']}</p>
+						</div>
+						<div style="height:33%">
+							<p style="text-align:center;">剩余:{$row['quantity']}</p>
+						</div>
+						<div style="height:33%;overflow:hidden;">
+							<p style="color:#fff;text-align:center;"><span style="margin-left:auto;margin-right:auto;" >{$row['shopname']}</span></p>
+						</div>
+					</div>
+					
+					<div class="col-xs-4" style="height:100px;padding-right:0px;">
+						<div style="height:55%">
+							<p style="color:#fff;text-align:center;">奖:{php echo $row['minhb']/100}-{php echo $row['maxhb']/100}元</p>
+						</div>
+						<div style="height:33%">
+							<p style="width:99%;margin-left:auto;margin-right:auto;text-align:center;"><a cardid="{$row['card_id']}" class="add btn btn-default"  type="button" >立即领取</a></p>
+						</div>
+					</div>
+					
+					
+				</div>
+
+			{/loop}
+		</div>
+		{else}	
+		<div class="row" align="center">
+			<p style="text-align: ceter">抱歉!没有找到符合的卡券</p>
+		</div>
+		{/if}
+	</div>
+	<div class="hw-overlay" id="hw-layer-info" style="margin-top:50px;height:90%;">
+		<div class="hw-layer-wrap">
+			<a class="close hwLayer-close" aria-label="Close"><span aria-hidden="true">&times;</span></a>
+			<div class="row" id="hw-layer-info" style="height:80%;margin-bottom:10px;">
+				{php echo htmlspecialchars_decode($this->module['config']['content']);}	
+										
+			</div>
+		</div>
+	</div>	
+{template 'common/footer'}
+<div class="weui_tab" >
+  <div class="weui_tab_bd">
+
+  </div>
+  <div class="weui_tabbar" style="position: fixed;" >
+    <a href="javascript:;" class="weui_tabbar_item weui_bar_item_on">
+      <div class="weui_tabbar_icon">
+        <img src="../addons/ld_card/image/index.png" alt="">
+      </div>
+      <p class="weui_tabbar_label">首页</p>
+    </a>
+
+    <a href="{php echo $this->createmobileurl('myshops')}" class="weui_tabbar_item">
+      <div class="weui_tabbar_icon">
+        <img src="../addons/ld_card/image/content.png" alt="">
+      </div>
+      <p class="weui_tabbar_label">商户中心</p>
+    </a>
+    <a href="{php echo $this->createmobileurl("ruzhu");}" class="weui_tabbar_item">
+      <div class="weui_tabbar_icon">
+        <img src="../addons/ld_card/image/ruzhu.png" alt="">
+      </div>
+      <p class="weui_tabbar_label">入驻</p>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+</body>
+<script type="text/javascript">
+
+function bd(lat1,lng1,lat2,lng2){
+
+	// 百度地图API功能
+	var map = new BMap.Map();
+	var pointA = new BMap.Point(lng1,lat1);  // 创建点坐标A
+	var pointB = new BMap.Point(lng2,lat2);  // 创建点坐标B
+	return (map.getDistance(pointA,pointB)/1000).toFixed(2);  //获取两点距离,保留小数点后两位
+	
+
+}
+
+ wx.ready(function(){
+
+ 	wx.getLocation({
+	    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+	    success: function (res) {
+	        var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+	        var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+	        var speed = res.speed; // 速度，以米/每秒计
+	        var accuracy = res.accuracy; // 位置精度
+	         //swal(latitude+"-"+longitude);
+	        // var url = "http://api.map.baidu.com/geoconv/v1/?coords="+latitude+","+longitude+"&from=1&to=5&ak=SAWFFdzmw4fHr32dA7a1dL48";
+	        for (var i = 0; i < $(".distance").length; i++) {
+	        	var lat2 = $("#lat"+i).html();
+	        	var lng2 = $("#lng"+i).html();
+	        	var jl = bd(latitude,longitude,lat2,lng2);
+	        	//alert(jl);
+	        	var t ="距离:\n";
+	        	$("#distance"+i).text(jl+"KM");
+	        };
+	        $.post("{php echo $this->createmobileurl('index',array('op'=>'location'))}",{lat:latitude,lng:longitude},function(data){
+	        	$("#addr").text(data.addr);
+	        },"json");
+	    },
+	    cancel: function(res){
+	    	$("#addr").text("您取消了定位");
+	    	$(".distance").text("定位失败");
+	    }
+	});
+
+ 	$(".look").on("click",function(){
+ 		var id = $(this).attr("id");
+ 		//swal($("#shopindex"+id).attr("href"));
+ 		
+ 		wx.openLocation({
+		    latitude: $("#lat"+id).html(), // 纬度，浮点数，范围为90 ~ -90
+		    longitude: $("#lng"+id).html(), // 经度，浮点数，范围为180 ~ -180。
+		    name: $("#name"+id).html(), // 位置名
+		    address: $("#add"+id).html(), // 地址详情说明
+		    scale: 28, // 地图缩放级别,整形值,范围从1~28。默认为最大
+		    infoUrl: $("#shopindex"+id).attr("href") // 在查看位置界面底部显示的超链接,可点击跳转
+		});
+ 	});
+
+	$('.add').click(function(){
+
+		card_id = $(this).attr('cardid');
+		
+		$.post("{php echo $this->createmobileurl('Addcard');}",{cardid:card_id},function(data){
+			
+			//alert(data);
+			wx.addCard({
+			  cardList: [{
+					cardId: card_id,
+					cardExt: '{"code": "", "openid": "{$_W['fans']['openid']}","nonce_str":"'+data.nonceStr+'","timestamp": "'+data.timestamp+'", "signature":"'+data.signature+'"}'
+			  }],
+			  success: function (res) {
+					swal({
+					title:"领取成功了",
+					text:"把卡券赠送给朋友，朋友使用后，你就可以得到红包啦，一定要让他使用呦！"},
+					
+					function(){
+						location.href = "{$settings['href']}";				
+					});
+			  }
+			});
+		},"json");
+			
+	});
+	
+	sharedata = {
+		title: '{$title}',
+		desc: '{$desc}',
+		link: '',
+		imgUrl: '{$img}',
+		success: function(){
+			swal({
+			title:'谢谢支持',
+			text:'大家一起领券赚奖励',
+			//imageUrl:'{$img}',
+			html:false
+			
+			}, function(){
+				location.href = "{$settings['href']}";
+
+			});
+		},
+		cancel: function(){ 
+			swal({
+			title:"分享了可以得到奖励哦，真的要取消吗？",
+			showCancelButton:true
+			});
+		}
+	};
+	wx.onMenuShareAppMessage(sharedata);
+	wx.onMenuShareTimeline(sharedata);
+	wx.onMenuShareQZone(sharedata);
+	wx.onMenuShareQQ(sharedata);
+	
+});
+$(function(){
+
+	$(".hwslider").hwSlider({
+    	autoPlay:true,
+    	height:320,
+    	start:2
+    });
+});	
+
+$("#search").click(function(){
+	
+	var key = $('#keyword').val();
+	if (key!='') {
+		location.href='{php echo $this->createmobileurl("shopsearch")}&key='+key; 
+	}else{
+		swal("请先输入关键词");
+	};
+});
+
+
+</script>		

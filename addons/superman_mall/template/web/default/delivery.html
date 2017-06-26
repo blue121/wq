@@ -1,0 +1,68 @@
+{template 'header'}
+{template 'common/shop-nav'}
+<ul class="nav nav-tabs">
+	<li class="{if $act == 'display'}active{/if}"><a href="{php echo $this->createWebUrl('delivery',array('act' => 'display'));}">自定义配送</a></li>
+	<li class="{if $act == 'post' && !$_GPC['id']}active{/if}"><a href="{php echo $this->createWebUrl('delivery', array('act' => 'post'))}">添加</a></li>
+	{if $act == 'post' && $_GPC['id']}<li class="active"><a href="{php echo $this->createWebUrl('delivery', array('act' => 'post', 'id' => 1))}">编辑</a></li>{/if}
+</ul>
+{if $act == 'display'}
+<div class="main">
+	<form class="form-horizontal form"  action="" method="post">
+		<div class="panel panel-default">
+			<div class="table-responsive panel-body">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>自定义配送</th>
+							<th width="90" class="text-center">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						{if $list}
+						{loop $list $li}
+						<tr>
+							<td>{$li['content']}</td>
+							<td style="white-space:nowrap;overflow: visible" class="text-right">
+								<div class="btn-group">
+									<a href="{php echo $this->createWebUrl('delivery', array('act' => 'post', 'id' => $li['id']));}" title="编辑" class="btn btn-default btn-sm"><i class="fa fa-edit"></i></a>
+									<a href="javascript:;" data-url="{php echo $this->createWebUrl('delivery' , array('act' => 'delete', 'id' => $li['id']));}" onclick="if(confirm('此操作不可恢复，确认吗？')){$(this).attr('href', $(this).attr('data-url'));return true;}return false;" title="删除" class="btn btn-default btn-sm"><i class="fa fa-times"></i></a>
+								</div>
+							</td>
+						</tr>
+						{/loop}
+						{/if}
+					</tbody>
+				</table>
+			</div>
+			<div class="panel-footer">
+				总共 <strong>{$total}</strong> 条
+			</div>
+		</div>
+		{$pager}
+	</form>
+</div>
+{else if $act == 'post'}
+<div class="main">
+	<form class="form-horizontal form"  action="" method="post">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				添加/编辑
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">自定义配送</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<input type="text" class="form-control" name="content" value="{$row['content']}">
+						<span class="help-block">推荐填写配送员姓名、手机号，发货时可直接选择对应配送员，方便顾客直接联系配送员</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input type="submit" class="btn btn-primary col-lg-1" name="submit" value="提交">
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+{/if}
+{template 'footer'}

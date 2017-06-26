@@ -1,0 +1,457 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+		{template 'common/nav'}
+		{if $act == 'display'}
+		{template 'common/title'}
+		<div class="content infinite-scroll" data-flag="0" data-status="{$status}" data-load-url="{php echo $this->createMobileUrl('order', array('act' => 'display', 'load' => 'infinite'))}" data-order-url="{php echo $this->createMobileUrl('order')}" data-detail-url="{php echo $this->createMobileUrl('detail', array('act' => 'display'))}" data-pay-url="{php echo $this->createMobileUrl('pay')}" data-comment-url="{php echo $this->createMobileUrl('comment')}" data-distance="50" data-page="{$pindex}">
+			<div class="buttons-tab">
+				<a href="{php echo $this->createMobileUrl('order')}" class="{if $status=='all'}active{/if} button {SUPERMAN_EXTERNAL}" data-no-cache="true">全部</a>
+				<a href="{php echo $this->createMobileUrl('order', array('status' => 'no_pay'))}" class="{if $status=='no_pay'}active{/if} button {SUPERMAN_EXTERNAL}" data-no-cache="true">待支付</a>
+				<a href="{php echo $this->createMobileUrl('order', array('status' => 'no_receive'))}" class="{if $status=='no_receive'}active{/if} button {SUPERMAN_EXTERNAL}" data-no-cache="true">待收货</a>
+				<a href="{php echo $this->createMobileUrl('order', array('status' => 'no_comment'))}" class="{if $status=='no_comment'}active{/if} button {SUPERMAN_EXTERNAL}" data-no-cache="true">待评价</a>
+				<a href="{php echo $this->createMobileUrl('order', array('status' => 'complete'))}" class="{if $status=='complete'}active{/if} button {SUPERMAN_EXTERNAL}" data-no-cache="true">已完成</a>
+			</div>
+			<div class="tabs">
+				<div class="tab active" id="order_list">
+					{if $list}
+					{loop $list $li}
+					<div class="card">
+						<div class="card-content">
+							<div class="list-block media-list">
+								<ul>
+									<li>
+										<a href="{php echo $this->createMobileUrl('order', array('act'=>'detail', 'orderid' => $li['id'], 'from_status' => $status))}" class="item-link item-content {SUPERMAN_EXTERNAL}" data-no-cache="true">
+											<div class="item-inner shop_name_wrap">
+												<span class="font8">{$li['shop']['title']}</span>
+												<span class="font7 pull-right color-gray">
+													{$li['order_status_title']}&nbsp;
+												</span>
+											</div>
+										</a>
+									</li>
+									{loop $li['order_items'] $item}
+									<a href="{php echo $this->createMobileUrl('order', array('act'=>'detail', 'orderid' => $li['id'], 'from_status' => $status))}">
+										<li class="item-content">
+											<div class="item-media">
+												<img class="img_square1" src="{php echo tomedia($item['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'">
+											</div>
+											<div class="item-inner font7">
+												<div class="item-title-row">
+													<div class="item-title color-default">{$item['title']}</div>
+												</div>
+												<div class="item-subtitle color-gray">{$item['sku']}</div>
+												<div class="item-subtitle color-gray">x{$item['total']}</div>
+												{if $li['status'] >= 3}
+												<span>
+												{if $item['iscomment']}
+												<a href="{php echo $this->createMobileUrl('comment', array('act' => 'display', 'orderid' => $li['id'], 'itemid' => $item['itemid']))}" class="button button-fill button-small font6 pull-right">查看评价</a>
+												{else}
+												<a href="{php echo $this->createMobileUrl('comment', array('act' => 'post', 'orderid' => $li['id'], 'itemid' => $item['itemid']))}" class="{SUPERMAN_EXTERNAL} button button-fill button-small button-warning font6 pull-right" data-no-cache="true">评价晒单</a>
+												{/if}
+												</span>
+												{/if}
+											</div>
+										</li>
+									</a>
+									{/loop}
+								</ul>
+							</div>
+						</div>
+						<div class="card-footer">
+							<span>
+								<span>合计:</span>
+								<span class="color-danger font8">&#165;{$li['price']}</span>
+							</span>
+							<span>
+								{if $li['status'] == 0}
+								<a href="#" data-url="{php echo $this->createMobileUrl('pay', array('orderid' => $li['id'], 'check' => 'yes'))}" class="button button-fill button-small button-success font6 pull-right order_pay">立即支付</a>
+								{else if $li['status'] == 2}
+								{if $li['pay_type'] != 3}
+								<a href="#" data-url="{php echo $this->createMobileUrl('order', array('act' => 'receive', 'orderid' => $li['id']))}" class="button button-fill button-small create-actions font6 pull-right order_operate" data-title="确认已收到商品？">确认收货</a>
+								{/if}
+								<a href="{php echo $this->createMobileUrl('order', array('act' => 'logistics', 'orderid' => $li['id']))}" class="button button-small font6 pull-right button-dark logistics_btn" data-no-cache="true">查看物流</a>
+								{/if}
+							</span>
+						</div>
+					</div>
+					{/loop}
+					{else}
+						<div class="text-center color-gray font7 msg_tips">
+						{if $_W['member']['uid']}
+							<div class="content-padded">
+								<span>没有订单</span>
+								<a href="{php echo $this->createMobileUrl('cart')}">去购物车看看</a>
+							</div>
+						{else}
+							<span>登录后可查看订单</span>
+							<a href="{php echo url('auth/login', array('forward' => base64_encode($_SERVER['QUERY_STRING'])))}" class="external">登录</a>
+						{/if}
+						</div>
+					{/if}
+				</div>
+			</div>
+			{if count($list)==$pagesize}
+			<div class="infinite-scroll-preloader">
+				<div class="preloader"></div>
+			</div>
+			{/if}
+		</div>
+		{else if $act == 'detail'}
+		{template 'common/title'}
+		<div class="content">
+			{if (isset($mgroupon) && $mgroupon['status'] == 1 || !isset($mgroupon)) && $order['status'] > 0 && $order['status'] < 3 && $order['checkout'] == 1 && $order['pay_type'] != 3}
+			<div class="qrcode">
+				<div class="row">
+					<div class="col-100 text-center">
+						<img src="{php echo $this->createMobileUrl('qrcode', array('content' => urlencode($_W['siteroot'].'app/'.$this->createMobileUrl('checkout', array('orderid' => $order['id'])))))}"/>
+					</div>
+					<div class="col-100 text-center font6 color-gray">
+						使用时请出示该二维码
+					</div>
+				</div>
+				<div class="list-block">
+					<ul>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title text-center label font7">验证码</div>
+									<div class="item-input">
+										<input type="text" class="font7" name="code" placeholder="询问店员或由店员输入">
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+					<div class="content-block btn">
+						<div class="row">
+							<div class="col-100">
+								<a href="#" data-orderid="{$order['id']}" data-url="{php echo $this->createMobileUrl('order')}" class="button button-fill button-success btn_checkout">确认核销</a>
+							</div>
+						</div>
+					</div>
+					<div class="font6 text-center color-gray">核销后不可撤回</div>
+				</div>
+			</div>
+			{/if}
+			<div class="list-block detail_wrap">
+				<ul>
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label font7">订单号</div>
+								<div class="item-input color-gray font7">
+									{$order['ordersn']}
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label font7">状态</div>
+								<div class="item-input color-gray font7">
+									{php echo SupermanUtil::get_order_status_title($order['status'], $order['dispatch_type'])}
+								</div>
+							</div>
+						</div>
+					</li>
+					{if $order['pay_type']}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label font7">支付方式</div>
+								<div class="item-input color-gray font7">
+									{php echo SupermanUtil::get_pay_type_title($order['pay_type'])}
+								</div>
+							</div>
+						</div>
+					</li>
+					{/if}
+					<li class="align-top">
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label font7">留言</div>
+								<div class="item-input color-gray font7 message">
+									{$order['remark']}
+								</div>
+							</div>
+						</div>
+					</li>
+					{if $order['express_fee'] > 0}
+					<li class="align-top">
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label font7">邮费</div>
+								<div class="item-input color-gray font7 message">
+									{$order['express_fee']}
+								</div>
+							</div>
+						</div>
+					</li>
+					{/if}
+					{if $order['realname'] != ''}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label font7">收件人</div>
+								<div class="item-input color-gray addressee">
+									<span class="font7">{$order['username']} {$order['mobile']}</span>
+									<span class="font7">{$order['address']}</span>
+								</div>
+							</div>
+						</div>
+					</li>
+					{/if}
+					{if $order['express_title'] != ''}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label font7">快递公司</div>
+								<div class="item-input color-gray font7">
+									{$order['express_title']}
+								</div>
+							</div>
+						</div>
+					</li>
+					{/if}
+					{if $order['express_no'] != ''}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label font7">快递单号</div>
+								<div class="item-input color-gray font7">
+									{$order['express_no']}
+								</div>
+							</div>
+						</div>
+					</li>
+					{/if}
+					{if $myfetch}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label font7">自取地址</div>
+								<div class="item-input color-gray font7">
+									{$myfetch}
+								</div>
+							</div>
+						</div>
+					</li>
+					{/if}
+					{if $order['custom_delivery']}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label font7">配送</div>
+								<div class="item-input color-gray font7">
+									{$order['custom_delivery']}
+								</div>
+							</div>
+						</div>
+					</li>
+					{/if}
+				</ul>
+                <!--快递商品需要收货人信息-->
+                {if $order['dispatch_type'] == 1}
+                <div class="list-block address_wrap">
+                    <ul>
+                        {if $order['username']}
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label font7">收货人</div>
+                                    <div class="item-input color-gray font7">
+                                        {$order['username']}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        {/if}
+                        {if $order['mobile']}
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label font7">联系电话</div>
+                                    <div class="item-input color-gray font7">
+                                        {$order['mobile']}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        {/if}
+                        {if $order['address']}
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label font7">收货地址</div>
+                                    <div class="item-input color-gray font7">
+                                        {$order['address']}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        {/if}
+                    </ul>
+                </div>
+                {/if}
+				<div class="list-block media-list">
+					<ul>
+						<li>
+							<a href="{php echo $this->createMobileUrl('shop', array('shopid' => $shop['id']))}" class="item-content item-link">
+								<div class="item-inner">
+									<div class="item-title font8">{$shop['title']}</div>
+								</div>
+							</a>
+						</li>
+						{loop $order['order_items'] $item}
+						<li>
+							<div class="item-content">
+								<a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['itemid']))}" class="{SUPERMAN_EXTERNAL}" data-no-cache="true">
+									<div class="item-media">
+										<img class="img_square1" src="{php echo tomedia($item['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'">
+									</div>
+								</a>
+								<div class="item-inner">
+									<a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['itemid']))}" class="{SUPERMAN_EXTERNAL}" data-no-cache="true">
+										<div class="item-title-row">
+											<div class="item-title font7 color-default">{$item['title']}</div>
+										</div>
+										{if $item['sku']}
+										<div class="item-subtitle font6 color-gray">
+											{$item['sku']}
+										</div>
+										{/if}
+										<div class="item-subtitle color-gray">
+											x {$item['total']}
+											<span class="price pull-right color-danger">&#165;{$item['price']}</span>
+										</div>
+									</a>
+									{if $item['extend']['virtual_info']}
+									<div class="item-subtitle font8 color-gray">
+										{$item['extend']['virtual_info']}
+									</div>
+									{/if}
+								</div>
+							</div>
+						</li>
+						{/loop}
+					</ul>
+				</div>
+				<div class="row">
+					<div class="col-100 text-right">
+						<span>合计:</span>
+						<span class="color-danger">&#165;{$order['price']}</span>
+					</div>
+					<div class="col-100 text-right color-gray font6">
+						下单时间：{php echo date('Y-m-d H:i:s', $order['createtime'])}
+					</div>
+				</div>
+			</div>
+			<div class="content-block btn">
+				<div class="row">
+					{if $order['status']==0}
+					<div class="col-100">
+						<a href="#" data-url="{php echo $this->createMobileUrl('pay', array('orderid' => $order['id'], 'check' => 'yes'))}" class="button button-fill button-success order_pay">去付款</a>
+					</div>
+					<div class="col-100">
+						<a href="#" data-url="{php echo $this->createMobileUrl('order', array('act' => 'cancel', 'orderid' => $order['id'], 'from_status' => $status))}" class="button button-fill button-danger order_operate" data-title="确认取消订单？">取消订单</a>
+					</div>
+					{/if}
+					{if $order['status']==1 && $self_refund}
+					<div class="col-100">
+						<a href="#" class="button button-fill button-warning refund_btn" data-url="{php echo $this->createMobileUrl('order')}" data-orderid="{$order['id']}">申请退款</a>
+					</div>
+					{/if}
+					{if $order['status']==2 && $order['pay_type'] != 3}
+					<div class="col-100">
+						<a href="#" data-url="{php echo $this->createMobileUrl('order', array('act' => 'receive', 'orderid' => $order['id'], 'from_status' => $status))}" class="button button-fill order_operate" data-title="确认已收到商品？">确认收货</a>
+					</div>
+					{/if}
+					{if $order['status'] == -1}
+					<div class="col-100">
+						<a href="#" data-url="{php echo $this->createMobileUrl('order', array('act' => 'delete', 'orderid' => $order['id'], 'from_status' => $status))}" class="button button-fill button-small button-danger create-actions order_operate" data-title="确认删除订单？">删除订单</a>
+					</div>
+					{/if}
+				</div>
+			</div>
+		</div>
+		{else if $act == 'logistics'}
+		{template 'common/title'}
+		<div class="content logistics_wrap">
+			<div class="list-block font7">
+				<ul>
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">订单号</div>
+								<div class="item-input color-gray">
+									{$order['ordersn']}
+								</div>
+							</div>
+						</div>
+					</li>
+					{if $order['express_title']}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">快递公司</div>
+								<div class="item-input color-gray">
+									{$order['express_title']}
+								</div>
+							</div>
+						</div>
+					</li>
+					{/if}
+					{if $order['express_no']}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">快递单号</div>
+								<div class="item-input color-gray">
+									{$order['express_no']}
+								</div>
+							</div>
+						</div>
+					</li>
+					{/if}
+					{if $order['custom_delivery']}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title label">配送</div>
+								<div class="item-input color-gray">
+									{$order['custom_delivery']}
+								</div>
+							</div>
+						</div>
+					</li>
+					{/if}
+				</ul>
+			</div>
+			{if $order['express_no']}
+			<div class="list-block media-list">
+				<ul class="time_axis_wrap">
+					{if !$order['express_info']}
+					<div class="text-center font7 color-gray">暂未查询到物流信息</div>
+					{/if}
+					{if $order['express_info']}
+					{loop $order['express_info'] $key $li}
+					<li class="{if $key == 0}active{/if} item-content">
+						<div class="item-inner">
+							<div class="item-title-row">
+								<div class="font7 express_title color-gray">{$li['context']}</div>
+							</div>
+							<div class="item-subtitle font6 color-gray">{$li['time']}</div>
+						</div>
+					</li>
+					{/loop}
+					{/if}
+				</ul>
+			</div>
+			{/if}
+		</div>
+		{/if}
+	</div>
+</div>
+{template 'common/footer'}

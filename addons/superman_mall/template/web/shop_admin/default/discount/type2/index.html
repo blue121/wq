@@ -1,0 +1,757 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+    <li>
+        <a href="{php echo $this->createWebUrl('discount', array('act' => 'index'))}">营销工具</a>
+    </li>
+    <li {if $op=='display'}class="active"{/if}>
+        <a href="{php echo $this->createWebUrl('discount', array('type' => 2, 'op' => 'display'))}">限时打折</a>
+    </li>
+    <li {if $op=='post'}class="active"{/if}>
+        <a href="{php echo $this->createWebUrl('discount', array('type' => 2, 'op' => 'post', 'id' => $_GPC['id']))}">{if $_GPC['id']}编辑{else}添加{/if}</a>
+    </li>
+</ul>
+{if $op == 'display'}
+<div class="main">
+    <form action="" method="post">
+        <div class="panel panel-default">
+            <div class="table-responsive panel-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>活动名称</th>
+                        <th width="100">商品数</th>
+                        <th width="160">时间</th>
+                        <th width="100">状态</th>
+                        <th width="90" class="text-right">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {if $list}
+                    {loop $list $li}
+                    <tr>
+                        <td style="position: relative">
+                            <div class="row pull-left" style="border: 1px #ddd solid; border-radius: 5px; background-color: #ddd; width:62px; height: 62px; margin-left: 0; margin-right: 0; display: inline-block">
+                                {if $li['activity_imgs']}
+                                {loop $li['activity_imgs'] $v}
+                                <div class="col-xs-6" style="padding: 2px">
+                                    <img class="pull-left"
+                                         src="{php echo tomedia($v['cover'])}"
+                                         onerror="this.src='{php echo $this->superman_placeholder}'"
+                                         width="26px" height="26px">
+                                </div>
+                                {/loop}
+                                {/if}
+                            </div>
+                            <div class="pull-left" style="padding-left: 1rem; line-height: 30px;">
+                                <span style="display: block">{$li['inner_title']}</span>
+                                <span style="display: block;">
+                                    <button class="btn btn-default btn-xs" type="button"
+                                            style="border-color: #ff6600;color: #ff6600;">{$li['title']}
+                                    </button>
+                                </span>
+                            </div>
+                        </td>
+                        <td>{$li['item_total']}</td>
+                        <td>
+                            <div>{$li['start']}</div>
+                            <div>{$li['end']}</div>
+                        </td>
+                        <td>
+                            {if $li['starttime'] > TIMESTAMP}
+                            <button type="button" class="btn btn-xs btn-default">
+                                未开始
+                            </button>
+                            {else if $li['endtime'] < TIMESTAMP}
+                            <button type="button" class="btn btn-xs btn-danger">
+                                已结束
+                            </button>
+                            {else}
+                            <button type="button" class="btn btn-xs btn-success">
+                                进行中
+                            </button>
+                            {/if}
+                        </td>
+                        <td style="overflow: visible;" class="text-right">
+                            <div class="btn-group">
+                                <a title="编辑"
+                                   href="{php echo $this->createWebUrl('discount', array('type' => 2, 'op' => 'post', 'id' => $li['id']))}"
+                                   class="btn btn-default btn-sm"><i class="fa fa-edit"></i> </a>
+                                <a href="javascript:;"
+                                   data-url="{php echo $this->createWebUrl('discount', array('type' => 2, 'op' => 'delete', 'id' => $li['id']));}"
+                                   onclick="if(confirm('此操作不可恢复，确认吗？')){$(this).attr('href', $(this).attr('data-url'));return true;}return false;"
+                                   title="删除" class="btn btn-default btn-sm"><i class="fa fa-times"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {/loop}
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                总共 <strong>{$total}</strong> 条
+            </div>
+        </div>
+        {$pager}
+    </form>
+</div>
+{else if $op == 'post'}
+<style>
+    .pagination-centered {
+        float: right;
+    }
+    .star {
+        color: red;
+        margin-right: 5px;
+        font-weight: bold;
+    }
+    .recommend_title {
+        padding: 0 .5rem;
+    }
+    .discount_wrap {
+        border: 1px #ddd solid;
+    }
+    .discount_wrap .discount_left_wrap {
+        border-right: 1px #ddd solid;
+    }
+    .discount_wrap .discount_left_wrap li {
+        border-left: 0;
+        border-right: 0;
+    }
+    .discount_wrap .discount_right_wrap li {
+        border-right: 0;
+    }
+    .discount_wrap li:first-child {
+        border-top: 0;
+        border-bottom: 0;
+    }
+    .discount_wrap li:last-child {
+        border-bottom: 0;
+    }
+    .text-overflow {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .discount_left_wrap, .discount_right_wrap {
+        padding: 0;
+        height: 865px;
+    }
+    .discount_right_wrap > .list-group {
+        margin-bottom: 0
+    }
+    .discount_right_wrap .list-group-item {
+        border-left: 0;
+    }
+    .discount_left_wrap .list-group-item:first-child {
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
+    }
+    .discount_left_wrap .list-group-item:last-child {
+        border-bottom-right-radius: 0;
+    }
+    .discount_right_wrap .list-group-item:first-child {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    .discount_right_wrap .list-group-item:last-child {
+        border-bottom-left-radius: 0;
+    }
+    /*左右两侧商品列表展示屏幕适配*/
+    @media (min-width: 1440px) {
+        .discount_left_item_wrap .discount_item_img {
+            padding: 0;
+            width: 14%
+        }
+        .discount_left_item_wrap .discount_item_sku {
+            line-height: 30px;
+            width: 77.66666667%
+        }
+        .discount_right_wrap .discount_item_img {
+            padding: 0;
+            width: 10%
+        }
+    }
+    @media (min-width: 1920px) {
+        .discount_left_item_wrap .discount_item_img {
+            padding: 0;
+            width: 10%
+        }
+        .discount_left_item_wrap .discount_item_sku {
+            line-height: 30px;
+            width: 81.66666667%
+        }
+        .discount_right_wrap .discount_item_img {
+            padding: 0;
+            width: 7%
+        }
+        .minus_btn {
+            width: 11.33333333%;
+        }
+    }
+    .discount_item_img img {
+        width: 60px;
+        height: 60px;
+    }
+    .discount_left_wrap .plus_btn, .discount_right_wrap .minus_btn {
+        line-height: 60px;
+        font-size: 20px;
+    }
+    .discount_left_wrap .item_filter {
+        line-height: 34px;
+    }
+    .discount_left_wrap .item_filter label {
+        margin-bottom: 0;
+    }
+    /*展示10条高度*/
+    .discount_right_scrollbar {
+        padding-bottom: 56px;
+        max-height: 866px;
+        overflow-y: scroll;
+    }
+    .discount_right_scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .discount_item_info {
+        line-height: 30px;
+    }
+    .discount_item_info .form-control {
+        height: 30px;
+    }
+    .minus_price {
+        width: 22.66666667%;
+    }
+    .discount_price {
+        width: 25.66666667%;
+    }
+    .discount_footer_wrap .col-lg-5 {
+        padding: 0 10px;
+    }
+    .discount_footer_wrap .item_filter {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .discount_footer_wrap .discount_pager_wrap {
+        padding-top: 10px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .discount_footer_wrap .col-lg-5, .discount_footer_wrap .col-lg-7{
+        border-right: 1px #ddd solid;
+        border-top: 1px #ddd solid;
+        height: 56px;
+        line-height: 56px;
+        background-color: #ffffff;
+    }
+    .discount_footer_wrap .col-lg-5:last-child, .discount_footer_wrap .col-lg-7:last-child {
+        z-index: 3;
+        border-right: 0;
+    }
+    .discount_footer_wrap .col-xs-8 {
+        padding-top: 11px;
+    }
+    .price_color {
+        color:#f16813;
+    }
+    .discount_input_wrap {
+        padding-left: 0;
+    }
+</style>
+<div class="main">
+    <form class="form-horizontal form" action="" method="post">
+        <div class="panel panel-default">
+            <div class="panel-heading">活动信息</div>
+            <div class="panel-body">
+                {if $id > 0}
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">活动地址</label>
+                    <div class="col-sm-8 col-md-8 col-xs-12">
+                        <div class="form-control-static">
+                            <a href="{$activity_url}" target="_blank">{$activity_url}</a>
+                        </div>
+                        <span class="help-block">本网址为当前活动的手机端商品列表链接，可以拷贝到其他地方使用</span>
+                    </div>
+                </div>
+                {/if}
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label"><span
+                            class="star">*</span>活动名称</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" class="form-control" name="title" placeholder="" value="{$row['title']}">
+                        <span class="help-block">推荐名称：
+                            <a class="recommend_title" href="javascript:;">限时抢购</a>
+                            <a class="recommend_title" href="javascript:;">新品促销</a>
+                            <a class="recommend_title" href="javascript:;">天天特价</a>
+                            <a class="recommend_title" href="javascript:;">全民疯抢</a>
+                            <a class="recommend_title" href="javascript:;">新品特惠</a>
+                            <a class="recommend_title" href="javascript:;">今日优惠</a>
+                            <a class="recommend_title" href="javascript:;">清仓特惠</a>
+                            <a class="recommend_title" href="javascript:;">反季热销</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">活动时间</label>
+                    <div class="col-sm-8 col-md-8 col-xs-12">
+                        {php echo tpl_form_field_daterange('activity_time', $activity_time, true);}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">限购数量</label>
+                    <div class="col-sm-8 col-md-8 col-xs-12">
+                        <input type="number" class="form-control" name="extend[quota]" placeholder="" value="{$row['extend']['quota']}">
+                        <span class="help-block">填写0或不填为不限购</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-12 col-sm-4 col-md-3 col-lg-2 control-label">活动备注</label>
+                    <div class="col-sm-8 col-xs-12">
+                        <input type="text" class="form-control" name="inner_title" placeholder="" value="{$inner_title}">
+                        <span class="help-block">仅在后台显示，帮您区分不同的活动，可以不填写</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row discount_wrap">
+            <div>
+                <div class="col-xs-5 discount_left_wrap">
+                    <ul class="list-group" style="margin-bottom: 0">
+                        <li class="list-group-item list-group-item-success row">
+                            <div class="col-xs-6" style="line-height: 34px;">请选择商品</div>
+                            <div class="col-xs-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="keyword" placeholder="商品名称">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-danger search_item_btn" type="button">查询</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </li>
+                        <div class="discount_left_item_wrap">
+                            {if $item_list}
+                            {loop $item_list $item}
+                            <li class="list-group-item row">
+                                <div class="col-xs-2 discount_item_img">
+                                    <img src="{php echo tomedia($item['cover']);}"
+                                         onerror="this.src='{php echo $this->superman_placeholder}'">
+                                </div>
+                                <div class="col-xs-9 discount_item_sku">
+                                    <div class="text-overflow">{$item['title']}</div>
+                                    <div>
+                                        原价：{$item['price']}元
+                                        {if $item['sku']}
+                                        <button type="button" class="btn btn-info btn-xs discount_price_btn"
+                                                data-container="body" data-html="true" data-toggle="tooltip"
+                                                data-placement="top" title="
+                                                {loop $item['sku'] $s}
+                                                {$s['title']} <span>{$s['price']}</span>元<br>
+                                                {/loop}
+                                            ">多个单价
+                                        </button>
+                                        {/if}
+                                        {if $item['discount_price']}
+                                        <button type="button" class="btn btn-success btn-xs discount_price_btn"
+                                                data-html="true" data-toggle="tooltip" data-placement="top"
+                                                title="折后价：<span>{$item['discount_price']}</span>元<br>">已有折扣
+                                        </button>
+                                        {/if}
+                                    </div>
+                                </div>
+                                <a href="javascript:;">
+                                    <div class="col-xs-1 plus_btn text-right" data-item-id="{$item['id']}" data-item-img="{php echo tomedia($item['cover']);}" data-item-price="{$item['price']}">
+                                        <i class="fa fa-plus-circle text-success"></i>
+                                    </div>
+                                </a>
+                            </li>
+                            {/loop}
+                            {/if}
+                        </div>
+                    </ul>
+                </div>
+                <div class="col-xs-7 discount_right_wrap">
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-success row">
+                            <div class="col-xs-12" style="line-height: 34px;">已选商品</div>
+                        </li>
+                        <div class="discount_right_scrollbar">
+                            {if $row['items']}
+                            {loop $row['items'] $item}
+                            <li class="list-group-item">
+                                <input type="hidden" name="itemid[]" value="{$item['id']}">
+                                <input type="hidden" name="aiid[]" value="{$item['aiid']}">
+                                <div class="row discount_item_info">
+                                    <div class="col-xs-2 discount_item_img">
+                                        <img src="{php echo tomedia($item['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <div>原价：</div>
+                                        <div>{$item['price']}元</div>
+                                    </div>
+                                    <div class="col-xs-2 discount_input_wrap">
+                                        <div>打折：</div>
+                                        <div>
+                                            <div class="input-group has-success">
+                                                <input type="text" class="discount_right_input form-control" data-original-price="{$item['price']}" name="item_extend[]" value="{$item['ai_extend']['value']}">
+                                                <span class="input-group-addon">折</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-2 minus_price">
+                                        <div>减价：</div>
+                                        <div>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="minus_price" value="0.00" disabled="">
+                                                <span class="input-group-addon">元</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3 discount_price">
+                                        <div>折后价：</div>
+                                        <div>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="discount_price" value="0.00" disabled="">
+                                                <span class="input-group-addon">元</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href="javascript:;">
+                                        <div class="col-xs-1 minus_btn text-right" data-item-id="{$item['id']}">
+                                            <i class="fa fa-minus-circle text-danger"></i>
+                                        </div>
+                                    </a>
+                                </div>
+                            </li>
+                            {/loop}
+                            {/if}
+                        </div>
+                    </ul>
+                </div>
+            </div>
+            <div class="row discount_footer_wrap">
+                <div class="col-lg-5">
+                    <div class="row">
+                        <div class="col-xs-3 item_filter">
+                            <label>
+                                <input type="checkbox" name="discount_filter_item"> 过滤已打折商品
+                            </label>
+                        </div>
+                        <div class="col-xs-9 discount_pager_wrap">
+                            {$pager}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7"></div>
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 10px;">
+            <div class="col-sm-12">
+                <button type="submit" name="submit" value="yes" class="btn btn-primary">提交</button>
+                <input type="hidden" name="token" value="{$_W['token']}"/>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+        var initLeftArea, initMinusBtn, initItemExtend;
+        var isdiscount = 0;
+        var page = 1;
+        var itemids = new Array();
+        var initItemIds = function(){
+            $('.minus_btn').each(function() {
+                itemids.push($(this).attr('data-item-id'));
+            });
+        };
+        initItemIds();
+        if ($('.discount_right_scrollbar').text().length > 0) {
+            $('input[name="item_extend[]"]').each(function() {
+                var value = parseFloat($(this).val());  //打折数
+                var t = $(this).parent().parent().parent().parent();
+                var original_price = $(this).attr('data-original-price'); //原价
+                discount_price = (original_price * value) * 0.1; //折后价
+                minus_price = original_price - discount_price; //减价
+                $(t).find('input[name=discount_price]').val(discount_price.formatCurrency(2,''));
+                $(t).find('input[name=minus_price]').val(minus_price.formatCurrency(2,''));
+            });
+        }
+        var addItem = function(item) {
+            var html = '';
+            html += '<li class="list-group-item row">';
+            html += '<div class="col-xs-2 discount_item_img">';
+            html += '<img src="'+tomedia(item['cover'])+'" onerror="this.src=\'{php echo $this->superman_placeholder}\'">';
+            html += '</div>';
+            html += '<div class="col-xs-9 discount_item_sku">';
+            html += '<div class="text-overflow">'+item['title']+'</div>';
+            html += '<div>';
+            html += '原价：'+item['price']+'元';
+            if (item['sku']) {
+                html += ' <button type="button" class="btn btn-info btn-xs discount_price_btn"';
+                html += 'data-container="body" data-html="true" data-toggle="tooltip"';
+                html += 'data-placement="top" title="';
+                for (var i=0; i<item['sku'].length; i++) {
+                    html += item['sku'][i]['title']+' <span>'+item['sku'][i]['price']+'</span>元<br>';
+                }
+                html += '">多个单价';
+                html += '</button>';
+            }
+            if (item['discount_price']) {
+                html += ' <button type="button" class="btn btn-success btn-xs discount_price_btn"';
+                html += 'data-html="true" data-toggle="tooltip" data-placement="top"';
+                html += 'title="折后价：<span>'+item['discount_price']+'</span>元<br>">已有折扣';
+                html += '</button>';
+            }
+            html += '</div>';
+            html += '</div>';
+            html += '<a href="javascript:;">';
+            html += '<div class="col-xs-1 plus_btn text-right" data-item-id="'+item['id']+'" data-item-img="'+tomedia(item['cover'])+'" data-item-price="'+item['price']+'">';
+            html += '<i class="fa fa-plus-circle text-success"></i>';
+            html += '</div>';
+            html += '</a>';
+            html += '</li>';
+            return html;
+        };
+        require(['bootstrap', 'util'], function($, u){
+            initLeftArea = function() {
+                $('.discount_price_btn').hover(function(){
+                    $(this).tooltip('show');
+                }, function (){
+                    $(this).tooltip('hide');
+                });
+                $('.plus_btn').bind('click', function(){
+                    var html = '';
+                    var t = this;
+                    var item_img = $(t).attr('data-item-img');
+                    var item_price = $(t).attr('data-item-price');
+                    var itemid = $(t).attr('data-item-id');
+                    html += '<li class="list-group-item">';
+                    html += '<input type="hidden" name="itemid[]" value="'+itemid+'">';
+                    html += '<div class="row discount_item_info">';
+                    html += '<div class="col-xs-2 discount_item_img">';
+                    html += '<img src="'+item_img+'" onerror="this.src=\'{php echo $this->superman_placeholder}\'">';
+                    html += '</div>';
+                    html += '<div class="col-xs-2">';
+                    html += '<div>原价：</div>';
+                    html += '<div>'+item_price+'元</div>';
+                    html += '</div>';
+                    html += '<div class="col-xs-2 discount_input_wrap">';
+                    html += '<div>打折：</div>';
+                    html += '<div>';
+                    html += '<div class="input-group">';
+                    html += '<input type="text" class="discount_right_input form-control" data-original-price="'+item_price+'" name="item_extend[]" value="">';
+                    html += '<span class="input-group-addon">折</span>';
+                    html += '</div>';
+                    html += '</div >';
+                    html += '</div>';
+                    html += '<div class="col-xs-2 minus_price">';
+                    html += '<div>减价：</div>';
+                    html += '<div>';
+                    html += '<div class="input-group">';
+                    html += '<input type="text" class="form-control" name="minus_price" value="0.00" disabled>';
+                    html += '<span class="input-group-addon">元</span>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '<div class="col-xs-3 discount_price">';
+                    html += '<div>折后价：</div>';
+                    html += '<div>';
+                    html += '<div class="input-group">';
+                    html += '<input type="text" class="form-control" name="discount_price" value="0.00" disabled>';
+                    html += '<span class="input-group-addon">元</span>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '<a href="javascript:;">';
+                    html += '<div class="col-xs-1 minus_btn text-right" data-item-id="'+itemid+'">';
+                    html += '<i class="fa fa-minus-circle text-danger"></i>';
+                    html += '</div>';
+                    html += '</a>';
+                    html += '</div>';
+                    html += '</li>';
+                    if ($.inArray(itemid.toString(), itemids) == -1) {
+                        itemids.push(itemid.toString());
+                        $('.discount_right_scrollbar').prepend(html);
+                        initMinusBtn();
+                        initItemExtend();
+                    } else {
+                        util.message('请勿重复添加商品！', '', 'error');
+                        return false;
+                    }
+                });
+            };
+            $('.form').submit(function(){
+                var flag = true;
+                if ($('.discount_right_scrollbar').text().length > 0) {
+                    $('input[name="item_extend[]"]').each(function() {
+                        var value = parseFloat($(this).val());
+                        if (!value || value < 0  || value > 10) {
+                            util.message('打折数非法，请重新填写！', '', 'error');
+                            flag = false;
+                            return false;
+                        }
+                    });
+                    if (!flag) {
+                        return false;
+                    }
+                }
+                var title = $('input[name=title]');
+                if (title.val() == '') {
+                    util.message('活动名称为空，请填写！', '', 'error');
+                    return false;
+                }
+                return true;
+            });
+            $('.recommend_title').click(function(){
+                var title = $(this).html();
+                $('input[name=title]').val(title);
+            });
+            //异步过滤已打折商品
+            $('input[name=discount_filter_item]').click(function(){
+                var t = this;
+                var url = window.location.href;
+                if ($(t).hasClass('disabled')) {
+                    return false;
+                }
+                $(t).addClass('disabled');
+                isdiscount = $(t).prop('checked')?1:0;
+                $('.current_pager').text('1');
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    dataType: 'json',
+                    data: 'isdiscount='+isdiscount+'&keyword='+$('input[name=keyword]').val()+'&page='+page,
+                    success: function (resp) {
+                        $(t).removeClass('disabled');
+                        if (resp.length > 0) {
+                            if (resp.length < 10) {
+                                $('.discount_pager_wrap').hide();
+                            } else {
+                                $('.discount_pager_wrap').show();
+                            }
+                            var html='', item;
+                            for (var i=0; i<resp.length; i++) {
+                                item = resp[i];
+                                html += addItem(item);
+                            }
+                            $('.discount_left_item_wrap').html(html);
+                            initLeftArea();
+                            initMinusBtn();
+                            initItemExtend();
+                        } else if (resp.length == 0) {
+                            $('.discount_left_item_wrap').html('');
+                        } else {
+                            util.message(resp, '', 'error');
+                        }
+                    }
+                });
+            });
+            //异步关键字模糊搜索
+            $('.search_item_btn').click(function(){
+                var t = this;
+                var url = window.location.href;
+                if ($(t).hasClass('disabled')) {
+                    return false;
+                }
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    dataType: 'json',
+                    data: 'isdiscount='+isdiscount+'&keyword='+$('input[name=keyword]').val()+'&page='+page,
+                    success: function (resp) {
+                        $(t).removeClass('disabled');
+                        if (resp.length > 0) {
+                            if (resp.length < 10) {
+                                $('.discount_pager_wrap').hide();
+                            } else {
+                                $('.discount_pager_wrap').show();
+                            }
+                            var html='', item;
+                            for (var i=0; i<resp.length; i++) {
+                                item = resp[i];
+                                html += addItem(item);
+                            }
+                            $('.discount_left_item_wrap').html(html);
+                            initLeftArea();
+                            initMinusBtn();
+                            initItemExtend();
+                        } else {
+                            util.message(resp, '', 'error');
+                        }
+                    }
+                });
+            });
+            initMinusBtn = function(){
+                $('.minus_btn').unbind('click').click(function(){
+                    var itemid = $(this).attr('data-item-id');
+                    $(this).parent().parent().parent().remove();
+                    itemids.splice($.inArray(itemid.toString(), itemids), 1);
+                });
+            };
+            initItemExtend = function() {
+                $('input[name="item_extend[]"]').unbind('keyup').keyup(function(){
+                    var t = $(this).parent().parent().parent().parent();
+                    var original_price = $(this).attr('data-original-price'); //原价
+                    discount_price = (original_price * $(this).val()) * 0.1; //折后价
+                    minus_price = original_price - discount_price; //减价
+                    if (!parseFloat($(this).val()) || parseFloat($(this).val()) < 0 || parseFloat($(this).val()) > 10) {
+                        $(this).parent().removeClass('has-success');
+                        $(this).parent().addClass('has-error');
+                        $(t).find('input[name=minus_price]').val('0.00');
+                        $(t).find('input[name=discount_price]').val('0.00');
+                    } else {
+                        $(this).parent().removeClass('has-error');
+                        $(this).parent().addClass('has-success');
+                        $(t).find('input[name=discount_price]').val(discount_price.formatCurrency(2,''));
+                        $(t).find('input[name=minus_price]').val(minus_price.formatCurrency(2,''));
+                    }
+                });
+            };
+            initLeftArea();
+            initMinusBtn();
+            initItemExtend();
+        });
+        var loadMoreItem = function(url, findex, obj){
+            var page = parseInt($(obj).attr('page'));
+            var total_pager = $('.total_pager').attr('data-tpage');
+            if (page <= total_pager) {
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    dataType: 'json',
+                    data: 'isdiscount='+isdiscount+'&keyword='+$('input[name=keyword]').val()+'&page='+page,
+                    success: function (resp) {
+                        if (resp.length > 0) {
+                            var html='', item;
+                            for (var i=0; i<resp.length; i++) {
+                                item = resp[i];
+                                html += addItem(item);
+                            }
+                            $('.discount_left_item_wrap').html(html);
+                            initLeftArea();
+                            initMinusBtn();
+                            initItemExtend();
+                            refreshPagination(obj, page);
+                        } else {
+                            util.message(resp, '', 'error');
+                        }
+                    }
+                });
+            }
+        };
+        var refreshPagination = function(obj, page) {
+            var name = $(obj).attr('data-name');
+            var prev_page, next_page;
+            $('.current_pager').text(page);
+            if (name == 'prev') {
+                prev_page = page>1?page - 1:1;
+                next_page = page + 1;
+                $(obj).attr('page', prev_page.toString());
+                $('a', $(obj).parent().next()).attr('page', next_page.toString());
+            } else if (name == 'next') {
+                prev_page = page>1?page - 1:1;
+                next_page = page + 1;
+                $('a', $(obj).parent().prev()).attr('page', prev_page.toString());
+                $(obj).attr('page', next_page.toString());
+            }
+        }
+    </script>
+</div>
+{/if}
+{template 'common/footer'}

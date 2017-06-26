@@ -1,0 +1,34 @@
+{template 'common/title'}
+<div class="content partner_poster" data-poster-img="{php echo $this->createMobileUrl('poster', array('act' => 'partner', 'id' => $this->partner['id']))}">
+    <div class="text-center color-gray font7 msg_tips" style="{if !empty($poster_url)}display:none;{/if}">
+        海报加载中，请稍候片刻...
+    </div>
+    <div class="poster_wrap">
+        {if !empty($poster_url)}<img class="poster" src="{$poster_url}"/>{/if}
+    </div>
+</div>
+<script>
+    var switchStyleGroups = new Array;
+    switchStyleGroups[0] = new Array;
+    <!--{if $style_list}-->
+        <!--{loop $style_list $k $li}-->
+        switchStyleGroups[0][<!--{$k}-->] = {
+            _id:  '<!--{$li["id"]}-->',
+            text: '<!--{$li["name"]}-->',
+            <!--{if $k==0}-->
+            bold: true,
+            color: 'danger',
+            <!--{/if}-->
+            onClick: function() {
+                PartnerPoster.loadPoster('<!--{$li["id"]}-->', this);
+            }
+        };
+        <!--{/loop}-->
+    <!--{/if}-->
+    switchStyleGroups[1] = [
+        {
+            text: '关闭',
+            bg: 'danger'
+        }
+    ];
+</script>

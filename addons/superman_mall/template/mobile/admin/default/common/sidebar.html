@@ -1,0 +1,79 @@
+<div class="panel-overlay"></div>
+<div class="panel panel-right panel-reveal panel_bg sidebar_wrap">
+    <div class="content-block nav_wrap">
+        <div class="list-block">
+            <ul>
+                <li>
+                    <a href="javascript:;" class="item-content">
+                        <div class="item-media">
+                            <img src="{php echo tomedia($this->shop['logo'])}" onerror="this.src='{php echo $this->superman_placeholder}'" class="shop_logo">
+                        </div>
+                        <div class="item-inner">
+                            <div class="item-title-row">
+                                <div class="text-overflow font7 color_default">{php echo $this->shop['title']}</div>
+                                <div class="font6 color-gray">
+                                    账号：{php echo $this->shop_user['username']}
+                                </div>
+                                <div class="font6 color-gray">
+                                    身份：{php echo $this->shop_user['groupid']?$this->shop_user['group']['title']:'管理员'}
+                                </div>
+                            </div>
+
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{php echo $this->createMobileUrl('admin', array('route' => 'finance.log'));}" class="item-link item-content close-panel font7" data-no-cache="true">
+                        <div class="item-media">
+                            <span class="iconfont">&#xe60c;</span>
+                            <!--<i class="icon icon-app icon-f7"></i>-->
+                        </div>
+                        <div class="item-inner">
+                            <div class="item-title">提现记录</div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{php echo $this->createMobileUrl('admin', array('route' => 'user.user', 'op' => 'display'));}" class="item-link item-content close-panel font7" data-no-cache="true">
+                        <div class="item-media">
+                            <span class="iconfont">&#xe628;</span>
+                        </div>
+                        <div class="item-inner">
+                            <div class="item-title">账号管理</div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{php echo $this->createMobileUrl('admin', array('route' => 'account.switch'));}" class="item-link item-content close-panel font7" data-no-cache="true">
+                        <div class="item-media">
+                            <span class="iconfont">&#xe610;</span>
+                        </div>
+                        <div class="item-inner">
+                            <div class="item-title">商户切换</div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{php echo $this->createMobileUrl('my');}" class="item-link item-content external font7">
+                        <div class="item-media">
+                            <span class="iconfont">&#xe629;</span>
+                        </div>
+                        <div class="item-inner">
+                            <div class="item-title">返回我的</div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="{php echo $this->createMobileUrl('home');}" class="item-link item-content external font7">
+                        <div class="item-media">
+                            <span class="iconfont">&#xe600;</span>
+                        </div>
+                        <div class="item-inner">
+                            <div class="item-title">返回商城</div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

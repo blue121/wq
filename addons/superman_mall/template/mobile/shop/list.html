@@ -1,0 +1,117 @@
+{template 'common/title'}
+{if $location == ''}
+<div class="content infinite-scroll shop_list" data-flag="0" data-list-url="{php echo $this->createMobileUrl('shop', array('act' => 'list', 'load' => 'infinite'))}" data-kw="{$kw}" data-order-payed="{$_GPC['order_payed']}" data-getlocal="{$_GPC['getlocal']}" data-latitude="{$latitude}" data-longitude="{$longitude}" data-shop-url="{php echo $this->createMobileUrl('shop', array('act' => 'display'))}" data-distance="50" data-page="{$pindex}">
+    <div class="card shop_list_wrap">
+        {if $list}
+        <div class="list-block media-list">
+            <ul class="shop_list_ul">
+                <li class="shop_list_order">
+                    <div class="item-content">
+                        <div class="item-inner row text-center font7 no-gutter">
+                            <div class="col-33">
+                                <a href="{php echo $this->createMobileUrl('shop', array('act' => 'list'))}" class="color-default  {if $selected == 1}active{/if}">综合</a>
+                            </div>
+                            <div class="col-33">
+                                <a href="{php echo $this->createMobileUrl('shop', array('act' => 'list', 'order_payed' => 1))}" class="color-default {if $selected == 2}active{/if}">销量</a>
+                            </div>
+                            <div class="col-33">
+                                <a href="{php echo $this->createMobileUrl('shop', array('act' => 'list', 'location' => 'get'))}" class="color-default external {if $selected == 3}active{/if}">离我最近</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {loop $list $li}
+                <li class="shop_info">
+                    <a href="{php echo $this->createMobileUrl('shop', array('shopid' => $li['id']))}" class="item-content color-default external">
+                        <div class="item-media">
+                            <img class="shop_avatar img_square1" src="{php echo tomedia($li['logo'])}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'"/>
+                        </div>
+                        <div class="item-inner">
+                            <div class="item-title-row">
+                                <div class="text-overflow">
+                                    <span class="font8 text-strong shop_title">
+                                        {$li['title']}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="item-title-row font7">
+
+                                <div class="text-overflow color-gray">
+                                    {if $li['phone']}
+                                    <span class="iconfont color-gray font6">&#xe619;</span> {$li['phone']}
+                                    {/if}
+                                </div>
+                                <div class="item-after distance">
+                                    {if $li['distance']}
+                                    {$li['distance']}km
+                                    {/if}
+                                </div>
+                            </div>
+                            {if $li['province']}
+                            <div class="item-title-row font7">
+                                <div class="text-overflow color-gray"><span class="iconfont color-gray font6">&#xe605;</span> {php echo $li['province'].$li['city'].$li['district'].$li['address']}</div>
+                            </div>
+                            {/if}
+                        </div>
+                    </a>
+                </li>
+				{if $li['activity']}
+                <div class="row no-gutter shop_discount_wrap">
+                    <div class="col-80">
+                        <div class="shop_discount_row text-overflow color-gray">
+                            <a href="{php echo $this->createMobileUrl('shop', array('shopid' => $li['id'],'activityid' => $li['activity'][0]['id']))}" class="color-gray">
+                                <span class="button button-danger font6">{$li['activity'][0]['title']}</span>
+                                <span class="font6">活动时间：{$li['activity'][0]['start']} ~ {$li['activity'][0]['end']}</span>
+                            </a>
+                        </div>
+						{if count($li['activity']) > 1}
+                        <div class="show_more_activity">
+							{loop $li['activity'] $k $activity}
+							{if $k != 0}
+                            <div class="shop_discount_row text-overflow color-gray">
+                                <a href="{php echo $this->createMobileUrl('shop', array('shopid' => $li['id'],'activityid' => $activity['id']))}" class="color-gray">
+                                    <span class="button button-danger font6">{$activity['title']}</span>
+                                    <span class="font6">活动时间：{php echo $activity['start']} ~ {php echo $activity['end']}</span>
+                                </a>
+                            </div>
+							{/if}
+							{/loop}
+                        </div>
+						{/if}
+                    </div>
+                    <div class="col-20 more_activity">
+                        <span class="font6 color-gray">{php echo count($li['activity'])}个活动</span>
+                        <span class="icon icon-down more_activity_icon font6 color-gray"></span>
+                    </div>
+                </div>
+				{/if}
+                {/loop}
+            </ul>
+        </div>
+        <!--
+        <div class="row">
+            {loop $list $li}
+            <div class="col-33">
+                <a href="{php echo $this->createMobileUrl('shop', array('shopid' => $li['id']))}">
+                    <img class="img_square1" src="{php echo tomedia($li['logo'])}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'"/>
+                    <span class="text-center text-overflow color-default font6">{$li['title']}&lt;!&ndash;({$li['distance']})&ndash;&gt;</span>
+                </a>
+            </div>
+            {/loop}
+        </div>
+        -->
+        {else}
+        <div class="row text-center">
+            <p class="color-gray font7">未找到数据</p>
+        </div>
+        {/if}
+    </div>
+    <div class="nodata font6 text-center color-gray" style="display: none;">没有了</div>
+    {if count($list)==$pagesize}
+    <div class="infinite-scroll-preloader">
+        <div class="preloader"></div>
+    </div>
+    {/if}
+</div>
+{/if}
+{template 'common/nav'}

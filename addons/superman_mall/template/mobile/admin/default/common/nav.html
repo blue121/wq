@@ -1,0 +1,18 @@
+<nav class="bar bar-tab">
+	<a class="tab-item {if $do == 'dashboard'}active{/if}" href="{php echo $this->createMobileUrl('admin', array('route' => 'dashboard.display'));}" data-no-cache="true">
+        <span class="icon iconfont">&#xe622;</span>
+		<span class="tab-label">首页</span>
+	</a>
+	<a class="tab-item {if $do == 'item'}active{/if}" href="{php echo $this->createMobileUrl('admin', array('route' => 'item.display'));}" data-no-cache="true">
+        <span class="icon iconfont">&#xe624;</span>
+		<span class="tab-label">商品</span>
+	</a>
+	<a class="tab-item {if $do == 'order'}active{/if}" href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'status' => '0'));}" data-no-cache="true">
+        <span class="icon iconfont">&#xe60d;</span>
+		<span class="tab-label">订单</span>
+	</a>
+	<a class="tab-item open-panel">
+        <span class="icon iconfont">&#xe615;</span>
+		<span class="tab-label">更多</span>
+	</a>
+</nav>

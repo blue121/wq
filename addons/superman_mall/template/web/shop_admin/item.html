@@ -1,0 +1,7 @@
+{template 'web/header'}
+{if $act == 'display'}
+	{template 'web/shop_admin/item-display'}
+{else if $act == 'post'}
+	{template 'web/shop_admin/item-post'}
+{/if}
+{template 'web/footer'}

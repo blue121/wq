@@ -1,0 +1,128 @@
+{template 'common/header'}
+{if is_error($plugin_permission)}
+<div class="alert alert-danger">{$plugin_permission['message']}</div>
+{else}
+<div class="main">
+	<form class="form-horizontal form" action="" method="post" enctype="multipart/form-data">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				满减优惠
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">是否包邮</label>
+					<div class="col-sm-6 col-md-8 col-xs-12">
+						<div class="input-group" style="margin-bottom: 1rem">
+							<label class="radio-inline">
+								<input type="radio" name="setting[free_ship][open]" value="1" {if isset($setting['free_ship']['open']) && $setting['free_ship']['open'] == 1}checked{/if}> 是
+							</label>
+							<label class="radio-inline">
+								<input type="radio" name="setting[free_ship][open]" value="0" {if !isset($setting['free_ship']['open']) || $setting['free_ship']['open'] == 0}checked{/if}> 否
+							</label>
+						</div>
+						<span class="help-block">开启包邮后，根据订单金额设置包邮</span>
+						<div class="input-group" style="margin-bottom: .5rem">
+							<span class="input-group-addon">订单满</span>
+							<input type="number" step="0.01" class="form-control" name="setting[free_ship][order_amount]" {if isset($setting['free_ship']['order_amount']) && $setting['free_ship']['order_amount']}value="{$setting['free_ship']['order_amount']}"{/if} {if !isset($setting['free_ship']['open']) || $setting['free_ship']['open'] == 0}disabled{/if}>
+							<span class="input-group-addon">元  包邮</span>
+						</div>
+						<span class="help-block">开启包邮后，如果设置为0元时，表示全场包邮</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">满减</label>
+					<div class="col-sm-6 col-md-8 col-xs-12" id="limit_minus_wrap">
+						{if isset($setting['full_dec']['value']) && !empty($setting['full_dec']['value'])}
+						{loop $setting['full_dec']['value'] $v}
+						<div class="row" style="margin-bottom: 1rem">
+							<div class="col-sm-11 col-md-11 col-xs-11" style="padding: 0">
+								<div class="input-group">
+									<span class="input-group-btn">
+										<button class="btn btn-default" type="button">订单满</button>
+									</span>
+									<input type="number" step="0.01" name="limit[]" class="form-control" value="{$v['limit']}">
+									<span class="input-group-btn">
+										<button class="btn btn-default" type="button" style="border-radius: 0; border-left: 0; border-right: 0">元  立减</button>
+									</span>
+									<input type="number" step="0.01" name="minus[]" class="form-control" value="{$v['minus']}">
+									<span class="input-group-btn">
+										<button class="btn btn-default" type="button">元</button>
+									</span>
+								</div>
+							</div>
+							<div class="col-sm-1 col-md-1 col-xs-1">
+								<a href="javascript:;" data-toggle="tooltip" class="btn btn-danger" onclick="deleteLimitMinus(this)" title="删除" data-id="0">
+									<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 删除
+								</a>
+							</div>
+						</div>
+						{/loop}
+						{else}
+						<div class="row" style="margin-bottom: 1rem">
+							<div class="col-sm-11 col-md-11 col-xs-11" style="padding: 0">
+								<div class="input-group">
+									<span class="input-group-btn">
+										<button class="btn btn-default" type="button">订单满</button>
+									</span>
+									<input type="number" step="0.01" name="limit[]" class="form-control">
+									<span class="input-group-btn">
+										<button class="btn btn-default" type="button" style="border-radius: 0; border-left: 0; border-right: 0">元  立减</button>
+									</span>
+									<input type="number" step="0.01" name="minus[]" class="form-control">
+									<span class="input-group-btn">
+										<button class="btn btn-default" type="button">元</button>
+									</span>
+								</div>
+							</div>
+							<div class="col-sm-1 col-md-1 col-xs-1">
+								<a href="javascript:;" data-toggle="tooltip" class="btn btn-danger" onclick="deleteLimitMinus(this)" title="删除" data-id="0">
+									<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 删除
+								</a>
+							</div>
+						</div>
+						{/if}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"></label>
+					<div class="col-sm-8 col-md-8 col-xs-12">
+						<button type="button" class="btn btn-warning add_limit_minus">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<button type="submit" class="btn btn-primary" name="submit" value="yes">提交</button>
+			<input type="hidden" name="token" value="{$_W['token']}">
+		</div>
+	</form>
+</div>
+<script>
+	require(['jquery'], function($){
+		$('input[name="setting[free_ship][open]"]').click(function(){
+			if ($(this).val() == 1) {
+				$('input[name="setting[free_ship][order_amount]"]').attr("disabled",false);
+			} else {
+				$('input[name="setting[free_ship][order_amount]"]').attr("disabled",true);
+			}
+		});
+		//添加满减
+		$('.add_limit_minus').click(function(){
+			$.ajax({
+				url: "{php echo $this->createWebUrl('discount', array('act' => 'new'))}",
+				success:function(response) {
+					$('#limit_minus_wrap').append(response);
+				}
+			});
+		});
+		//删除满减
+		window.deleteLimitMinus = function(obj) {
+			$(obj).parent().parent().remove();
+			return;
+		};
+	});
+</script>
+{/if}
+{template 'common/footer'}

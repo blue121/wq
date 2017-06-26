@@ -1,0 +1,248 @@
+{template 'common/header'}
+<div class="page-group">
+	<div class="page page-current superpage_{$do}" id="superpage_{$do}_{$act}">
+		<form method="post" action="">
+			<input type="hidden" name="token" value="{$_W['token']}">
+			<input type="hidden" name="itemid" value="{$_GPC['itemid']}">
+			<input type="hidden" name="total" value="{$_GPC['total']}">
+			<input type="hidden" name="skuid" value="{$_GPC['skuid']}">
+			<input type="hidden" name="address_id" id="address_id" value="{$address['id']}">
+			<div class="bar bar-footer">
+				<div class="row no-gutter">
+					<div class="col-75 all_price">合计：&#165;{$allprice}</div>
+					<div class="col-25 text-center font8">
+						<button id="btn_submit_order" type="button" name="submit" value="yes" data-need-address="{$need_address}" data-unsubscribe-order="{$subscribe_setting['unsubscribe_order']}" data-subscribe-url="{$subscribe_setting['subscribeurl']}" data-subscribe-tips="{if $subscribe_setting['subscribe_tips']}{$subscribe_setting['subscribe_tips']}{else}关注公众号，享受更好的购物体验！{/if}" data-follow="{$_W['fans']['follow']}">提交订单</button>
+					</div>
+				</div>
+			</div>
+			{template 'common/title'}
+			<div class="content">
+				{if $need_address}
+				<div class="list-block media-list">
+					<ul>
+						<li>
+							<a href="{$address_url}" class="item-link item-content">
+								<div class="item-inner">
+									{if $address}
+									<div class="item-title-row">
+										<div class="item-title text-strong">
+											<span>{$address['username']}</span>
+											<span>{$address['hide_mobile']}</span>
+										</div>
+									</div>
+									<div class="item-text font7">{$alladdr}</div>
+									{else}
+									添加收货地址
+									{/if}
+								</div>
+							</a>
+						</li>
+						<div class="row address_bg_wrap">
+							<div class="col-100" style="background-image: url('{$_W[siteroot]}/addons/superman_mall/template/mobile/images/address_bg.gif');">&nbsp;</div>
+						</div>
+					</ul>
+				</div>
+				{/if}
+				{if $need_IDcard}
+				<div class="list-block">
+					<ul>
+						{if isset($IDcard)}
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label font7 idcard_title">身份证号</div>
+									<div class="item-input">
+										<input class="font7" type="text" name="idcard" data-idcard="{$IDcard}" value="{$hide_IDcard}" disabled>
+									</div>
+									<div class="item-media edit_idcard_btn"><span class="text-center iconfont fonta">&#xe611;</span></div>
+								</div>
+							</div>
+						</li>
+						{else}
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-input">
+										<input class="font7" type="text" placeholder="海关清关需收货人姓名与身份证准确无误" name="idcard">
+									</div>
+								</div>
+							</div>
+						</li>
+						{/if}
+					</ul>
+				</div>
+				{/if}
+				{if $this->shops}
+				{loop $this->shops $shopid $shop}
+				<input type="hidden" class="myfetchid" data-shopid="{$shopid}" id="myfetchid_{$shopid}" value="{if isset($shop['default_myfetch']['id'])}{$shop['default_myfetch']['id']}{/if}">
+				<div class="list-block media-list font7 item_list_wrap">
+					<ul>
+						<li>
+							<a href="{php echo $this->createMobileUrl('shop', array('shopid' => $shopid))}" class="item-content item-link">
+								<div class="item-media"><i class="icon icon-f7"></i></div>
+								<div class="item-inner shop_name_wrap">
+									<div class="item-title font8">{$shop['title']}</div>
+								</div>
+							</a>
+						</li>
+						{loop $shop['item'] $item}
+						<li class="item_wrap" data-shopid="{$shopid}" data-price="{$item['price']}" data-total="{$item['total']}">
+							<a href="{php echo $this->createMobileUrl('detail', array('itemid' => $item['itemid']))}" class="external">
+								<div class="item-content">
+									<div class="item-media">
+										<img class="img_square1" src="{php echo tomedia($item['cover'])}" onerror="this.src='{$_W[siteroot]}/addons/superman_mall/template/mobile/images/placeholder.gif'">
+									</div>
+									<div class="item-inner item_attr_wrap">
+										<div class="item-title-row">
+											<div class="item-title font7 color-default">{$item['title']}</div>
+										</div>
+										<div class="item-subtitle color-gray font6">{$item['attr']}</div>
+										<div class="item-subtitle">
+											<span class="color-danger font8 pull-left">&#165;{$item['price']}</span>
+											<span class="color-gray pull-right">x{$item['total']}</span>
+										</div>
+									</div>
+								</div>
+							</a>
+						</li>
+						{/loop}
+					</ul>
+				</div>
+				<div class="list-block font7">
+					<ul class="dispatch_wrap">
+						{if $need_address}
+						<li>
+							<a href="#express_type_wrap_{$shopid}" class="color-default">
+								<div class="item-content item-link">
+									<div class="item-inner distribution_wrap">
+										<div class="item-title">配送方式</div>
+										<div class="item-title dispatch_type" id="dispatch_type_{$shopid}" data-price="{$shop['price']}" data-postage="{php echo $shop['postage']}" data-shopid="{$shopid}" {if $shop['delivery_mode'] == 2}data-val="option2"{else if $shop['postage'] <= 0 || !$shop['myfetch_switch']}data-val="option1"{/if}>
+											{if $shop['delivery_mode'] == 2}
+											自提
+											{else if $shop['postage'] <= 0}
+											包邮
+											{else if !$shop['myfetch_switch']}
+											快递：&#165;{php echo SupermanUtil::float_format($shop['postage'], 2)}
+											{else}
+											请选择
+											{/if}
+										</div>
+									</div>
+								</div>
+							</a>
+						</li>
+						{/if}
+						<li class="align-top">
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label">订单留言</div>
+									<div class="item-input">
+										<textarea class="font7 remark" data-shopid="{$shopid}" placeholder="给商户留言（选填、100字以内）"></textarea>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div></div>
+									<div>
+										<span>共{$shop['total']}件商品</span>&nbsp;
+										<span id="shop_allprice_{$shopid}">合计：&#165;{php echo $shop['price']}</span>
+									</div>
+								</div>
+							</div>
+						</li>
+						{if isset($shop['discount']['full_dec'])}
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="full_dec" data-shopid="{$shopid}" data-full-dec="{$shop['discount']['full_dec']['minus']['value']}">
+										<span class="button button-danger font6">{$shop['discount']['full_dec']['title']}</span>
+										<span class="font6">{$shop['discount']['full_dec']['content']}</span>&nbsp;
+										<span class="font6">-&yen;{php echo SupermanUtil::float_format($shop['discount']['full_dec']['minus']['value'], 2)}</span>
+									</div>
+								</div>
+							</div>
+						</li>
+						{/if}
+						{if isset($shop['discount']['cash_credit']) && $shop['discount']['cash_credit'] > 0}
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title label cash_switch font7">可用{$shop['discount']['cash_credit']}{php echo $credit_group[$this->discount_setting['credit']['credit_type']]['title']}抵&yen;{$shop['discount']['cash']}</div>
+									<div class="item-input">
+										<label class="label-switch pull-right">
+											<input type="checkbox" class="cash_credit" data-shopid="{$shopid}" data-checked="0" data-cash-credit="{$shop['discount']['cash']}">
+											<div class="checkbox cash_open"></div>
+										</label>
+									</div>
+								</div>
+							</div>
+						</li>
+						{/if}
+					</ul>
+				</div>
+				{/loop}
+				{/if}
+			</div>
+		</form>
+	</div>
+	{if $this->shops}
+	{loop $this->shops $shopid $shop}
+	<div class="page express_type_wrap" id='express_type_wrap_{$shopid}'  data-shopid="{$shopid}">
+		<header class="bar bar-nav">
+			<a class="icon icon-left pull-left back"></a>
+			<h1 class='title'>配送方式</h1>
+		</header>
+		<div class="content">
+			<div class="list-block media-list">
+				<ul>
+					{if $shop['delivery_mode'] == 0 || $shop['delivery_mode'] == 1}
+					<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title-row">
+									<div class="item-title">
+										<label>
+											<input type="radio" name="distribution_{$shopid}" class="distribution" value="option1" checked> 快递
+										</label>
+									</div>
+									<div class="item-after color-danger">&#165;{php echo $shop['postage']}</div>
+								</div>
+							</div>
+						</div>
+					</li>
+					{/if}
+					{if $shop['delivery_mode'] == 0 || $shop['delivery_mode'] == 2}
+						{if $shop['myfetch_switch']}
+						<li>
+							<div class="row no-gutter">
+								<div class="col-20">
+									<label >
+										<input type="radio" name="distribution_{$shopid}" class="distribution" value="option2" {if $shop['delivery_mode'] == 2}checked{/if}> 自提
+									</label>
+								</div>
+								<div class="col-80 select_myfetch" hidden="hidden">
+									<input class="text-right" type="text" id="picker" name="title" value="请选择自提门店" />
+									{if $shop['delivery_mode'] == 2 && $shop['default_myfetch']}
+									<div class="text-right font6 color-gray myfetch_address">{php echo $shop['default_myfetch']['province'].' '.$shop['default_myfetch']['city'].' '.$shop['default_myfetch']['district'].' '.$shop['default_myfetch']['address'].'<br>'.$shop['default_myfetch']['username'].' '.$shop['default_myfetch']['mobile']}</div>
+									{else}
+									<div class="text-right font6 color-gray myfetch_address">未选择自提门店</div>
+									{/if}
+								</div>
+							</div>
+						</li>
+						{/if}
+					{/if}
+				</ul>
+			</div>
+			<div class="content-block">
+				<a class="button button-fill back" id="btn_save_{$shopid}">保存</a>
+			</div>
+		</div>
+	</div>
+	{/loop}
+	{/if}
+</div>
+{template 'common/footer'}

@@ -1,0 +1,102 @@
+{template 'common/header-base'}
+<div class="container">
+	{if defined('IN_MESSAGE')}
+    <style>
+        .container {
+            width:800px;
+        }
+        .alert {
+            margin-top: 100px;
+        }
+        .page-header {
+            border-bottom: 0;
+        }
+    </style>
+	<div class="jumbotron clearfix alert alert-{$label}">
+		<div class="row">
+			<div class="col-xs-12 col-sm-3 col-lg-2">
+				<i class="fa fa-5x fa-{if $label=='success'}check-circle{/if}{if $label=='danger'}times-circle{/if}{if $label=='info'}info-circle{/if}{if $label=='warning'}exclamation-triangle{/if}"></i>
+			</div>
+			<div class="col-xs-12 col-sm-8 col-md-9 col-lg-10">
+				{if is_array($msg)}
+				<h2>MYSQL 错误：</h2>
+				<p>{php echo cutstr($msg['sql'], 300, 1);}</p>
+				<p><b>{$msg['error'][0]} {$msg['error'][1]}：</b>{$msg['error'][2]}</p>
+				{else}
+				<h2>{$caption}</h2>
+				<p>{$msg}</p>
+				{/if}
+				{if $redirect}
+				<p><a href="{$redirect}">如果你的浏览器没有自动跳转，请点击此链接</a></p>
+				<script type="text/javascript">
+					setTimeout(function () {
+						location.href = "{$redirect}";
+					}, 3000);
+				</script>
+				{else}
+				<p>[<a href="javascript:history.go(-1);">点击这里返回上一页</a>] &nbsp; [<a href="{php echo wurl('site/entry/dashboard', array('m' => 'superman_mall'))}">首页</a>]</p>
+				{/if}
+			</div>
+			{else}
+			<div class="row">
+				{php $navs = SuermanMallMenu::webNavs($this->web['user_permission']);}
+				{if !empty($navs)}
+				<div class="col-xs-12 col-sm-3 col-lg-2 big-menu">
+					{loop $navs $k $nav}
+					<div class="panel panel-default" style="margin-bottom: 10px; border-top-width: 1px;">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								{if $nav['icon']}<i class="{$nav['icon']}"></i>{/if} {$nav['title']}
+							</h4>
+							<a class="panel-collapse {if $nav['active']}collapsed{/if} nav_collapse_link" data-do="__nav_{$nav['xdo']}" data-toggle="collapse" href="#frame-{$k}">
+								<i class="fa fa-chevron-circle-down"></i>
+							</a>
+						</div>
+						<ul class="list-group collapse {$nav['active']}" id="frame-{$k}">
+							{loop $nav['items'] $link}
+							<li class="list-group-item {$link['active']}" onclick="window.location.href = '{$link[url]}';" style="cursor:pointer; overflow:hidden;">
+								{$link['title']}
+								{if $link['extra']}
+								<a class="pull-right" href="{$link['extra']['url']}" title="{$link['extra']['title']}">
+									<i class="{$link['extra']['icon']}"></i>
+								</a>
+								{/if}
+							</li>
+							{/loop}
+						</ul>
+					</div>
+					{/loop}
+					<script>
+						require(['jquery'],function($) {
+							$('.nav_collapse_link').click(function () {
+								util.cookie.prefix = window.sysinfo.cookie.pre;
+								var value = $(this).hasClass('collapsed')?0:1;
+								util.cookie.set($(this).attr('data-do'), value, 365*86400);
+							});
+						});
+					</script>
+				</div>
+			<div class="col-xs-12 col-sm-9 col-lg-10">
+				{if CRUMBS_NAV == 1}
+				{php global $module_types;global $module;global $ptr_title;}
+				<ol class="breadcrumb" style="padding:5px 0;">
+					<li><a href="{url 'home/welcome/ext'}"><i class="fa fa-cogs"></i> &nbsp; 扩展功能</a></li>
+					<li><a href="{url 'home/welcome/ext' array('m' => $module['name'])}">{$module_types[$module['type']]['title']}模块 - {$module['title']}</a></li>
+					<li class="active">{$ptr_title}</li>
+				</ol>
+				{elseif CRUMBS_NAV == 2}
+				{php global $module_types;global $module;global $ptr_title; global $site_urls; $m = $_GPC['m'];}
+				<ul class="nav nav-tabs">
+					<li><a href="{url 'platform/reply' array('m' => $m)}">管理{$module['title']}</a></li>
+					<li><a href="{url 'platform/reply/post' array('m' => $m)}"><i class="fa fa-plus"></i> 添加{$module['title']}</a></li>
+					{if !empty($site_urls)}
+					{loop $site_urls $site_url}
+					<li {if $_GPC['do'] == $site_url['do']} class="active"{/if}><a href="{$site_url['url']}"> {$site_url['title']}</a></li>
+					{/loop}
+					{/if}
+				</ul>
+				{/if}
+				{else}
+				<div class="col-xs-12 col-sm-12 col-lg-12">
+					{/if}
+					{/if}

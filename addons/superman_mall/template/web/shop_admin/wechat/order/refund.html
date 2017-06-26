@@ -1,0 +1,154 @@
+<!--<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="" method="post" class="form-horizontal" role="form">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">订单号</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<input class="form-control" name="ordersn" type="text" value="{$_GPC['ordersn']}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">商品名</label>
+				<div class="col-sm-8 col-md-8 col-lg-8 col-xs-12">
+					<input class="form-control" name="title" type="text" value="{$_GPC['title']}">
+				</div>
+				<div class="pull-right col-xs-12 col-sm-2 col-md-2 col-lg-2">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>-->
+<form action="" method="post">
+    {if $list}
+    {loop $list $li}
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <div class="pull-left">订单号：{$li['order']['ordersn']}</div>
+            <div class="pull-right">下单时间：{$li['order']['createtime']}</div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover" style="margin-bottom: 0;">
+                <thead>
+                <tr>
+                    <th width="150">头像/昵称</th>
+                    <th width="70">封面图</th>
+                    <th>商品/规格</th>
+                    <th width="80">售后类型</th>
+                    <th width="80">退货数量</th>
+                    <th width="80">退货金额</th>
+                    <th width="80">状态</th>
+                    <th width="150">更新时间</th>
+                    <th width="100" class="text-right">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <img style="height: 3rem; width: 3rem; border-radius: 50%" src="{php echo tomedia($li['member']['avatar'])}" >
+                        {$li['member']['nickname']}
+                    </td>
+                    <td>
+                        <img class="item_img" src="{php echo tomedia($li['item']['cover'])}" onerror="this.src='{php echo $this->superman_placeholder}'">
+                    </td>
+                    <td style="line-height: 2.6rem">
+                        <span class="text-overflow" style="display: block">{$li['item']['title']}</span>
+                        <span class="text-overflow" style="display: block">{$li['item']['sku']}</span>
+                    </td>
+                    <td>
+                        {if $li['type'] == 1}
+                        退货
+                        {/if}
+                    </td>
+                    <td>{$li['total']}</td>
+                    <td>&#165;{$li['money']}</td>
+                    <td>
+                        {if $li['status'] == 1}
+                        <span class="label label-success">已完成</span>
+                        {else if $li['status'] == '-1'}
+                        <span class="label label-danger">已取消</span>
+                        {else if $li['progress']['title'] == '申请退货'}
+                        <span class="label label-default">{$li['progress']['title']}</span>
+                        {else}
+                        <span class="label label-info">{$li['progress']['title']}</span>
+                        {/if}
+                    </td>
+                    <td>{php echo date('Y-m-d H:i:s', $li['updatetime'])}</td>
+                    <td class="text-right">
+						<div class="btn-group">
+							<a href="{php echo $this->createWebUrl('order', array('act' => 'refund-post', 'srvid' => $li['id']))}" title="编辑" class="btn btn-default btn-sm">
+								<i class="fa fa-edit"></i>
+							</a>
+							<a href="#" title="退款" data-toggle="modal" data-target=".bs-example-modal-sm" class="btn btn-danger btn-sm btn_refund" data-pay-type="{$li['order']['pay_type']}" data-srvid="{$li['id']}">
+								退款
+							</a>
+						</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {/loop}
+	<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<form method="post" class="refund_form">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel">确认退款</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group row" style="line-height: 26px; margin-bottom: 0">
+							<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label text-right">金额</label>元
+							<div class="col-sm-8 col-md-8 col-xs-12">
+								<input name="refund_price" type="text" class="form-control"  placeholder="">
+								<span class="help-block">微信支付限制，退款金额不能大于订单支付金额</span>
+							</div>
+						</div>
+						<div class="form-group row" style="min-height: 110px; line-height: 26px;">
+							<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label text-right">接收退款账户</label>
+							<div class="col-sm-8 col-md-8 col-xs-12">
+								<div class="input-group" style="padding-bottom: .3rem">
+									<label class="radio-inline">
+										<input type="radio" class="type_wechat" name="refund_type" value="2"> 微信钱包
+									</label>
+									<label class="radio-inline">
+										<input type="radio" class="type_credit" name="refund_type" value="1" checked> 账户余额
+									</label>
+									<span class="help-block" style="margin: 0">微信钱包：微信支付订单，可原路退回微信钱包，退款成功后，请用户在微信钱包查看（微信->我->钱包->零钱->零钱明细）</span>
+									<span class="help-block" style="margin: 0">账户余额：商城账户余额</span>
+								</div>
+								<label style="font-weight: normal; margin-bottom: 0">
+									<input type="checkbox" name="refund_close"> 已完成退款，确认退款订单完成
+								</label>
+								<span class="help-block" style="margin: 0">勾选后，退款订单将完成并关闭，相当于用户手机端确认完成退款订单</span>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="hidden" name="srvid">
+						<input type="hidden" name="token" value="{$_W['token']}">
+						<button class="btn btn-primary" name="submit" type="submit" value="yes">确认</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+    {/if}
+	{$pager}
+</form>
+<script type="text/javascript">
+	require(['jquery'],function($){
+		$('.btn_refund').bind('click', function(){
+			var t = this;
+			var srvid = $(t).attr('data-srvid');
+			var pay_type = $(t).attr('data-pay-type');
+			if (pay_type != '2') {
+				$('.type_wechat').attr('disabled', 'disabled');
+			}
+			$('input[name=srvid]').val(srvid);
+		});
+	});
+</script>

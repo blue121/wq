@@ -1,0 +1,12 @@
+{template 'common/header'}
+{if is_error($plugin_permission)}
+<div class="alert alert-danger">{$plugin_permission['message']}</div>
+{else}
+<ul class="nav nav-tabs">
+    <li {if $act == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('printer');}">打印机管理</a></li>
+    <li {if $act == 'post'}class="active"{/if}><a href="{php echo $this->createWebUrl('printer', array('act' => 'post'));}">添加打印机</a></li>
+    <li {if $act == 'log'}class="active"{/if}><a href="{php echo $this->createWebUrl('printer', array('act' => 'log'));}">打印记录</a></li>
+</ul>
+{template $this->do.'/'.$this->act}
+{/if}
+{template 'common/footer'}

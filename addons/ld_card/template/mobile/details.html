@@ -1,0 +1,67 @@
+{template "common/header"}
+<style type="text/css">
+#nickname{
+	margin:5px 10px;
+}
+#avatar{
+	
+	border:2px dotted #c2c2c2;
+}
+#top{
+	margin-top:30px;
+}
+.containar{
+	padding:0px;
+	margin:0px;
+}
+</style>
+
+<header id="header" style="background: #fff;" class="mui-bar mui-bar-nav">
+<a onclick="javascript:window.history.back(-1);" class="mui-action-back mui-btn mui-btn-blue mui-btn-link mui-btn-nav mui-pull-left"><span class="mui-icon mui-icon-left-nav"></span> 返回</a>
+<h1 class="mui-title"><b>{$cardinfo['title']}</b>&nbsp;&nbsp;领取详情</h1>
+<a href="{php echo $this->createmobileurl('index')}" class="mui-btn mui-btn-blue mui-btn-link mui-btn-nav mui-pull-right"> 首页<span class="mui-icon mui-icon-forward"></span></a>
+</header>
+
+<div class="mui-row" id="top">
+	<div class="col-xs-4" align="center">
+		<h5>已发红包总额</h5><br>
+		<p style="font-size:30px;color:blue">{php echo $total/100}</p>
+	</div>
+	<img id="avatar" class="img-circle col-xs-4" src="{php echo tomedia($shop['logo']);}" alt="">	
+</div>
+<div align="center" class="mui-row" id="nickname">
+	<h4>
+	<span class="label label-info">{$cardinfo['card_id']}</span>
+	</h4>
+</div>
+	{$pager}
+<div class="table-responsive">
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>领取</th>
+			<th>动作</th>
+			<th>赠送</th>
+			<th>红包</th>
+			<th>时间</th>
+		</tr>	
+	</thead>
+	<tbody>
+		{loop $logs $v}
+		<tr>
+			<td>{$v['user']}</td>
+			<td>
+				{if $v['status']=="get"}领取{elseif $v['status']=="consume"}核销{/if}
+			</td>
+			<td>{$v['friend']}</td>
+			<td>{$v['sendhb']}</td>
+			<td>{php echo date("ymd H:i",$v['time'])}</td>
+		</tr>
+		{/loop}
+	</tbody>
+</table>
+	
+</div>
+{$pager}
+{template "common/footer"}

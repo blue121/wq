@@ -1,0 +1,100 @@
+{template 'common/title'}
+<div class="content partner_home">
+	<div class="list-block media-list">
+		<ul>
+			<li>
+				<a href="{php echo $this->createMobileUrl('partner', array('act' => 'order'))}" data-no-cache="true" class="item-link item-content">
+					<div class="item-inner">
+						<div class="item-title-row">
+							<div class="font6 color-gray">今日收益</div>
+						</div>
+						<div class="item-subtitle color-warning text-center fonta2 profit_num">{php echo isset($today_commission['commission_total'])?$today_commission['commission_total']:0.00}</div>
+					</div>
+				</a>
+			</li>
+			<li>
+				<div class="item-content">
+					<div class="item-inner">
+						<div class="item-title-row text-center">
+							<div>
+								<div class="font8">&yen;{php echo $this->partner['commission_total']}</div>
+								<div class="font6">{php echo $this->setting['text']['commission_total']}</div>
+							</div>
+							<div>
+								<div class="font8">&yen;{php echo $this->partner['commission_received']}</div>
+								<div class="font6">{php echo $this->setting['text']['commission_received']}</div>
+							</div>
+							<div>
+								<div class="font8">&yen;{php echo $this->partner['commission_balance']}</div>
+								<div class="font6">{php echo $this->setting['text']['commission_balance']}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="nine_grids_wrap">
+		<div class="weui_grids">
+			<a href="{php echo $this->createMobileUrl('partner', array('act' => 'team'))}"data-no-cache="true" class="weui_grid">
+				<div class="weui_grid_icon">
+					<i class="iconfont color-gray">&#xe644;</i>
+				</div>
+				<p class="weui_grid_label color-gray font6">
+					{php echo $this->setting['text']['myteam']}
+				</p>
+			</a>
+			<a href="{php echo $this->createMobileUrl('partner', array('act' => 'invite'))}" data-no-cache="true" class="external weui_grid">
+				<div class="weui_grid_icon">
+					<i class="iconfont color-gray">&#xe60e;</i>
+				</div>
+				<p class="weui_grid_label color-gray font6">
+					{php echo $this->setting['text']['invite_friend']}
+				</p>
+			</a>
+			{if isset($this->setting['base']['rank']) && $this->setting['base']['rank'] == 1}
+			<a href="{php echo $this->createMobileUrl('partner', array('act' => 'ranking'))}" data-no-cache="true" class="weui_grid">
+				<div class="weui_grid_icon">
+					<i class="iconfont color-gray">&#xe60b;</i>
+				</div>
+				<p class="weui_grid_label color-gray font6">
+					{php echo $this->setting['text']['commission_rank']}
+				</p>
+			</a>
+			{/if}
+			<a href="{php echo $this->createMobileUrl('partner', array('act' => 'order'))}" data-no-cache="true" class="weui_grid">
+				<div class="weui_grid_icon">
+					<i class="iconfont color-gray">&#xe60d;</i>
+				</div>
+				<p class="weui_grid_label color-gray font6">
+					{php echo $this->setting['text']['order']}
+				</p>
+			</a>
+			<a href="{php echo $this->createMobileUrl('partner', array('act' => 'getcash', 'op' => 'display'))}" data-no-cache="true" class="weui_grid">
+				<div class="weui_grid_icon">
+					<i class="iconfont color-gray">&#xe60c;</i>
+				</div>
+				<p class="weui_grid_label color-gray font6">
+					{php echo $this->setting['text']['getcash_display']}
+				</p>
+			</a>
+			<a href="{php echo $this->createMobileUrl('partner', array('act' => 'getcash', 'op' => 'apply'))}" data-no-cache="true" class="weui_grid">
+				<div class="weui_grid_icon">
+					<i class="iconfont color-gray">&#xe60a;</i>
+				</div>
+				<p class="weui_grid_label color-gray font6">
+					{php echo $this->setting['text']['getcash_apply']}
+				</p>
+			</a>
+			<a href="{php echo $this->createMobileUrl('partner', array('act' => 'poster'))}" class="weui_grid">
+				<div class="weui_grid_icon">
+					<i class="iconfont color-gray">&#xe61a;</i>
+				</div>
+				<p class="weui_grid_label color-gray font6">
+					{php echo $this->setting['text']['my_poster']}
+				</p>
+			</a>
+		</div>
+	</div>
+</div>
+{template 'common/nav'}

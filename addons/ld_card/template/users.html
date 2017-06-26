@@ -1,0 +1,90 @@
+{template 'common/header'}
+<div class="main">
+	
+		<div class="panel panel-default">
+			
+			<div class="panel-body">
+				<ul class="nav nav-tabs" id="myTab">
+					<li class="active"><a href="{php echo $this->createweburl('users');}"> 管理商户</a></li>
+					<li ><a href="{php echo $this->createweburl('adduser');}"> 添加商户</a></li>				
+				</ul>
+			</div>
+			
+			<div class = "main">
+	<div class = "panel-default">
+	
+	</div>
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+		<thead class="navbar-inner">
+	    <tr class="success">	
+		 <th style="width:5%;">ID</th>
+<!-- 		 <th style="width:10%;color:red;">总额</th> -->
+		 <th style="width:25%;">店名</th>
+		 <th style="width:10%;">店主</th>
+         <th style="width:20%;">地址</th>
+         <th style="width:10%;">电话</th>
+		 <th style="width:8%;">店主id</th>
+		 <th style="width:30%;">二维码</th>
+         <th style="width:30%;">操作</th>
+		</tr>
+		</thead>
+		<tbody>
+		{loop $users $item}
+		<tr>
+	      <td>{$item['id']}</td> 
+<!-- 		  <td style="color:red;">{$item['sum']}</td>  -->
+		  <td>{$item['shopname']}</td>
+          <td>{$item['username']}</td> 
+		  <td>{$item['add']}</td>
+          <td><a class="btn btn-default" href="javascript:;" onclick="displayUrl('{$item['tel']}');">查看</a></td>
+		  <td><a class="btn btn-default" href="javascript:;" onclick="displayUrl('{$item['openid']}');">查看</a></td>
+		  <td><img style="width:40%" src="{$item['qrcode']}" />
+		  <a class="btn btn-default" href="javascript:;" onclick="displayUrl('{$item['url']}');">链接</a> 
+		  </td>
+		  <td>
+				<div style="">
+			       <div class="row">
+			       	<a class="btn btn-default" href="{php echo $this->createWebUrl('cards',array('userid'=>$item['id']))}" >卡券管理</a>
+					<a href="{php echo $this->createweburl('adduser',array('id'=>$item['id'],'op'=>'edit'))}" class="btn btn-info">编辑商户</a>
+					<a style="color:#fff;" class="btn btn-danger" href="{php echo $this->createWebUrl('deluser',array('id'=>$item['id']))}" onclick="return confirm('确认删除此商户吗？删除后此商户的卡券，以及所有卡券记录都将被删除');return false;">×</a>
+			       </div>
+					<div class="row">
+						{if $item['status']==0}
+						<a href="{php echo $this->createweburl('shenhe',array('id'=>$item['id']));}" onclick="return confirm('确认要审核此商户吗？');return false;" class="btn btn-warning">商户审核</a>
+						{/if}
+						
+					</div>
+			        					 
+					 
+				</div>	
+			
+		  </td>				
+		</tr>
+		{/loop}
+		</tbody>		
+		</table>
+		
+	</div>
+	{$pager}
+</div>
+<script type = "text/javascript">
+function displayUrl(lurl) {
+		require(['jquery', 'util'], function($, u) {
+			var content = '<p class="form-control-static" style="word-break:break-all">结果: <br>' + lurl + '</p>';
+			
+			var footer =
+					'<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>' +
+					'<button type="button" class="btn btn-primary">复制</button>';
+			var diaobj = u.dialog('查看', content, footer);
+			diaobj.find('.btn-default').click(function() {
+				diaobj.modal('hide');
+			});
+			diaobj.on('shown.bs.modal', function(){
+				u.clip(diaobj.find('.btn-primary')[0], lurl);
+			});
+			diaobj.modal('show');
+		});
+	}
+</script>
+{template 'common/footer'}

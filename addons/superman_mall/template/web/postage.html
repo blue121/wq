@@ -1,0 +1,513 @@
+{template 'web/header'}
+{template 'web/common/shop-nav'}
+<style>
+	.star {
+		color: red;
+		margin-right: 5px;
+		font-weight: bold;
+	}
+</style>
+<ul class="nav nav-tabs">
+	<li {if $act == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('postage');}">邮费模板</a></li>
+	<li {if $act == 'post' && !$_GPC['id']}class="active"{/if}><a href="{php echo $this->createWebUrl('postage', array('act' => 'post'));}">添加模板</a></li>
+	{if $_GPC['id']}<li {if $act == 'post'}class="active"{/if}><a href="{php echo $this->createWebUrl('postage', array('act' => 'post', 'id' => $id));}">编辑模板</a></li>{/if}
+</ul>
+{if $act=='display'}
+{loop $list $item}
+<div class="panel panel-default">
+	<div class="panel-heading clearfix">
+		<div class="pull-left">{$item['title']}</div>
+		<div class="pull-right">
+			更新时间：{php echo date('Y-m-d H:i:s', $item['updatetime'])}&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="{php echo $this->createWebUrl('postage', array('act' => 'copy', 'id' => $item['id']))}">复制模板</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+			<a href="{php echo $this->createWebUrl('postage', array('act' => 'post', 'id' => $item['id']))}">编辑</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+			<a href="{php echo $this->createWebUrl('postage', array('act' => 'delete', 'id' => $item['id'], 'type' => 'template'))}">删除</a>
+		</div>
+	</div>
+	<div class="panel-body">
+		<table class="table table-hover">
+			<thead>
+			<tr>
+				<th>运送到</th>
+				<th width="85">{php echo M::t('superman_mall_postage_template')->get_thead_by_valuation($item['valuation'], 1)}</th>
+				<th width="85">{php echo M::t('superman_mall_postage_template')->get_thead_by_valuation($item['valuation'], 2)}</th>
+				<th width="85">{php echo M::t('superman_mall_postage_template')->get_thead_by_valuation($item['valuation'], 3)}</th>
+				<th width="85">{php echo M::t('superman_mall_postage_template')->get_thead_by_valuation($item['valuation'], 4)}</th>
+			</tr>
+			</thead>
+			<tbody>
+			{loop $item['items'] $li}
+			<tr>
+				<td>{$li['area']}</td>
+				<td>{$li['start']}</td>
+				<td>{$li['postage']}</td>
+				<td>{$li['step']}</td>
+				<td>{$li['renew']}</td>
+			</tr>
+			{/loop}
+			</tbody>
+		</table>
+	</div>
+</div>
+{/loop}
+{$pager}
+<script type="text/javascript">
+	require(['bootstrap', 'util'],function($, u){
+	});
+</script>
+{else if $act == 'post'}
+<style>
+	.area_wrap {
+		width: 85%;
+	}
+	#area_list li {
+		list-style: none;
+		width: 150px;
+		float: left;
+	}
+	#area_list li label {
+		font-weight: normal;
+	}
+	#list_wrap td {
+		white-space: normal;
+	}
+</style>
+<form class="form-horizontal form" method="post">
+	<input type="hidden" name="id" value="{$item[id]}">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			{if empty($item['id'])}
+			添加模板
+			{else}
+			编辑模板
+			{/if}
+		</div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label"><span class="star">*</span>模板名称</label>
+				<div class="col-sm-6 col-md-10 col-xs-12">
+					<input class="form-control" name="title" type="text" value="{$item['title']}"/>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">是否包邮</label>
+				<div class="col-sm-6 col-md-10 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="free" data-id="{$item['id']}" value="0" {if !$item['free']}checked{/if}> 否
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="free" data-id="{$item['id']}" value="1" {if $item['free']}checked{/if}> 是
+						</label>
+					</div>
+					<span class="help-block"></span>
+				</div>
+			</div>-->
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">计价方式</label>
+				<div class="col-sm-6 col-md-10 col-xs-12">
+					<div class="input-group">
+						<label class="radio-inline">
+							<input type="radio" name="valuation" data-id="{$item['id']}" value="1" {if $item['valuation']==1}checked{/if}> 按件数
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="valuation" data-id="{$item['id']}" value="2" {if $item['valuation']==2}checked{/if}> 按重量
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="valuation" disabled data-id="{$item['id']}" value="3" {if $item['valuation']==3}checked{/if}> 按体积(暂不支持)
+						</label>
+					</div>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">配送区域</label>
+				<div class="col-sm-6 col-md-10 col-xs-12">
+					<div class="express_area">
+						<table class="table table-hover">
+							<tr>
+								<th>运送到</th>
+								<th width="85">{php echo M::t('superman_mall_postage_template')->get_thead_by_valuation($item['valuation'], 1)}</th>
+								<th width="85">{php echo M::t('superman_mall_postage_template')->get_thead_by_valuation($item['valuation'], 2)}</th>
+								<th width="85">{php echo M::t('superman_mall_postage_template')->get_thead_by_valuation($item['valuation'], 3)}</th>
+								<th width="85">{php echo M::t('superman_mall_postage_template')->get_thead_by_valuation($item['valuation'], 4)}</th>
+								<th width="70">操作</th>
+							</tr>
+							<tbody id="list_wrap">
+							<tr>
+								<td class="clearfix">
+									<div class="pull-left">
+										<span>其他地区(除所选地区之外的其他地区)</span>
+									</div>
+									<div class="pull-right"></div>
+								</td>
+								<td>
+									<input type="text" class="form-control input-sm" name="default[start]" value="{$default['start']}"/>
+								</td>
+								<td>
+									<input type="text" class="form-control input-sm" name="default[postage]" value="{$default['postage']}"/>
+								</td>
+								<td>
+									<input type="text" class="form-control input-sm" name="default[step]" value="{$default['step']}"/>
+								</td>
+								<td>
+									<input type="text" class="form-control input-sm" name="default[renew]" value="{$default['renew']}"/>
+								</td>
+								<td></td>
+							</tr>
+							{if $item['items']}
+							{loop $item['items'] $li}
+							<tr id="area_{$li['id']}">
+								<td class="clearfix">
+									<div class="pull-left area_wrap">
+										<input type="hidden" name="area[{$li['id']}]" value="{$li['area']}"/>
+										<span>{$li['area']}</span>
+									</div>
+									<div class="pull-right">
+										<a href="#" class="edit_area">编辑</a>
+										<!--<button type="button" class="btn btn-default btn-sm edit_area">
+											<i class="fa fa-edit"></i> 编辑
+										</button>-->
+									</div>
+								</td>
+								<td>
+									<input type="text" class="form-control input-sm" name="start[{$li['id']}]" value="{$li['start']}"/>
+								</td>
+								<td>
+									<input type="text" class="form-control input-sm" name="postage[{$li['id']}]" value="{$li['postage']}"/>
+								</td>
+								<td>
+									<input type="text" class="form-control input-sm" name="step[{$li['id']}]" value="{$li['step']}"/>
+								</td>
+								<td>
+									<input type="text" class="form-control input-sm" name="renew[{$li['id']}]" value="{$li['renew']}"/>
+								</td>
+								<td>
+									<button type="button" data-id="{$li['id']}" class="btn btn-danger btn-sm delete_area">
+										<i class="fa fa-remove"></i> 删除
+									</button>
+								</td>
+							</tr>
+							{/loop}
+							{/if}
+							</tbody>
+						</table>
+					</div>
+					<button type="button" class="btn btn-warning add_area" title="添加区域">
+						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加区域
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+			<input name="submit" type="submit" value="提交" class="btn btn-primary col-lg-1">
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</div>
+</form>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">选择区域</h4>
+			</div>
+			<div class="modal-body">
+				<div class="panel-body">
+					<ul id="area_list"></ul>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary" data-wrapper-id="" id="area_confirm">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+{if defined('LOCAL_DEVELOPMENT')}
+<script>
+	require.config({
+		paths: {
+			'district': '{$_W["siteroot"]}addons/superman_mall/template/web/js/district-zh'
+		}
+	});
+</script>
+{else}
+<script>
+	require.config({
+		paths: {
+			'district': '{$_W["siteroot"]}addons/superman_mall/template/web/js/district-zh.min'
+		}
+	});
+</script>
+{/if}
+<script>
+	require(['district'], function(d){
+		function get_thead_by_valuation($val, $column) {
+			switch ($column) {
+				case 1:
+					switch ($val) {
+						case 1:
+							return '首件(个)';
+							break;
+						case 2:
+							return '首重(kg)';
+							break;
+						case 3:
+							return '首体积(m³)';
+							break;
+					}
+					break;
+				case 2:
+				case 4:
+					return '邮费(元)';
+					break;
+				case 3:
+					switch ($val) {
+						case 1:
+							return '续件(个)';
+							break;
+						case 2:
+							return '续重(kg)';
+							break;
+						case 3:
+							return '续体积(m³)';
+							break;
+					}
+					break;
+				default:
+					return '未知';
+					break;
+			}
+		}
+		var selected_areas = [];
+		<!--{loop $item['items'] $li}-->
+		selected_areas = '{$li["area"]}'.split(',');
+		<!--{/loop}-->
+		//初始化区域数据
+		var initAreaList = function(){
+			var areas = '', checked = '';
+			$.each(d.districts, function(k, v){
+				if ($.inArray($.trim(v.title), selected_areas) != -1) {
+					checked = 'checked disabled';
+				} else {
+					checked = '';
+				}
+				areas += '<li>';
+				areas += '<label><input type="checkbox" '+checked+' value="'+v.title+'"/> <span>'+v.title+'</span></label>';
+				areas += '</li>';
+			});
+			$('#area_list').html(areas);
+		};
+		initAreaList();
+		//初始化区域操作
+		var initAreaOperate = function(obj){
+			//console.log($('.edit_area', obj));
+			$('.edit_area', obj).click(function(){
+				editArea(this);
+			});
+			$('.delete_area', obj).click(function(){
+				deleteArea(this);
+			});
+			$('#area_list input[type=checkbox]').click(function(){
+				changeArea(this);
+			});
+		};
+		initAreaOperate($('#list_wrap'));
+		//确认地区选择
+		$('#area_confirm').click(function(){
+			var wrapper_id = $(this).attr('data-wrapper-id');
+			var wrapper = $('#'+wrapper_id);
+			var area_arr = [], area_str = '';
+			$('#area_list :checkbox:checked').each(function(){
+				if (!$(this).prop('disabled')) {
+					area_arr.push($(this).val());
+					if ($.inArray($(this).val(), selected_areas) == -1) {
+						selected_areas.push($(this).val());
+					}
+				}
+			});
+			area_str = area_arr.join();
+			$('.area_wrap span', wrapper).html(area_str).attr('title', area_str);
+			$('.area_wrap input', wrapper).val(area_str);
+			//隐藏选择区域窗口
+			$('#myModal').modal('hide');
+		});
+		//切换计价方式
+		$('input[name=valuation]').click(function(){
+			if (!confirm('修改计价方式后，当前模板的配送区域数据将被清空，确定吗？')) {
+				return false;
+			}
+			var id = $(this).attr('data-id');
+			var valuation = parseInt($(this).val());
+			var html = '<table class="table table-hover">';
+			html += '<tr>';
+			html += '<th>运送到</th>';
+			html += '<th width="85">'+get_thead_by_valuation(valuation, 1)+'</th>';
+			html += '<th width="85">'+get_thead_by_valuation(valuation, 2)+'</th>';
+			html += '<th width="85">'+get_thead_by_valuation(valuation, 3)+'</th>';
+			html += '<th width="85">'+get_thead_by_valuation(valuation, 4)+'</th>';
+			html += '<th width="70">操作</th>';
+			html += '</tr>';
+			html += '<tbody id="list_wrap">';
+			html += '<tr>';
+			html += '<td class="clearfix">';
+			html += '<div class="pull-left">';
+			html += '<span>其他地区(除所选地区之外的其他地区)</span>';
+			html += '</div>';
+			html += '<div class="pull-right"></div>';
+			html += '</td>';
+			html += '<td>';
+			html += '<input type="text" class="form-control input-sm" name="default[start]" value="1"/>';
+			html += '</td>';
+			html += '<td>';
+			html += '<input type="text" class="form-control input-sm" name="default[postage]" value="6"/>';
+			html += '</td>';
+			html += '<td>';
+			html += '<input type="text" class="form-control input-sm" name="default[step]" value="1"/>';
+			html += '</td>';
+			html += '<td>';
+			html += '<input type="text" class="form-control input-sm" name="default[renew]" value="2"/>';
+			html += '</td>';
+			html += '<td></td>';
+			html += '</tr>';
+			html += '</tbody>';
+			html += '</table>';
+			if (id) {
+				$.ajax({
+					url: "{php echo $this->createWebUrl('postage', array('act' => 'delete'))}",
+					data: 'type=clear_template_value&id='+id,
+					success: function (response) {
+						if (response == 'success') {
+							$('.express_area').html(html);
+
+							//清空地区选择
+							selected_areas = [];
+							$('#area_list :checkbox:checked').prop('disabled', false);
+						} else {
+							util.message(response, '', 'error');
+						}
+					}
+				});
+			} else {
+				$('.express_area').html(html);
+
+				//清空地区选择
+				selected_areas = [];
+				$('#area_list :checkbox:checked').prop('disabled', false);
+			}
+		});
+		//切换包邮状态
+		/*$('input[name=free]').click(function(){
+			if ($(this).val() == 1) {
+				if (!confirm('设置为包邮后，当前模板的配送区域数据将被清空，确定吗？')) {
+					return false;
+				}
+			}
+			var id = $(this).attr('data-id');
+			if (id) {
+				$.ajax({
+					url: "{php echo $this->createWebUrl('postage', array('act' => 'delete'))}",
+					data: 'type=template_value&id='+id,
+					success: function (response) {
+						if (response == 'success') {
+							$('#list_wrap').html('');
+						} else {
+							util.message(response, '', 'error');
+						}
+					}
+				});
+			} else {
+				$('#list_wrap').html('');
+			}
+		});*/
+		//添加区域
+		$('.add_area').click(function(){
+			$.ajax({
+				url: "{php echo $this->createWebUrl('postage', array('act' => 'area'))}",
+				success: function (response) {
+					$('#list_wrap').append(response);
+					var wrapper_id = $(response).attr('id');
+					//记录和绑定元素id
+					$('#area_confirm').attr('data-wrapper-id', wrapper_id);
+					//初始化checkbox为未选中
+					$('#area_list input[type=checkbox]').prop('checked', false).each(function(){
+						if ($.inArray($(this).val(), selected_areas) != -1) {
+							$(this).attr('disabled', true).prop('checked', true);
+						}
+					});
+					//展示选择区域窗口
+					$('#myModal').modal('show');
+					//初始化地区编辑、删除等操作
+					initAreaOperate($('#'+wrapper_id));
+				}
+			});
+		});
+		//编辑区域
+		var editArea = function(obj){
+			var wrapper = $(obj).parent().parent().parent();
+			var selected = $('.area_wrap input', wrapper).val();
+			selected = selected.split(',');
+			//初始化已选择地区
+			$('#area_list input[type=checkbox]').each(function(){
+				if ($.inArray($(this).val(), selected) != -1) {
+					$(this).prop('checked', true).attr('disabled', false);
+				} else {
+					$(this).prop('checked', false);
+					if ($.inArray($(this).val(), selected_areas) != -1) {
+						$(this).attr('disabled', true).prop('checked', true);
+					}
+				}
+			});
+			$('#myModal').modal('show');
+			$('#area_confirm').attr('data-wrapper-id', $(wrapper).attr('id'));
+		};
+		//删除区域
+		var deleteArea = function(obj){
+			if (!confirm('确认删除该配送区域？')) {
+				return false;
+			}
+			var id = $(obj).attr('data-id');
+			if (id) {
+				$.ajax({
+					url: "{php echo $this->createWebUrl('postage', array('act' => 'delete'))}",
+					data: 'type=template_value&id='+id,
+					success: function (response) {
+						if (response == 'success') {
+							$(obj).parent().parent().remove();
+						} else {
+							util.message(response, '', 'error');
+						}
+					}
+				});
+			} else {
+				$(obj).parent().parent().remove();
+			}
+		};
+		//更新选择
+		var changeArea = function(obj){
+			if (!$(obj).prop('checked')) {
+				var pos = $.inArray($(obj).val(), selected_areas);
+				if (pos != -1) {
+					selected_areas.splice(pos, 1);
+				}
+			}
+			//console.log(selected_areas);
+		};
+		//提交表单
+		$('form').submit(function(){
+			var title = $('input[name=title]');
+			if (title.val() == '') {
+				util.message('模板名称为空，请重新填写', '', 'error');
+				return false;
+			}
+			return true;
+		});
+	});
+</script>
+{/if}
+{template 'web/footer'}

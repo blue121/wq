@@ -1,0 +1,118 @@
+<div class="page-group">
+    <div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+        {template 'common/nav'}
+        {template 'common/title'}
+        <div class="content">
+            <div class="statistics_wrap">
+                <div class="content-padded">
+                    <div class="row text-center no-gutter">
+                        <div class="col-100 total_income_title font9">
+                            总收入
+                        </div>
+                        <div class="col-100 total_income">
+                            <h2>&yen;{$data['income']}</h2>
+                        </div>
+                        <div class="col-33 font7">
+                            <div>本月订单</div>
+                            <div>{$data['order']}</div>
+                        </div>
+                        <div class="col-33 font7">
+                            <div class="today_read_title">今日浏览</div>
+                            <div>{$data['page_view']}</div>
+                        </div>
+                        <div class="col-33 font7">
+                            <div>今日访客</div>
+                            <div>{$data['unique_visitor']}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--订单入口 start-->
+            <div class="list-block media-list order_enter_wrap">
+                <ul>
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'status' => 0));}" class="item-link item-content" data-no-cache="true">
+                            <div class="item-inner">
+                                <div class="item-title-row font7">
+                                    <div class="item-title color_default">订单</div>
+                                    <div class="font6 color-gray">更多</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <div class="weui_grids">
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'status' => 0));}" class="weui_grid" data-no-cache="true">
+                            <div class="weui_grid_icon text-center">
+                                <span class="iconfont">&#xe63d;</span>
+                                <!--<span class="icon icon-app"></span>-->
+                            </div>
+                            <p class="weui_grid_label font6 color-gray">
+                                待付款
+                            </p>
+                        </a>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'status' => 1));}" class="weui_grid" data-no-cache="true">
+                            <div class="weui_grid_icon text-center">
+                                <span class="iconfont">&#xe612;</span>
+                            </div>
+                            <p class="weui_grid_label font6 color-gray">
+                                待发货
+                            </p>
+                        </a>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'order.display', 'type' => 1));}" class="weui_grid" data-no-cache="true">
+                            <div class="weui_grid_icon text-center">
+                                <span class="iconfont">&#xe620;</span>
+                            </div>
+                            <p class="weui_grid_label font6 color-gray">
+                                拼团
+                            </p>
+                        </a>
+                    </div>
+                </ul>
+            </div>
+            <!--订单入口 end-->
+            <!--商品入口 start-->
+            <div class="list-block media-list item_enter_wrap">
+                <ul>
+                    <li>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'item.display'));}" class="item-link item-content" data-no-cache="true">
+                            <div class="item-inner">
+                                <div class="item-title-row font7 color_default">
+                                    <div class="item-title">商品</div>
+                                    <div class="font6 color-gray">更多</div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <div class="weui_grids">
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'item.display', 'status' => 'upshelf'));}" class="weui_grid" data-no-cache="true">
+                            <div class="weui_grid_icon text-center">
+                                <span class="iconfont">&#xe61f;</span>
+                            </div>
+                            <p class="weui_grid_label font6 color-gray">
+                                出售中
+                            </p>
+                        </a>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'item.display', 'status' => 'stockout'));}" class="weui_grid" data-no-cache="true">
+                            <div class="weui_grid_icon text-center">
+                                <span class="iconfont">&#xe621;</span>
+                            </div>
+                            <p class="weui_grid_label font6 color-gray">
+                                已售罄
+                            </p>
+                        </a>
+                        <a href="{php echo $this->createMobileUrl('admin', array('route' => 'item.display', 'status' => 'offshelf'));}" class="weui_grid" data-no-cache="true">
+                            <div class="weui_grid_icon text-center">
+                                <span class="iconfont">&#xe623;</span>
+                            </div>
+                            <p class="weui_grid_label font6 color-gray">
+                                仓库中
+                            </p>
+                        </a>
+                    </div>
+                </ul>
+            </div>
+            <!--商品入口 end-->
+        </div>
+        {template 'common/share'}
+    </div>
+</div>

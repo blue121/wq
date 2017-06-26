@@ -1,0 +1,64 @@
+<div class="page-group">
+    <div class="page superpage_{$do}" id="superpage_{$do}_{$act}">
+        {template 'common/nav'}
+        {template 'common/title'}
+        <div class="content infinite-scroll" data-url="{php echo $this->createMobileUrl('admin', array('route' => 'finance.log', 'load' => 'infinite'))}" data-flag="0" data-distance="50" data-page="{$pindex}" id="log_list">
+            {if $list}
+            {loop $list $li}
+            <div class="list-block font7">
+                <ul>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">申请日期</div>
+                            <div class="item-after">{$li['create_date']}</div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">提现金额</div>
+                            <div class="item-after">&yen;{$li['money']}</div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">服务费</div>
+                            <div class="item-after">&yen;{$li['service_fee']}</div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">到账金额</div>
+                            <div class="item-after">&yen;{$li['account_money']}</div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">提现账户</div>
+                            <div class="item-after">{$li['account_type_title']}</div>
+                        </div>
+                    </li>
+                    <li class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">状态</div>
+                            <div class="item-after">{$li['status_title']}</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            {/loop}
+			{else}
+            <div class="row no_data color_default">
+                <div class="col-100 font6 text-center">
+                    暂无数据
+                </div>
+            </div>
+            {/if}
+            {if count($list)==$pagesize}
+            <div class="infinite-scroll-preloader">
+                <div class="preloader"></div>
+            </div>
+            {/if}
+        </div>
+        {template 'common/share'}
+    </div>
+</div>

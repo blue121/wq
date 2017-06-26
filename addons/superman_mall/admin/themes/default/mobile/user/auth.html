@@ -1,0 +1,53 @@
+{template '../common/header-base'}
+        <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+        <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+        <div class="page-group">
+            <div class="page page-current">
+                <header class="bar bar-nav">
+                    <!--后退按钮-->
+                    <a class="icon icon-left pull-left back"></a>
+                    <h1 class="title">请选择</h1>
+                </header>
+                <div class="content">
+                    <div class="list-block media-list" style="margin: .5rem 0;">
+                        <form action="" method="post">
+                            <ul>
+                                {if $list}
+                                {loop $list $key $li}
+                                <li>
+                                    <label class="label-checkbox item-content">
+                                        <input type="radio" name="key" value="{$key}" {if $key == 0}checked{/if}>
+                                        <div class="item-media">
+                                            <i class="icon icon-form-checkbox"></i>
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-title-row">
+                                                <div class="item-title">{$li['username']}</div>
+                                                <div class="item-after">{$li['shop']['title']}</div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </li>
+                                {/loop}
+                                {/if}
+                            </ul>
+                            <div class="content-block" style="margin-top: .5rem">
+                                <div class="row">
+                                    <div class="col-100" style="width:92%; margin: 0 4%">
+                                        <button class="btn btn-lg btn-success btn-block" type="submit" id="submit" name="submit" value="登录">登录</button>
+                                        <input name="token" value="{$_W['token']}" type="hidden" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+    <script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js' charset='utf-8'></script>
+    </body>
+</html>
+
+
